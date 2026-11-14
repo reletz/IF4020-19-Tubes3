@@ -1,0 +1,15 @@
+# Kunci privat: jangan pernah di-commit
+*.key.pem
+
+# Elixir/Erlang
+/_build/
+/deps/
+/cover/
+/doc/
+*.ez
+*.beam
+erl_crash.dump
+.elixir_ls/
+
+# Keluaran lokal
+/out/
