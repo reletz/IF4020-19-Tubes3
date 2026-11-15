@@ -11,7 +11,10 @@ ARG ELIXIR_IMAGE=elixir:1.20-otp-29-alpine
 FROM ${ELIXIR_IMAGE} AS build
 ENV MIX_ENV=prod
 WORKDIR /src
-COPY mix.exs ./
+# Hex dibutuhkan mix untuk membaca spesifikasi dependensi. ex_doc hanya untuk
+# dev sehingga tidak diunduh maupun masuk ke image.
+RUN mix local.hex --force
+COPY mix.exs mix.lock ./
 COPY lib ./lib
 RUN mix escript.build
 
