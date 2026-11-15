@@ -14,3 +14,6 @@ erl_crash.dump
 # Keluaran lokal
 /out/
 .env
+
+# laporan latex
+/docs/report/build/

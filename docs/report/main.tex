@@ -1,0 +1,89 @@
+% Build: latexmk -pdf -outdir=build main.tex
+\documentclass[12pt,a4paper]{article}
+\input{preamble}
+
+\newcommand{\progname}{Nadina}
+\newcommand{\repourl}{https://github.com/reletz/IF4020-19-Tubes3}
+\newcommand{\imageref}{reletz/nadina}
+\newcommand{\videourl}{TODO}
+\newcommand{\apiurl}{TODO}
+\newcommand{\tahun}{2026}
+
+% TODO: lengkapi nama lengkap dan NIM seluruh anggota, serta file foto/tanda tangan
+\newcommand{\anggotaA}{Dita Maheswari}
+\newcommand{\nimA}{13523125}
+\newcommand{\fotoA}{foto1.png}
+\newcommand{\anggotaB}{Naufarrel Zhafif Abhista}
+\newcommand{\nimB}{13523149}
+\newcommand{\fotoB}{foto2.png}
+\newcommand{\anggotaC}{TODO nama lengkap Nayaka}
+\newcommand{\nimC}{TODO}
+\newcommand{\fotoC}{foto3.png}
+
+\begin{document}
+
+% ====================================================================
+% COVER
+% ====================================================================
+\begin{titlepage}
+  \centering
+  {\large\bfseries LAPORAN TUGAS BESAR 3\par}
+  {\large\bfseries IF4020 KRIPTOGRAFI\par}
+  \vspace{1cm}
+  {\Huge\bfseries \progname\par}
+  \vspace{0.4cm}
+  {\large Penandatanganan dan Verifikasi Software Release\par}
+  {\large dengan RSA-PSS, ECDSA, dan EdDSA\par}
+  \vspace{1.5cm}
+
+  \begin{minipage}[t]{0.3\textwidth}\centering\foto{\fotoA}\\[2pt]{\bfseries\anggotaA}\\\nimA\end{minipage}\hfill
+  \begin{minipage}[t]{0.3\textwidth}\centering\foto{\fotoB}\\[2pt]{\bfseries\anggotaB}\\\nimB\end{minipage}\hfill
+  \begin{minipage}[t]{0.3\textwidth}\centering\foto{\fotoC}\\[2pt]{\bfseries\anggotaC}\\\nimC\end{minipage}
+
+  \vfill
+  {\large\bfseries Program Studi Teknik Informatika\\
+  Sekolah Teknik Elektro dan Informatika\\
+  Institut Teknologi Bandung\\
+  \tahun\par}
+\end{titlepage}
+
+% ====================================================================
+% PERNYATAAN
+% ====================================================================
+\pagenumbering{roman}
+\section*{Pernyataan}
+\addcontentsline{toc}{section}{Pernyataan}
+
+% TODO: tentukan teks pernyataan sesuai ketentuan tugas dan kondisi sebenarnya
+% (termasuk penggunaan alat bantu, bila ada). Jangan menyalin pernyataan Tugas 2.
+\noindent TODO.
+
+\vspace{1cm}
+\noindent
+\ttd{\anggotaA}{\nimA}{ttd1.png}\hfill
+\ttd{\anggotaB}{\nimB}{ttd2.png}
+
+\vspace{1.5cm}
+\noindent
+\ttd{\anggotaC}{\nimC}{ttd3.png}
+
+\newpage
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+
+% ====================================================================
+% ISI
+% ====================================================================
+\input{sections/bab1-pendahuluan}
+\input{sections/bab2-dasar-teori}
+\input{sections/bab3-perancangan}
+\input{sections/bab4-implementasi}
+\input{sections/bab5-pengujian}
+\input{sections/bab6-analisis-keamanan}
+\input{sections/bab7-bonus}
+\input{sections/bab8-kesimpulan}
+\input{sections/pustaka}
+\input{sections/lampiran}
+
+\end{document}
