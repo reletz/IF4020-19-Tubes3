@@ -11,7 +11,8 @@ defmodule Nadina.MixProject do
       releases: releases(),
       name: "Nadina",
       source_url: "https://github.com/reletz/IF4020-19-Tubes3",
-      docs: docs()
+      docs: docs(),
+      dialyzer: dialyzer()
     ]
   end
 
@@ -28,7 +29,17 @@ defmodule Nadina.MixProject do
   defp deps do
     [
       {:ex_doc, "~> 0.40", only: :dev, runtime: false},
-      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_add_apps: [:mix, :public_key, :crypto],
+      plt_local_path: "priv/plts",
+      plt_core_path: "priv/plts",
+      flags: [:error_handling, :unknown]
     ]
   end
 
