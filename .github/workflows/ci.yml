@@ -29,8 +29,12 @@ jobs:
         with:
           otp-version: "29"
           elixir-version: "1.20"
+      - name: Dependensi
+        run: mix deps.get
       - name: Format
         run: mix format --check-formatted
+      - name: Credo
+        run: mix credo
       - name: Test
         run: mix test
 

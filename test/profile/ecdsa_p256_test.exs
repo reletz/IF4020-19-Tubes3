@@ -97,7 +97,7 @@ defmodule Nadina.Profile.EcdsaP256Test do
 
   test "vektor RFC 6979 A.2.5 (verifikasi)" do
     point = <<4, @rfc6979_ux::256, @rfc6979_uy::256>>
-    pub = {{:ECPoint, point}, {:namedCurve, {1, 2, 840, 10045, 3, 1, 7}}}
+    pub = {{:ECPoint, point}, {:namedCurve, {1, 2, 840, 10_045, 3, 1, 7}}}
     assert EcdsaP256.check_key(pub) == :ok
     assert EcdsaP256.verify(pub, "sample", <<@rfc6979_r::256, @rfc6979_s::256>>)
     refute EcdsaP256.verify(pub, "Sample", <<@rfc6979_r::256, @rfc6979_s::256>>)
@@ -118,13 +118,13 @@ defmodule Nadina.Profile.EcdsaP256Test do
     end
 
     test "menolak tipe kunci selain EC" do
-      rsa_pub = {:RSAPublicKey, 12345, 65537}
+      rsa_pub = {:RSAPublicKey, 12_345, 65_537}
       assert EcdsaP256.check_key(rsa_pub) == {:error, :wrong_key_type}
       assert EcdsaP256.check_key(:sampah) == {:error, :wrong_key_type}
     end
 
     test "menolak titik publik bukan uncompressed" do
-      pub = {{:ECPoint, <<2, 0::256>>}, {:namedCurve, {1, 2, 840, 10045, 3, 1, 7}}}
+      pub = {{:ECPoint, <<2, 0::256>>}, {:namedCurve, {1, 2, 840, 10_045, 3, 1, 7}}}
       assert EcdsaP256.check_key(pub) == {:error, :wrong_parameters}
     end
   end

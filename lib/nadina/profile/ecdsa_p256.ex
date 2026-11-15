@@ -14,7 +14,7 @@ defmodule Nadina.Profile.EcdsaP256 do
   @behaviour Nadina.Profile
 
   # OID 1.2.840.10045.3.1.7 (prime256v1 / secp256r1)
-  @p256_oid {1, 2, 840, 10045, 3, 1, 7}
+  @p256_oid {1, 2, 840, 10_045, 3, 1, 7}
 
   @sig_size 64
 

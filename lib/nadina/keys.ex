@@ -20,7 +20,7 @@ defmodule Nadina.Keys do
 
   alias Nadina.Profile
 
-  @p256_oid {1, 2, 840, 10045, 3, 1, 7}
+  @p256_oid {1, 2, 840, 10_045, 3, 1, 7}
   @ed25519_oid {1, 3, 101, 112}
 
   @type reason ::
@@ -234,9 +234,8 @@ defmodule Nadina.Keys do
       with {:ok, io} <- File.open(tmp, [:write, :exclusive, :binary]),
            :ok <- File.chmod(tmp, mode),
            :ok <- IO.binwrite(io, content),
-           :ok <- File.close(io),
-           :ok <- File.rename(tmp, path) do
-        :ok
+           :ok <- File.close(io) do
+        File.rename(tmp, path)
       end
 
     case result do
