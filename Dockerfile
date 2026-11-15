@@ -5,8 +5,9 @@
 # Pakai  : docker run --rm --network none --user "$(id -u):$(id -g)" \
 #            -v "$PWD:/work" -w /work nadina <subcommand> ...
 
-ARG ELIXIR_IMAGE=elixir:1.20-otp-29-alpine
-ARG RUNTIME_IMAGE=alpine:3.24
+# Base image dikunci per digest (index multi-arch). Perbarui lewat dependabot.
+ARG ELIXIR_IMAGE=elixir:1.20-otp-29-alpine@sha256:a2f0fe1bfd8a2f9cc91d913f4a12e6430e27e618720f753a514e2fff3d35f5a7
+ARG RUNTIME_IMAGE=alpine:3.24@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf
 
 # ---- tahap build: mix release (ERTS ikut dibundel) ----
 FROM ${ELIXIR_IMAGE} AS build
