@@ -18,6 +18,8 @@ concurrency:
 
 env:
   IMAGE: reletz/nadina
+  # Username Docker Hub bukan rahasia. Hanya token push yang berasal dari secret.
+  DOCKER_USERNAME: reletz
 
 jobs:
   ci:
@@ -65,7 +67,7 @@ jobs:
       - name: Login Docker Hub (token push)
         uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
+          username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PUSH_TOKEN }}
 
       - name: Build multi-arch dan push
