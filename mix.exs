@@ -8,7 +8,7 @@ defmodule Nadina.MixProject do
       elixir: "~> 1.20",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      escript: escript(),
+      releases: releases(),
       name: "Nadina",
       source_url: "https://github.com/reletz/IF4020-19-Tubes3",
       docs: docs()
@@ -19,10 +19,10 @@ defmodule Nadina.MixProject do
     [extra_applications: [:logger, :crypto, :public_key]]
   end
 
-  # Entry point CLI. Nadina.CLI.main/1 menerima daftar argumen dan mengakhiri
-  # proses dengan exit code asli lewat System.halt/1.
-  defp escript do
-    [main_module: Nadina.CLI, name: "nadina"]
+  # Release OTP untuk image container. Entry point CLI dipanggil lewat
+  # bin/nadina eval, argumen diteruskan ke System.argv/0.
+  defp releases do
+    [nadina: [include_executables_for: [:unix], strip_beams: true]]
   end
 
   defp deps do
