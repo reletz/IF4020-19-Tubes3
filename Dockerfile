@@ -6,8 +6,9 @@
 #            -v "$PWD:/work" -w /work nadina <subcommand> ...
 
 ARG ELIXIR_IMAGE=elixir:1.20-otp-29-alpine
+ARG RUNTIME_IMAGE=alpine:3.24
 
-# ---- tahap build: kompilasi menjadi escript tunggal ----
+# ---- tahap build: mix release (ERTS ikut dibundel) ----
 FROM ${ELIXIR_IMAGE} AS build
 ENV MIX_ENV=prod
 WORKDIR /src
@@ -16,17 +17,23 @@ WORKDIR /src
 RUN mix local.hex --force
 COPY mix.exs mix.lock ./
 COPY lib ./lib
-RUN mix escript.build
+RUN mix release nadina --path /opt/nadina
 
 # ---- tahap akhir: runtime minimal, non-root ----
-FROM ${ELIXIR_IMAGE}
-# UID/GID dapat ditimpa saat run lewat --user. HOME diarahkan ke /tmp agar
-# runtime Erlang tetap dapat menulis walau UID acak tidak punya home.
-RUN adduser -D -u 10001 nadina
+FROM ${RUNTIME_IMAGE}
+# Pustaka native untuk ERTS: libstdc++, ncurses, OpenSSL (crypto), dan lksctp (agar stderr bersih).
+RUN apk add --no-cache libstdc++ ncurses-libs openssl lksctp-tools \
+ && adduser -D -u 10001 nadina \
+ && printf '#!/bin/sh\nexec /opt/nadina/bin/nadina eval "Nadina.CLI.main(System.argv())" "$@"\n' \
+      > /usr/local/bin/nadina \
+ && chmod 0755 /usr/local/bin/nadina
+COPY --from=build /opt/nadina /opt/nadina
+# UID/GID dapat ditimpa saat run lewat --user. HOME dan RELEASE_TMP diarahkan ke
+# /tmp agar tetap dapat ditulis oleh UID acak. Tanpa distribusi Erlang.
 ENV HOME=/tmp \
-    LANG=C.UTF-8 \
-    ERL_AFLAGS="-noshell"
-COPY --from=build /src/nadina /usr/local/bin/nadina
+    RELEASE_TMP=/tmp \
+    RELEASE_DISTRIBUTION=none \
+    LANG=C.UTF-8
 USER 10001:10001
 WORKDIR /work
 ENTRYPOINT ["/usr/local/bin/nadina"]
