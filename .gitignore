@@ -17,3 +17,6 @@ erl_crash.dump
 
 # laporan latex
 /docs/report/build/
+
+# direktori sementara ExUnit
+/tmp/
