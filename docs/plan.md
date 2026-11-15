@@ -35,6 +35,7 @@ yg ga dikerjain yaitu transparency log, layanan sertifikat, integrasi registry a
 | trust store | di repo pemakai (anmategra), ci/trust.json | hash dikunci di konfigurasi, perubahan lewat review. |
 | artefak yg di-sign | rilis .zip anmategra | dibikin sekali, terus dipake ulang sm job sign dan verify. |
 | pemindai | trivy | gerbang build, gagal kalo ada temuan high atau critical. |
+| base image | elixir:1.20-otp-29-alpine | ada utk amd64 dan arm64. spike udah dijalanin di amd64 (alpine 3.24, openssl 3.5, uid acak, --network none) dan hasilnya sama kayak debian. arm64 belum dijalanin. |
 
 ---
 
@@ -218,7 +219,7 @@ prinsipnya rata (beban kira-kira sama) dan tiap orang punya porsi kripto, condon
 |---|---|---|
 | 0 | kerangka repo, spike kripto (udah kelar) | semua |
 | 1 | behaviour Profile, strict_json, manifest, bundle, keys, tiga profil | dita, nau, nayaka |
-| 2 | sign, verify, trust, cli, dockerfile, ci.yml, cek otp 29 di alpine | nayaka, dita, nau |
+| 2 | sign, verify, trust, cli, dockerfile, ci.yml, spike di arm64 | nayaka, dita, nau |
 | 3 | image terbit (digest pertama), u01-u14, interop | semua |
 | 4 | pipeline anmategra dan c01-c05 | nayaka, nau |
 | 5 | benchmark, analisis keamanan, laporan | dita, nau, nayaka |
