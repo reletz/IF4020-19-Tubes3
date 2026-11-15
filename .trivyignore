@@ -1,0 +1,4 @@
+# Daftar CVE yang sengaja diabaikan trivy. Kosong secara default.
+# Setiap entri wajib diberi alasan dan tanggal kedaluwarsa, misalnya
+#   CVE-2099-0001 exp:2027-01-31
+# Hanya untuk paket OS yang belum punya perbaikan dan tidak dapat dijangkau.
