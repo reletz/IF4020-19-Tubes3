@@ -6,3 +6,7 @@ out
 docs
 .env
 .env.*
+test
+spike
+bench
+.github
