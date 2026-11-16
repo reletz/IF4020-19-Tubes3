@@ -120,6 +120,7 @@ defmodule Nadina.StrictJSON do
     end
   end
 
+  @spec fail(term()) :: no_return()
   defp fail(reason), do: throw({__MODULE__, reason})
 
   defp skip_ws(<<c, rest::binary>>, pos) when c in [?\s, ?\t, ?\n, ?\r],
