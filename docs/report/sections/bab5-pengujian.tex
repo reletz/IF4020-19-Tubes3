@@ -1,14 +1,361 @@
 \section{Pengujian}
+% Nama berkas dan perintah panjang di \texttt tidak bisa dipenggal.
+\sloppy
 
-\subsection{Skenario U01--U14}
-% TODO: tabel per skenario (berkas masukan, hasil yang diharapkan, hasil pengujian, cara menjalankan).
+Seluruh pengujian pada bab ini berjalan otomatis dengan \texttt{mix test}, kecuali skenario
+C01 sampai C05 yang berjalan pada pipeline anmategra. \textit{Workflow} \texttt{ci.yml}
+menjalankan tes dua kali: pada runner Ubuntu, dan di dalam image
+\texttt{elixir:1.20-otp-29-alpine} yang memakai musl dan OpenSSL yang sama dengan image
+rilis. Image Alpine tersebut tidak memuat CLI \texttt{openssl}, sehingga tes
+interoperabilitas hanya berjalan pada runner Ubuntu.
+
+Untuk laporan ini, seluruh tes dijalankan ulang di dalam image Alpine yang sama dengan
+CLI OpenSSL 3.5.9 ditambahkan, sehingga tes interoperabilitas ikut berjalan. Hasilnya 213
+tes lulus (180 tes dan 33 doctest) tanpa kegagalan dan tanpa tes yang dilewati. Property
+test pada \texttt{test/property/} dijalankan dengan cara yang sama dan 20 property lulus.
+
+\subsection{Skenario U01 sampai U14}
+
+Skenario ditulis pada berkas \texttt{test/cli\_test.exs} dan memanggil CLI lewat
+\texttt{Nadina.CLI.run/1}, fungsi yang sama dengan titik masuk \texttt{bin/nadina} tanpa
+\texttt{halt}. Exit code dan keluaran \texttt{verify -json} diperiksa langsung. Berkas
+masukan dibentuk oleh tes di direktori sementara (\texttt{@tag :tmp\_dir}) dengan nilai
+dasar berikut:
+
+\begin{itemize}
+  \item artefak \texttt{contoh-app.zip} berisi teks \texttt{isi artefak},
+  \item paket \texttt{contoh-app} dan versi \texttt{1.0.0},
+  \item satu pasangan kunci per profil hasil \texttt{nadina keygen},
+  \item \textit{trust store} hasil \texttt{nadina trust add} yang mengizinkan kunci
+    tersebut untuk \texttt{contoh-app},
+  \item bundle hasil \texttt{nadina sign} atas artefak di atas.
+\end{itemize}
+
+U01 dan U14 dijalankan untuk ketiga profil. U02 sampai U13 memakai profil
+\texttt{ecdsa-p256-sha256}, karena pemeriksaannya tidak bergantung pada algoritma.
+Setiap tes mengubah satu hal dari kondisi dasar, lalu memverifikasi ulang.
+
+{\small
+\begin{longtable}{@{}p{1cm}p{7.2cm}p{4.3cm}p{1.6cm}@{}}
+\toprule
+ID & Perubahan pada masukan & Hasil yang diharapkan & Hasil \\
+\midrule
+\endhead
+U01 & Berkas teks (\texttt{halo dunia}), berkas biner 5000 byte acak, dan berkas kosong
+  ditandatangani lalu diverifikasi, untuk tiap profil. Hasil juga diperiksa memuat
+  \texttt{algorithm}, \texttt{keyid}, \texttt{package}, dan \texttt{version} yang benar.
+  & \texttt{OK}, exit 0 & Lulus \\
+U02 & Satu byte artefak diganti (\texttt{isi artefak} menjadi \texttt{isi artefaK}),
+  ukuran dan nama tetap. & \texttt{ARTIFACT\_MISMATCH}, exit 1 & Lulus \\
+U03 & Satu byte ditambahkan di akhir artefak, lalu pada uji terpisah satu byte dihapus.
+  & \texttt{ARTIFACT\_MISMATCH}, exit 1 & Lulus \\
+U04 & Versi manifest diganti menjadi \texttt{9.9.9} dan diserialisasi ulang secara
+  canonical. Tanda tangan lama dipertahankan dan verifikasi memakai
+  \texttt{-version 9.9.9}. & \texttt{INVALID\_SIGNATURE}, exit 1 & Lulus \\
+U05 & Bit terendah pada byte pertama tanda tangan dibalik. Panjang tanda tangan tetap dan
+  Base64 tetap sah. & \texttt{INVALID\_SIGNATURE}, exit 1 & Lulus \\
+U06 & Verifikasi dengan \textit{trust store} kosong, lalu dengan \textit{trust store} asli
+  setelah kunci penerbit dihapus lewat \texttt{trust remove}.
+  & \texttt{KEY\_NOT\_TRUSTED}, exit 1 & Lulus \\
+U07 & \textit{Trust store} berisi kunci penerbit yang hanya diizinkan untuk paket
+  \texttt{paket-lain}. & \texttt{KEY\_NOT\_TRUSTED}, exit 1 & Lulus \\
+U08 & Bundle sah diverifikasi dengan \texttt{-version 2.0.0}.
+  & \texttt{METADATA\_MISMATCH}, exit 1 & Lulus \\
+U09 & Artefak disalin ke \texttt{nama-lain.zip} tanpa mengubah isi, lalu berkas salinan
+  yang diverifikasi. & \texttt{METADATA\_MISMATCH}, exit 1 & Lulus \\
+U10 & Empat bundle diuji terpisah: field \texttt{manifest\_b64} ganda,
+  \texttt{manifest\_b64} bertipe integer, Base64 tanda tangan tidak sah, dan manifest
+  sebesar 16 KiB ditambah 1 byte. & \texttt{FORMAT\_ERROR}, exit 1, \texttt{algorithm}
+  bernilai \texttt{null} pada tiap kondisi & Lulus \\
+U11 & Nilai \texttt{algorithm} pada manifest diganti \texttt{rsa-sha1}.
+  & \texttt{UNSUPPORTED\_ALGORITHM}, exit 1 & Lulus \\
+U12 & Artefak ditandatangani dengan kunci ECDSA P-256 lain yang tidak ada di
+  \textit{trust store}. \texttt{keyid} pada manifest sesuai kunci tersebut.
+  & \texttt{KEY\_NOT\_TRUSTED}, exit 1, \texttt{keyid} pada hasil sama dengan fingerprint
+  kunci baru & Lulus \\
+U13 & Bundle ditulis ulang dengan spasi, tab, dan baris baru tambahan serta urutan field
+  dibalik. Kedua string Base64 tidak diubah. & \texttt{OK}, exit 0 & Lulus \\
+U14 & Manifest identik ditandatangani dua kali dengan kunci yang sama, untuk tiap profil.
+  & Kedua bundle \texttt{OK}. Tanda tangan RSA-PSS dan ECDSA berbeda, Ed25519 identik.
+  & Lulus \\
+\bottomrule
+\caption{Skenario pengujian U01 sampai U14.}
+\end{longtable}
+}
+
+Hasil U14 sesuai dengan sumber randomness tiap algoritma. RSA-PSS memakai salt 32 byte
+acak dan ECDSA memakai nonce $k$ acak, sehingga dua tanda tangan atas pesan yang sama
+berbeda. Ed25519 menurunkan nonce dari kunci dan pesan (RFC 8032), sehingga tanda
+tangannya identik. Analisis lengkapnya, termasuk 200 tanda tangan ECDSA tanpa nilai $r$
+berulang, ada pada subbab Nonce dan Randomness di bab Analisis Keamanan.
+
+Selain tabel di atas, \texttt{cli\_test.exs} menguji kasus tambahan pada urutan status
+verifikasi: opsi wajib yang hilang dan berkas yang tidak ada menghasilkan
+\texttt{INPUT\_ERROR} dengan exit 2, \textit{trust store} rusak atau fingerprint yang tidak
+cocok dengan kuncinya menghasilkan \texttt{FORMAT\_ERROR}, dan kunci tepercaya dengan
+profil berbeda dari manifest menghasilkan \texttt{KEY\_NOT\_TRUSTED}.
+
+\subsubsection*{Cara menjalankan}
+\begin{lstlisting}[language=bash,numbers=none]
+mix test test/cli_test.exs
+mix test test/cli_test.exs --only describe:"U14: dua tanda tangan atas manifest identik"
+\end{lstlisting}
+
+\subsection{Test Vector dan Property Test}
+
+Setiap profil diuji terhadap vektor dari sumber publik, terpisah dari CLI:
+
+\begin{itemize}
+  \item RSA-PSS: 108 kasus Wycheproof \texttt{rsa\_pss\_3072\_sha256\_mgf1\_32}, yang
+    parameternya sama persis dengan profil (RSA 3072, SHA-256, MGF1-SHA-256, salt 32 byte).
+    Semua kasus \textit{valid} diterima dan semua kasus \textit{invalid} ditolak.
+  \item ECDSA P-256: vektor RFC 6979 lampiran A.2.5 untuk pesan \texttt{sample}. Tanda
+    tangan diterima, pesan \texttt{Sample} ditolak, dan kunci privat vektor menurunkan
+    titik publik yang sama.
+  \item Ed25519: RFC 8032 bagian 7.1 TEST 1 (pesan kosong) dan TEST 2 (pesan 1 byte).
+    Kunci publik, tanda tangan, dan hasil verifikasi sama dengan vektor.
+\end{itemize}
+
+Tes profil juga memeriksa nilai di luar domain tanpa \textit{raise}: $r$ atau $s$ bernilai
+$0$, $n$, atau $2^{256}-1$ pada ECDSA, serta tanda tangan bernilai $0$, $1$, $n-1$, $n$,
+dan $2^{3072}-1$ pada RSA-PSS. Semuanya menghasilkan \texttt{false}.
+
+Property test di \texttt{test/property/} memakai StreamData untuk membangkitkan masukan
+acak:
+
+\begin{itemize}
+  \item \texttt{strict\_json}: dokumen JSON sah diterima dengan nilai yang sama, sedangkan
+    \textit{duplicate key}, \texttt{null} di posisi mana pun, data setelah nilai pertama,
+    dan boolean di posisi integer ditolak.
+  \item manifest dan bundle: \texttt{parse(serialize(m))} mengembalikan manifest dan byte
+    yang sama. White space, urutan field selain canonical, field tambahan, serta boolean
+    atau pecahan di posisi \texttt{size} ditolak. Pada bundle, white space dan urutan field
+    tidak mengubah isi, sedangkan Base64 tanpa padding atau dengan bit padding tidak nol
+    ditolak.
+  \item sign dan verify: untuk tiap profil, 40 rilis acak yang ditandatangani lewat CLI
+    selalu menghasilkan \texttt{OK}, dan 50 pesan acak menghasilkan tanda tangan sah yang
+    ditolak untuk pesan lain.
+\end{itemize}
+
+\subsubsection*{Cara menjalankan}
+\begin{lstlisting}[language=bash,numbers=none]
+mix test test/profile test/property test/nonce_analysis_test.exs
+\end{lstlisting}
 
 \subsection{Interoperabilitas}
-% TODO: pengujian dengan kakas atau implementasi independen untuk ketiga algoritma.
 
-\subsection{Pengujian Integrasi CI/CD (C01--C05)}
-% TODO: tautan workflow run, referensi image dan digest, log, keluaran JSON, bukti penanda.
+Interoperabilitas diuji terhadap OpenSSL untuk ketiga profil (berkas
+\texttt{test/interop/}). OpenSSL hanya dipakai sebagai alat uji, tidak oleh program. Tes
+bertag \texttt{:interop} dilewati bila \texttt{openssl} tidak ada di \texttt{PATH}.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{@{}p{2.6cm}p{4cm}p{4cm}p{3.4cm}@{}}
+\toprule
+Profil & Nadina ke OpenSSL & OpenSSL ke Nadina & Harus ditolak \\
+\midrule
+RSA-PSS &
+  Kunci dibaca OpenSSL (3072 bit, $e = 65537$), fingerprint sama. Tanda tangan diterima
+  \texttt{openssl pkeyutl -verify} dengan opsi PSS salt 32 dan MGF1-SHA-256. &
+  Kunci buatan OpenSSL dimuat sebagai profil RSA-PSS dan tanda tangannya sah. &
+  PSS dengan salt lain dan PKCS\#1 v1.5 dari OpenSSL. \\
+\addlinespace
+ECDSA P-256 &
+  Kurva dikenali sebagai \texttt{prime256v1}, fingerprint sama. Tanda tangan $r\|s$ diubah
+  ke DER lalu diterima \texttt{openssl dgst -verify}. &
+  DER dari OpenSSL diubah ke $r\|s$ lalu diterima, termasuk banyak tanda tangan dengan
+  panjang DER berbeda-beda. &
+  Pesan yang diubah. \\
+\addlinespace
+Ed25519 &
+  Kurva dikenali sebagai Ed25519. SPKI dari OpenSSL tanpa field parameter dan fingerprint
+  sama. Tanda tangan diterima OpenSSL. &
+  Kunci buatan OpenSSL dimuat sebagai Ed25519 dan tanda tangannya sah. &
+  Pesan yang diubah dan tanda tangan atas hash pesan (pola Ed25519ph). \\
+\bottomrule
+\end{tabular}
+\caption{Cakupan uji interoperabilitas dengan OpenSSL.}
+\end{table}
+
+Pada ketiga profil, kunci publik yang diturunkan OpenSSL dari kunci privat Nadina sama
+dengan berkas \texttt{.pub.pem} yang ditulis Nadina, dan fingerprint
+$\mathrm{SHA256}(\text{DER SPKI})$ dari kedua sisi sama.
+
+\subsubsection*{Cara menjalankan}
+\begin{lstlisting}[language=bash,numbers=none]
+mix test --only interop
+\end{lstlisting}
+
+\subsection{Pengujian Integrasi CI/CD (C01 sampai C05)}
+% TODO (Nayaka): tautan workflow run per skenario, referensi image dan digest, log, keluaran
+% JSON verify, bukti ada atau tidak adanya berkas penanda. Bukti disimpan di docs/ci-evidence/.
 
 \subsection{Pengujian Performa}
-% TODO: spesifikasi hardware, OS, versi runtime; metode persentil (nearest-rank); tabel hasil
-% dari data/ (keygen, hash artefak, sign/verify, end-to-end, ukuran).
+
+\subsubsection*{Lingkungan}
+Benchmark dijalankan sekali pada satu mesin, di dalam image rilis Nadina (Docker Desktop
+dengan backend WSL2) dan dengan \texttt{--network none}. Data mentah dan ringkasan ada di
+\texttt{data/benchmark/}, dan tabel pada subbab ini dibaca langsung dari berkas CSV
+tersebut.
+
+Container diberi hostname \texttt{nadina} yang dipetakan ke \texttt{127.0.0.1} lewat
+\texttt{--add-host}. Pada percobaan awal tanpa pemetaan ini, Docker Desktop tidak menuliskan
+hostname container ke \texttt{/etc/hosts}, sehingga setiap proses BEAM menunggu timeout
+DNS ke resolver yang tidak terjangkau. Akibatnya \texttt{nadina -version} memerlukan
+5,55 detik, dibandingkan 0,47 detik setelah hostname dipetakan. Selisih ini berasal dari
+lingkungan, bukan dari Nadina, tetapi dapat muncul pada pemakaian \texttt{--network none}
+di lingkungan lain.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+Komponen & Nilai \\
+\midrule
+CPU & 13th Gen Intel Core i7-13700HX, 24 CPU logis \\
+Memori untuk VM WSL2 & 7,6 GiB \\
+OS host & Windows 11 Home Single Language 10.0.26200 \\
+Kernel & 6.18.58.1-microsoft-standard-WSL2 (x86\_64) \\
+OS container & Alpine Linux 3.24 (musl) \\
+Runtime & Elixir 1.20.5, Erlang/OTP 29 (ERTS 17.1.1) \\
+Pustaka kripto & \texttt{:crypto} dan \texttt{:public\_key} OTP di atas OpenSSL 3.5.9 \\
+\bottomrule
+\end{tabular}
+\caption{Lingkungan benchmark (\texttt{data/benchmark/env.csv}).}
+\end{table}
+
+\subsubsection*{Metode}
+Skrip \texttt{bench/bench.exs} dijalankan lewat \texttt{bench/run.sh}. Setiap operasi
+dijalankan 5 kali sebagai pemanasan lalu diukur 30 kali, kecuali pembangkitan kunci yang
+diukur 5 pasang per profil. Waktu diambil dari \texttt{:erlang.monotonic\_time/0}, sehingga
+tidak terpengaruh perubahan jam sistem. Median memakai definisi biasa (rata-rata dua nilai
+tengah bila $n$ genap). Persentil ke-95 memakai metode \textit{nearest-rank}: data diurutkan
+naik dan P95 adalah elemen ke-$\lceil 0{,}95 \cdot n \rceil$ dengan posisi dimulai dari 1.
+Untuk $n = 30$, P95 adalah elemen ke-29.
+
+Artefak berukuran 64 KiB, 4 MiB, dan 64 MiB berisi byte acak, dan berkas yang sama dipakai
+untuk ketiga profil. Komponen yang diukur sebagai berikut:
+
+\begin{itemize}
+  \item pembangkitan kunci: \texttt{Keys.generate/1}, terpisah dari sign dan verify,
+  \item hash artefak: SHA-256 streaming atas byte artefak (\texttt{Artifact.digest/1}),
+  \item sign dan verify: operasi kriptografi atas byte manifest $M$ di dalam proses yang
+    sama, termasuk hash internal algoritma, tanpa I/O dan tanpa hash artefak,
+  \item end-to-end: \texttt{nadina sign} dan \texttt{nadina verify -json} sebagai proses
+    baru, termasuk boot BEAM, I/O, hash artefak, parsing, dan penulisan keluaran.
+    \texttt{nadina -version} diukur dengan cara yang sama sebagai pembanding biaya boot.
+\end{itemize}
+
+\pgfplotstableset{
+  col sep=comma,
+  every head row/.style={before row=\toprule, after row=\midrule},
+  every last row/.style={after row=\bottomrule},
+  bench/.style={fixed, fixed zerofill, precision=1, use comma, 1000 sep={.}},
+}
+
+\subsubsection*{Pembangkitan kunci}
+
+\begin{table}[H]
+\centering
+\pgfplotstabletypeset[bench,
+  columns={algorithm,n,median_us,min_us,max_us},
+  columns/algorithm/.style={string type, column name=Profil, column type=l},
+  columns/n/.style={column name=$n$, int detect},
+  columns/median_us/.style={column name=Median (ms), preproc/expr={##1/1000}, precision=2},
+  columns/min_us/.style={column name=Min (ms), preproc/expr={##1/1000}, precision=2},
+  columns/max_us/.style={column name=Maks (ms), preproc/expr={##1/1000}, precision=2},
+]{data/benchmark/keygen.csv}
+\caption{Waktu pembangkitan satu pasangan kunci.}
+\end{table}
+
+\subsubsection*{Hash artefak}
+
+\begin{table}[H]
+\centering
+\pgfplotstabletypeset[bench,
+  columns={size_label,n,median_us,p95_us,throughput_mib_s},
+  columns/size_label/.style={string type, column name=Artefak, column type=l},
+  columns/n/.style={column name=$n$, int detect},
+  columns/median_us/.style={column name=Median (ms), preproc/expr={##1/1000}, precision=2},
+  columns/p95_us/.style={column name=P95 (ms), preproc/expr={##1/1000}, precision=2},
+  columns/throughput_mib_s/.style={column name=Throughput (MiB/s), precision=0},
+]{data/benchmark/hash.csv}
+\caption{Waktu SHA-256 atas artefak. Throughput dihitung dari median.}
+\end{table}
+
+\subsubsection*{Sign dan verify atas manifest}
+
+\begin{table}[H]
+\centering
+\pgfplotstabletypeset[bench,
+  columns={algorithm,op,n,median_us,p95_us},
+  columns/algorithm/.style={string type, column name=Profil, column type=l},
+  columns/op/.style={string type, column name=Operasi, column type=l},
+  columns/n/.style={column name=$n$, int detect},
+  columns/median_us/.style={column name=Median ($\mu$s)},
+  columns/p95_us/.style={column name=P95 ($\mu$s)},
+]{data/benchmark/sign_verify.csv}
+\caption{Waktu operasi kriptografi atas byte manifest $M$.}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  ybar, bar width=14pt, width=0.8\textwidth, height=6cm,
+  ymode=log, log origin=infty,
+  ylabel={Median ($\mu$s, skala log)},
+  symbolic x coords={rsa-pss-sha256,ecdsa-p256-sha256,ed25519},
+  xtick=data, enlarge x limits=0.25,
+  legend style={at={(0.5,-0.18)}, anchor=north, legend columns=-1},
+]
+\addplot table[x=algorithm, y=median_us, col sep=comma, only op=sign]
+  {data/benchmark/sign_verify.csv};
+\addplot table[x=algorithm, y=median_us, col sep=comma, only op=verify]
+  {data/benchmark/sign_verify.csv};
+\legend{sign, verify}
+\end{axis}
+\end{tikzpicture}
+\caption{Median sign dan verify atas manifest per profil.}
+\end{figure}
+
+\subsubsection*{End-to-end}
+
+\begin{table}[H]
+\centering
+\small
+\pgfplotstabletypeset[bench,
+  columns={algorithm,op,size_label,median_us,p95_us},
+  columns/algorithm/.style={string type, column name=Profil, column type=l},
+  columns/op/.style={string type, column name=Perintah, column type=l},
+  columns/size_label/.style={string type, column name=Artefak, column type=l},
+  columns/median_us/.style={column name=Median (ms), preproc/expr={##1/1000}, precision=0},
+  columns/p95_us/.style={column name=P95 (ms), preproc/expr={##1/1000}, precision=0},
+]{data/benchmark/e2e.csv}
+\caption{Waktu end-to-end per perintah sebagai proses baru. Baris \texttt{boot} adalah
+\texttt{nadina -version}.}
+\end{table}
+
+\subsubsection*{Ukuran}
+
+\begin{table}[H]
+\centering
+\pgfplotstabletypeset[bench,
+  columns={algorithm,private_der,public_der,signature,manifest,bundle},
+  columns/algorithm/.style={string type, column name=Profil, column type=l},
+  columns/private_der/.style={column name=Privat DER, int detect},
+  columns/public_der/.style={column name=Publik DER, int detect},
+  columns/signature/.style={column name=Tanda tangan, int detect},
+  columns/manifest/.style={column name=Manifest, int detect},
+  columns/bundle/.style={column name=Bundle, int detect},
+]{data/benchmark/sizes.csv}
+\caption{Ukuran dalam byte. Kunci privat dalam PKCS\#8 dan kunci publik dalam SPKI, keduanya
+DER tanpa enkripsi. Tanda tangan diukur sebelum Base64.}
+\end{table}
+
+\subsubsection*{Analisis}
+% TODO: isi setelah benchmark penuh (runs=30) selesai.
+
+\fussy

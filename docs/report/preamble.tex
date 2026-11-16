@@ -14,6 +14,19 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\pgfplotsset{compat=1.18}
+% Hanya baris dengan kolom op bernilai #1 yang diplot.
+\pgfplotsset{
+  only op/.style={
+    y filter/.append code={%
+      \edef\tempa{\thisrow{op}}%
+      \edef\tempb{##1}%
+      \ifx\tempa\tempb\else\def\pgfmathresult{}\fi%
+    }
+  }
+}
 \usepackage{setspace}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
