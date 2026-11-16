@@ -1,5 +1,9 @@
 # Kunci privat: jangan pernah di-commit
 *.key.pem
+*.key
+*.pem
+!ci/keys/*.pub.pem
+signing*
 
 # Elixir/Erlang
 /_build/

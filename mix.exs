@@ -7,6 +7,7 @@ defmodule Nadina.MixProject do
       version: "0.1.0",
       elixir: "~> 1.20",
       start_permanent: Mix.env() == :prod,
+      elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
       releases: releases(),
       name: "Nadina",
@@ -19,6 +20,9 @@ defmodule Nadina.MixProject do
   def application do
     [extra_applications: [:logger, :crypto, :public_key]]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Release OTP untuk image container. Entry point CLI dipanggil lewat
   # bin/nadina eval, argumen diteruskan ke System.argv/0.

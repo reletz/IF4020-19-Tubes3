@@ -17,7 +17,7 @@ defmodule Nadina.CLI do
 
   Perintah
     keygen        -algorithm <profil> -out <prefix> [-force]
-    sign          -file <path> -package <nama> -version <versi> -key <private.pem> -out <bundle.json>
+    sign          -file <path> -package <nama> -version <versi> -key <private.pem> -out <bundle.json> [-force]
     verify        -file <path> -bundle <bundle.json> -trust-store <trust.json>
                   -package <nama> -version <versi> [-json]
     trust add     -key <public.pem> -package <nama> -store <trust.json>
@@ -59,12 +59,13 @@ defmodule Nadina.CLI do
   """
   @spec run([String.t()]) :: {0 | 1 | 2, String.t(), String.t()}
   def run(argv) do
-    case normalize(argv) do
-      [flag] when flag in ["--version"] -> {0, Nadina.version() <> "\n", ""}
-      [flag] when flag in ["--help", "-h"] -> {0, @usage, ""}
-      [] -> {2, "", "Perintah tidak diberikan.\n\n" <> @usage}
-      ["--help" | _] -> {0, @usage, ""}
-      [cmd | rest] -> dispatch(cmd, rest)
+    args = normalize(argv)
+
+    cond do
+      args == ["--version"] -> {0, Nadina.version() <> "\n", ""}
+      Enum.any?(args, &(&1 in ["--help", "-h"])) -> {0, @usage, ""}
+      args == [] -> {2, "", "Perintah tidak diberikan.\n\n" <> @usage}
+      true -> dispatch(hd(args), tl(args))
     end
   end
 
@@ -148,7 +149,15 @@ defmodule Nadina.CLI do
   # ---- sign
 
   defp sign(args) do
-    strict = [file: :string, package: :string, version: :string, key: :string, out: :string]
+    strict = [
+      file: :string,
+      package: :string,
+      version: :string,
+      key: :string,
+      out: :string,
+      force: :boolean
+    ]
+
     with_opts(args, strict, [:file, :package, :version, :key, :out], &do_sign/1)
   end
 
@@ -221,7 +230,10 @@ defmodule Nadina.CLI do
   defp trust("list", args), do: with_opts(args, [store: :string], [:store], &trust_list/1)
 
   defp trust("remove", args) do
-    with_opts(args, [keyid: :string, store: :string], [:keyid, :store], &trust_remove/1)
+    case parse(args, keyid: :string, store: :string) do
+      {:ok, opts} -> trust_remove(opts)
+      {:error, message} -> usage_error(message)
+    end
   end
 
   defp trust_add(opts) do
@@ -250,10 +262,38 @@ defmodule Nadina.CLI do
   end
 
   defp trust_remove(opts) do
-    with {:ok, entries} <- Trust.load(opts[:store]) |> map_error(),
-         {:ok, entries} <- Trust.remove(entries, opts[:keyid]) |> map_error(),
-         :ok <- Trust.save(opts[:store], entries) |> map_error() do
-      {0, "Dihapus: #{opts[:keyid]}\n", ""}
+    store = opts[:store]
+    keyids = keyids(opts)
+
+    cond do
+      not is_binary(store) or store == "" ->
+        usage_error("Opsi wajib tidak diberikan: --store.")
+
+      keyids == [] ->
+        usage_error("Opsi wajib tidak diberikan: --keyid.")
+
+      not Enum.all?(keyids, &Regex.match?(~r/\A[0-9a-f]{64}\z/, &1)) ->
+        usage_error("keyid harus 64 karakter heksadesimal huruf kecil.")
+
+      true ->
+        remove_keyids(store, keyids)
+    end
+  end
+
+  defp keyids(opts) do
+    opts
+    |> Keyword.get_values(:keyid)
+    |> Enum.flat_map(&String.split(&1, ","))
+    |> Enum.map(&String.trim/1)
+    |> Enum.reject(&(&1 == ""))
+    |> Enum.uniq()
+  end
+
+  defp remove_keyids(store, keyids) do
+    with {:ok, entries} <- Trust.load(store) |> map_error(),
+         {:ok, entries} <- Trust.remove(entries, keyids) |> map_error(),
+         :ok <- Trust.save(store, entries) |> map_error() do
+      {0, "Dihapus: #{Enum.join(keyids, ", ")}\n", ""}
     else
       {:error, message} -> fail(message)
     end

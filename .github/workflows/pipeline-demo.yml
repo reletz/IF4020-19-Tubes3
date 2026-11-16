@@ -1,1 +1,464 @@
-# TODO: workflow pemakai (sign, verify, deploy simulasi, C01-C05)
+name: pipeline-demo
+
+on:
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: Skenario yang dijalankan
+        type: choice
+        options:
+          - all
+          - c01
+          - c02
+          - c03
+          - c04
+          - c05
+        default: all
+      version:
+        description: Versi artefak Anmategra
+        type: string
+        default: "1.0.0"
+      image:
+        description: Referensi image (kosong berarti vars.NADINA_DIGEST)
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pipeline-demo-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  IMAGE: ${{ inputs.image || vars.NADINA_DIGEST }}
+  VERSION: ${{ inputs.version }}
+
+jobs:
+  c01:
+    if: ${{ inputs.scenario == 'all' || inputs.scenario == 'c01' }}
+    runs-on: ubuntu-latest
+    environment: nadina-demo
+    strategy:
+      fail-fast: false
+      matrix:
+        algorithm:
+          - rsa-pss-sha256
+          - ecdsa-p256-sha256
+          - ed25519
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Validasi image
+        run: |
+          case "$IMAGE" in
+            *@sha256:*) ;;
+            *) echo "IMAGE harus memakai digest @sha256:"; exit 1 ;;
+          esac
+      - name: Tarik image
+        run: docker pull "$IMAGE"
+      - name: Bangun artefak
+        run: |
+          set -eu
+          mkdir -p dist out
+          git archive --format=zip --prefix=anmategra/ -o "dist/anmategra-$VERSION.zip" "HEAD:ci/fixtures/anmategra"
+          sha256sum "dist/anmategra-$VERSION.zip" > out/artifact.sha256
+      - name: Tandatangani
+        env:
+          KEY_RSA: ${{ secrets.NADINA_DEMO_KEY_RSA_PSS }}
+          KEY_ECDSA: ${{ secrets.NADINA_DEMO_KEY_ECDSA_P256 }}
+          KEY_ED25519: ${{ secrets.NADINA_DEMO_KEY_ED25519 }}
+        run: |
+          set -eu
+          case "${{ matrix.algorithm }}" in
+            rsa-pss-sha256) key="$KEY_RSA" ;;
+            ecdsa-p256-sha256) key="$KEY_ECDSA" ;;
+            ed25519) key="$KEY_ED25519" ;;
+          esac
+          test -n "$key"
+          umask 077
+          key_file="$RUNNER_TEMP/signing.key.pem"
+          trap 'rm -f "$key_file"' EXIT
+          printf '%s\n' "$key" > "$key_file"
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            -v "$PWD/dist:/input:ro" \
+            -v "$PWD/out:/output" \
+            -v "$key_file:/run/signing.key.pem:ro" \
+            "$IMAGE" sign \
+            --file "/input/anmategra-$VERSION.zip" \
+            --package anmategra \
+            --version "$VERSION" \
+            --key /run/signing.key.pem \
+            --out /output/release.json
+      - name: Verifikasi
+        run: |
+          set +e
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            -v "$PWD/dist:/input:ro" \
+            -v "$PWD/out:/output:ro" \
+            -v "$PWD/ci/trust.json:/trust.json:ro" \
+            "$IMAGE" verify \
+            --file "/input/anmategra-$VERSION.zip" \
+            --bundle /output/release.json \
+            --trust-store /trust.json \
+            --package anmategra \
+            --version "$VERSION" \
+            --json > out/verification.json
+          code=$?
+          set -e
+          test "$code" -eq 0
+          grep -q '"valid":true' out/verification.json
+          grep -q '"status":"OK"' out/verification.json
+      - name: Penanda deploy
+        run: |
+          set -eu
+          printf 'anmategra %s %s\n' "$VERSION" "${{ matrix.algorithm }}" > out/deployed.txt
+      - name: Catat identitas
+        if: always()
+        run: |
+          mkdir -p out
+          printf '%s\n' "$IMAGE" > out/image.txt
+          printf '%s\n' "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > out/run-url.txt
+          {
+            echo "### C01 ${{ matrix.algorithm }}"
+            echo "- image: $IMAGE"
+            if [ -f out/verification.json ]; then cat out/verification.json; fi
+            if [ -f out/deployed.txt ]; then echo "- marker: ada"; else echo "- marker: tidak ada"; fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: c01-${{ matrix.algorithm }}
+          path: out/
+          if-no-files-found: error
+
+  c02:
+    if: ${{ inputs.scenario == 'all' || inputs.scenario == 'c02' }}
+    runs-on: ubuntu-latest
+    environment: nadina-demo
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Validasi image
+        run: |
+          case "$IMAGE" in
+            *@sha256:*) ;;
+            *) echo "IMAGE harus memakai digest @sha256:"; exit 1 ;;
+          esac
+      - name: Tarik image
+        run: docker pull "$IMAGE"
+      - name: Bangun artefak
+        run: |
+          set -eu
+          mkdir -p dist out
+          git archive --format=zip --prefix=anmategra/ -o "dist/anmategra-$VERSION.zip" "HEAD:ci/fixtures/anmategra"
+          sha256sum "dist/anmategra-$VERSION.zip" > out/artifact.sha256
+      - name: Tandatangani
+        env:
+          KEY_ECDSA: ${{ secrets.NADINA_DEMO_KEY_ECDSA_P256 }}
+        run: |
+          set -eu
+          test -n "$KEY_ECDSA"
+          umask 077
+          key_file="$RUNNER_TEMP/signing.key.pem"
+          trap 'rm -f "$key_file"' EXIT
+          printf '%s\n' "$KEY_ECDSA" > "$key_file"
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            -v "$PWD/dist:/input:ro" \
+            -v "$PWD/out:/output" \
+            -v "$key_file:/run/signing.key.pem:ro" \
+            "$IMAGE" sign \
+            --file "/input/anmategra-$VERSION.zip" \
+            --package anmategra \
+            --version "$VERSION" \
+            --key /run/signing.key.pem \
+            --out /output/release.json
+      - name: Ubah satu byte artefak
+        run: |
+          python3 - "$VERSION" <<'PY'
+          import sys
+          from pathlib import Path
+
+          path = Path("dist") / f"anmategra-{sys.argv[1]}.zip"
+          data = bytearray(path.read_bytes())
+          data[len(data) // 2] ^= 1
+          path.write_bytes(data)
+          PY
+          sha256sum "dist/anmategra-$VERSION.zip" > out/tampered.sha256
+      - name: Verifikasi harus ditolak
+        run: |
+          set +e
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            -v "$PWD/dist:/input:ro" \
+            -v "$PWD/out:/output:ro" \
+            -v "$PWD/ci/trust.json:/trust.json:ro" \
+            "$IMAGE" verify \
+            --file "/input/anmategra-$VERSION.zip" \
+            --bundle /output/release.json \
+            --trust-store /trust.json \
+            --package anmategra \
+            --version "$VERSION" \
+            --json > out/verification.json
+          code=$?
+          set -e
+          test "$code" -eq 1
+          grep -q '"status":"ARTIFACT_MISMATCH"' out/verification.json
+          test ! -f out/deployed.txt
+          printf 'tidak ada\n' > out/marker-status.txt
+      - name: Catat identitas
+        if: always()
+        run: |
+          mkdir -p out
+          printf '%s\n' "$IMAGE" > out/image.txt
+          printf '%s\n' "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > out/run-url.txt
+          {
+            echo "### C02"
+            echo "- image: $IMAGE"
+            if [ -f out/verification.json ]; then cat out/verification.json; fi
+            echo "- marker: tidak ada"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: c02
+          path: out/
+          if-no-files-found: error
+
+  c03:
+    if: ${{ inputs.scenario == 'all' || inputs.scenario == 'c03' }}
+    runs-on: ubuntu-latest
+    environment: nadina-demo
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Validasi image
+        run: |
+          case "$IMAGE" in
+            *@sha256:*) ;;
+            *) echo "IMAGE harus memakai digest @sha256:"; exit 1 ;;
+          esac
+      - name: Tarik image
+        run: docker pull "$IMAGE"
+      - name: Bangun artefak
+        run: |
+          set -eu
+          mkdir -p dist out
+          git archive --format=zip --prefix=anmategra/ -o "dist/anmategra-$VERSION.zip" "HEAD:ci/fixtures/anmategra"
+      - name: Tandatangani
+        env:
+          KEY_ECDSA: ${{ secrets.NADINA_DEMO_KEY_ECDSA_P256 }}
+        run: |
+          set -eu
+          test -n "$KEY_ECDSA"
+          umask 077
+          key_file="$RUNNER_TEMP/signing.key.pem"
+          trap 'rm -f "$key_file"' EXIT
+          printf '%s\n' "$KEY_ECDSA" > "$key_file"
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            -v "$PWD/dist:/input:ro" \
+            -v "$PWD/out:/output" \
+            -v "$key_file:/run/signing.key.pem:ro" \
+            "$IMAGE" sign \
+            --file "/input/anmategra-$VERSION.zip" \
+            --package anmategra \
+            --version "$VERSION" \
+            --key /run/signing.key.pem \
+            --out /output/release.json
+      - name: Verifikasi dengan trust store kosong
+        run: |
+          set +e
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            -v "$PWD/dist:/input:ro" \
+            -v "$PWD/out:/output:ro" \
+            -v "$PWD/ci/trust-empty.json:/trust.json:ro" \
+            "$IMAGE" verify \
+            --file "/input/anmategra-$VERSION.zip" \
+            --bundle /output/release.json \
+            --trust-store /trust.json \
+            --package anmategra \
+            --version "$VERSION" \
+            --json > out/verification.json
+          code=$?
+          set -e
+          test "$code" -eq 1
+          grep -q '"status":"KEY_NOT_TRUSTED"' out/verification.json
+          test ! -f out/deployed.txt
+          printf 'tidak ada\n' > out/marker-status.txt
+      - name: Catat identitas
+        if: always()
+        run: |
+          mkdir -p out
+          printf '%s\n' "$IMAGE" > out/image.txt
+          printf '%s\n' "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > out/run-url.txt
+          {
+            echo "### C03"
+            echo "- image: $IMAGE"
+            if [ -f out/verification.json ]; then cat out/verification.json; fi
+            echo "- marker: tidak ada"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: c03
+          path: out/
+          if-no-files-found: error
+
+  c04:
+    if: ${{ inputs.scenario == 'all' || inputs.scenario == 'c04' }}
+    runs-on: ubuntu-latest
+    environment: nadina-demo
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Validasi image
+        run: |
+          case "$IMAGE" in
+            *@sha256:*) ;;
+            *) echo "IMAGE harus memakai digest @sha256:"; exit 1 ;;
+          esac
+      - name: Tarik image
+        run: docker pull "$IMAGE"
+      - name: Bangun artefak
+        run: |
+          set -eu
+          mkdir -p dist out
+          git archive --format=zip --prefix=anmategra/ -o "dist/anmategra-$VERSION.zip" "HEAD:ci/fixtures/anmategra"
+      - name: Tandatangani
+        env:
+          KEY_ECDSA: ${{ secrets.NADINA_DEMO_KEY_ECDSA_P256 }}
+        run: |
+          set -eu
+          test -n "$KEY_ECDSA"
+          umask 077
+          key_file="$RUNNER_TEMP/signing.key.pem"
+          trap 'rm -f "$key_file"' EXIT
+          printf '%s\n' "$KEY_ECDSA" > "$key_file"
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            -v "$PWD/dist:/input:ro" \
+            -v "$PWD/out:/output" \
+            -v "$key_file:/run/signing.key.pem:ro" \
+            "$IMAGE" sign \
+            --file "/input/anmategra-$VERSION.zip" \
+            --package anmategra \
+            --version "$VERSION" \
+            --key /run/signing.key.pem \
+            --out /output/release.json
+      - name: Verifikasi dengan artefak tidak tersedia
+        run: |
+          set +e
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            -v "$PWD/dist:/input:ro" \
+            -v "$PWD/out:/output:ro" \
+            -v "$PWD/ci/trust.json:/trust.json:ro" \
+            "$IMAGE" verify \
+            --file "/input/tidak-ada.zip" \
+            --bundle /output/release.json \
+            --trust-store /trust.json \
+            --package anmategra \
+            --version "$VERSION" \
+            --json > out/verification.json
+          code=$?
+          set -e
+          test "$code" -eq 2
+          grep -q '"status":"INPUT_ERROR"' out/verification.json
+          test ! -f out/deployed.txt
+          printf 'tidak ada\n' > out/marker-status.txt
+      - name: Catat identitas
+        if: always()
+        run: |
+          mkdir -p out
+          printf '%s\n' "$IMAGE" > out/image.txt
+          printf '%s\n' "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > out/run-url.txt
+          {
+            echo "### C04"
+            echo "- image: $IMAGE"
+            if [ -f out/verification.json ]; then cat out/verification.json; fi
+            echo "- marker: tidak ada"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: c04
+          path: out/
+          if-no-files-found: error
+
+  c05:
+    if: ${{ inputs.scenario == 'all' || inputs.scenario == 'c05' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Validasi image
+        run: |
+          case "$IMAGE" in
+            *@sha256:*) ;;
+            *) echo "IMAGE harus memakai digest @sha256:"; exit 1 ;;
+          esac
+      - name: Tarik image
+        run: docker pull "$IMAGE"
+      - name: Bangun artefak
+        run: |
+          set -eu
+          mkdir -p dist out/c05
+          git archive --format=zip --prefix=anmategra/ -o "dist/anmategra-$VERSION.zip" "HEAD:ci/fixtures/anmategra"
+      - name: Jalankan CLI dengan UID runner tanpa TTY
+        run: |
+          set -eu
+          id -u > out/uid.txt
+          id -g > out/gid.txt
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            "$IMAGE" -version | tee out/version.txt
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            -v "$PWD/out:/output" \
+            "$IMAGE" keygen -algorithm ed25519 -out /output/c05/key
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            -v "$PWD/out:/output" \
+            "$IMAGE" trust add \
+            -key /output/c05/key.pub.pem \
+            -package anmategra \
+            -store /output/c05/trust.json
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            -v "$PWD/dist:/input:ro" \
+            -v "$PWD/out:/output" \
+            "$IMAGE" sign \
+            --file "/input/anmategra-$VERSION.zip" \
+            --package anmategra \
+            --version "$VERSION" \
+            --key /output/c05/key.key.pem \
+            --out /output/c05/release.json
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            -v "$PWD/dist:/input:ro" \
+            -v "$PWD/out:/output:ro" \
+            "$IMAGE" verify \
+            --file "/input/anmategra-$VERSION.zip" \
+            --bundle /output/c05/release.json \
+            --trust-store /output/c05/trust.json \
+            --package anmategra \
+            --version "$VERSION" \
+            --json > out/verification.json
+          grep -q '"valid":true' out/verification.json
+          grep -q '"status":"OK"' out/verification.json
+      - name: Catat identitas
+        if: always()
+        run: |
+          mkdir -p out
+          printf '%s\n' "$IMAGE" > out/image.txt
+          printf '%s\n' "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > out/run-url.txt
+          {
+            echo "### C05"
+            echo "- image: $IMAGE"
+            echo "- uid: $(id -u)"
+            echo "- gid: $(id -g)"
+            if [ -f out/verification.json ]; then cat out/verification.json; fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: c05
+          path: out/
+          if-no-files-found: error

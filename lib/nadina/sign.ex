@@ -27,8 +27,10 @@ defmodule Nadina.Sign do
   def run(opts) do
     file = Keyword.fetch!(opts, :file)
     out = Keyword.fetch!(opts, :out)
+    force? = Keyword.get(opts, :force, false)
 
-    with {:ok, size, sha256} <- Artifact.digest(file),
+    with :ok <- ensure_output_available(out, force?),
+         {:ok, size, sha256} <- Artifact.digest(file),
          {:ok, mod, priv, pub} <- Keys.load_private_file(Keyword.fetch!(opts, :key)),
          keyid = Keys.fingerprint(pub),
          {:ok, manifest} <-
@@ -47,6 +49,14 @@ defmodule Nadina.Sign do
          :ok <- write_atomic(out, bundle) do
       {:ok, %{bundle: out, keyid: keyid, algorithm: mod.name()}}
     end
+  end
+
+  defp ensure_output_available(path, true) do
+    if File.dir?(path), do: {:error, {:io, :eisdir}}, else: :ok
+  end
+
+  defp ensure_output_available(path, false) do
+    if File.exists?(path), do: {:error, :exists}, else: :ok
   end
 
   # Bundle ditulis ke berkas sementara pada direktori yang sama lalu di-rename.

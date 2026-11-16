@@ -2,7 +2,11 @@
 _build
 deps
 *.key.pem
+*.key
+*.pem
+signing*
 out
+dist
 docs
 .env
 .env.*
