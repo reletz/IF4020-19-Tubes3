@@ -1,0 +1,7 @@
+algorithm,op,n,median_us,p95_us
+rsa-pss-sha256,sign,3,2841.4,2886.6
+rsa-pss-sha256,verify,3,97.4,105.3
+ecdsa-p256-sha256,sign,3,51.1,56.0
+ecdsa-p256-sha256,verify,3,111.1,112.4
+ed25519,sign,3,111.8,112.4
+ed25519,verify,3,129.2,138.3

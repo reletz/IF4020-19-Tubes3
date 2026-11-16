@@ -1,0 +1,4 @@
+algorithm,private_der,public_der,signature,manifest,bundle
+rsa-pss-sha256,1793,422,384,310,997
+ecdsa-p256-sha256,138,91,64,313,577
+ed25519,48,44,64,303,561

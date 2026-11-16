@@ -1,0 +1,4 @@
+algorithm,n,median_us,min_us,max_us
+rsa-pss-sha256,1,187428.8,187428.8,187428.8
+ecdsa-p256-sha256,1,37.8,37.8,37.8
+ed25519,1,45.9,45.9,45.9
