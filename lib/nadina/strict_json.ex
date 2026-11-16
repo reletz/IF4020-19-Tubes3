@@ -129,19 +129,26 @@ defmodule Nadina.StrictJSON do
 
   defp parse_value(input, pos, depth) do
     {rest, pos} = skip_ws(input, pos)
-
-    case rest do
-      <<>> -> fail({:unexpected_end, pos})
-      <<?{, rest::binary>> -> parse_object(rest, pos, enter(depth, pos))
-      <<?[, rest::binary>> -> parse_array(rest, pos, enter(depth, pos))
-      <<?", rest::binary>> -> parse_string(rest, pos + 1, [])
-      <<"true", rest::binary>> -> {true, rest, pos + 4}
-      <<"false", rest::binary>> -> {false, rest, pos + 5}
-      <<"null", _::binary>> -> fail({:null_not_allowed, pos})
-      <<c, _::binary>> when c == ?- or c in ?0..?9 -> parse_number(rest, pos)
-      _ -> fail({:unexpected_byte, pos})
-    end
+    parse_value_at(rest, pos, depth)
   end
+
+  defp parse_value_at(<<>>, pos, _depth), do: fail({:unexpected_end, pos})
+
+  defp parse_value_at(<<?{, rest::binary>>, pos, depth),
+    do: parse_object(rest, pos, enter(depth, pos))
+
+  defp parse_value_at(<<?[, rest::binary>>, pos, depth),
+    do: parse_array(rest, pos, enter(depth, pos))
+
+  defp parse_value_at(<<?", rest::binary>>, pos, _depth), do: parse_string(rest, pos + 1, [])
+  defp parse_value_at(<<"true", rest::binary>>, pos, _depth), do: {true, rest, pos + 4}
+  defp parse_value_at(<<"false", rest::binary>>, pos, _depth), do: {false, rest, pos + 5}
+  defp parse_value_at(<<"null", _::binary>>, pos, _depth), do: fail({:null_not_allowed, pos})
+
+  defp parse_value_at(<<c, _::binary>> = rest, pos, _depth) when c == ?- or c in ?0..?9,
+    do: parse_number(rest, pos)
+
+  defp parse_value_at(_, pos, _depth), do: fail({:unexpected_byte, pos})
 
   defp enter(depth, pos) when depth >= @max_depth, do: fail({:too_deep, pos})
   defp enter(depth, _pos), do: depth + 1
@@ -215,23 +222,22 @@ defmodule Nadina.StrictJSON do
       end
 
     {digits, rest} = take_digits(digits_input, [])
-    len = byte_size(digits)
+    check_digits(digits, sign, start)
+    check_no_fraction(rest, start)
 
-    cond do
-      len == 0 -> fail({:invalid_number, start})
-      len > 1 and binary_part(digits, 0, 1) == "0" -> fail({:invalid_number, start})
-      sign == -1 and digits == "0" -> fail({:invalid_number, start})
-      true -> :ok
-    end
-
-    case rest do
-      <<c, _::binary>> when c in [?., ?e, ?E] -> fail({:non_integer_number, start})
-      _ -> :ok
-    end
-
-    consumed = len + if(sign == -1, do: 1, else: 0)
+    consumed = byte_size(digits) + if(sign == -1, do: 1, else: 0)
     {sign * String.to_integer(digits), rest, start + consumed}
   end
+
+  defp check_digits("", _sign, start), do: fail({:invalid_number, start})
+  defp check_digits("0", -1, start), do: fail({:invalid_number, start})
+  defp check_digits(<<?0, _, _::binary>>, _sign, start), do: fail({:invalid_number, start})
+  defp check_digits(_digits, _sign, _start), do: :ok
+
+  defp check_no_fraction(<<c, _::binary>>, start) when c in [?., ?e, ?E],
+    do: fail({:non_integer_number, start})
+
+  defp check_no_fraction(_rest, _start), do: :ok
 
   defp take_digits(<<c, rest::binary>>, acc) when c in ?0..?9, do: take_digits(rest, [c | acc])
   defp take_digits(rest, acc), do: {acc |> Enum.reverse() |> IO.iodata_to_binary(), rest}
@@ -265,30 +271,23 @@ defmodule Nadina.StrictJSON do
 
   defp parse_escape(<<?u, rest::binary>>, pos) do
     {cp, rest} = hex4(rest, pos)
-
-    cond do
-      cp in 0xD800..0xDBFF ->
-        case rest do
-          <<?\\, ?u, low_rest::binary>> ->
-            {low, rest} = hex4(low_rest, pos)
-            if low not in 0xDC00..0xDFFF, do: fail({:invalid_surrogate, pos})
-            combined = 0x10000 + Bitwise.bsl(cp - 0xD800, 10) + (low - 0xDC00)
-            {<<combined::utf8>>, rest, 12}
-
-          _ ->
-            fail({:invalid_surrogate, pos})
-        end
-
-      cp in 0xDC00..0xDFFF ->
-        fail({:invalid_surrogate, pos})
-
-      true ->
-        {<<cp::utf8>>, rest, 6}
-    end
+    unicode_escape(cp, rest, pos)
   end
 
   defp parse_escape(<<>>, pos), do: fail({:unexpected_end, pos + 1})
   defp parse_escape(_, pos), do: fail({:invalid_escape, pos})
+
+  defp unicode_escape(cp, <<?\\, ?u, low_rest::binary>>, pos) when cp in 0xD800..0xDBFF do
+    {low, rest} = hex4(low_rest, pos)
+    if low not in 0xDC00..0xDFFF, do: fail({:invalid_surrogate, pos})
+    combined = 0x10000 + Bitwise.bsl(cp - 0xD800, 10) + (low - 0xDC00)
+    {<<combined::utf8>>, rest, 12}
+  end
+
+  defp unicode_escape(cp, _rest, pos) when cp in 0xD800..0xDFFF,
+    do: fail({:invalid_surrogate, pos})
+
+  defp unicode_escape(cp, rest, _pos), do: {<<cp::utf8>>, rest, 6}
 
   defp hex4(<<a, b, c, d, rest::binary>>, pos) do
     {Enum.reduce([a, b, c, d], 0, &(&2 * 16 + hex_digit(&1, pos))), rest}
