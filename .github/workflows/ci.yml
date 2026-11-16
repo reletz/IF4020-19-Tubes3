@@ -37,6 +37,8 @@ jobs:
         run: mix deps.get --check-locked
       - name: Audit dependensi (retired atau advisory)
         run: mix hex.audit
+      - name: Kompilasi (warning dianggap galat)
+        run: mix compile --warnings-as-errors
       - name: Format
         run: mix format --check-formatted
       - name: Credo
