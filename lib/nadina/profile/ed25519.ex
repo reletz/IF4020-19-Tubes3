@@ -41,9 +41,20 @@ defmodule Nadina.Profile.Ed25519 do
   end
 
   @impl true
-  def public_from_private({:ECPrivateKey, _, _, params, point, _}) do
+  def public_from_private({:ECPrivateKey, _, _, _, _, _} = priv) do
+    {:ECPrivateKey, _, _, params, point, _} = complete(priv)
     {{:ECPoint, point}, params}
   end
+
+  # PKCS8 Ed25519 (RFC 8410) hanya memuat seed 32 byte, sehingga titik publik kosong
+  # setelah decode. Titik publik diturunkan dari seed.
+  defp complete({:ECPrivateKey, ver, <<_::binary-size(32)>> = seed, params, point, attrs})
+       when not is_binary(point) do
+    {derived, _seed} = :crypto.generate_key(:eddsa, :ed25519, seed)
+    {:ECPrivateKey, ver, seed, params, derived, attrs}
+  end
+
+  defp complete(priv), do: priv
 
   @doc """
   Memeriksa tipe dan parameter kunci. Kunci harus EC pada kurva Ed25519 dengan titik
@@ -55,7 +66,8 @@ defmodule Nadina.Profile.Ed25519 do
       {:error, :wrong_key_type}
   """
   @impl true
-  def check_key({:ECPrivateKey, _, priv, params, point, _}) when is_binary(priv) do
+  def check_key({:ECPrivateKey, _, <<_::binary-size(32)>>, params, _, _} = priv) do
+    {:ECPrivateKey, _, _, _, point, _} = complete(priv)
     with :ok <- check_params(params), do: check_point(point)
   end
 
@@ -85,7 +97,7 @@ defmodule Nadina.Profile.Ed25519 do
   @impl true
   @spec sign(Nadina.Profile.private_key(), binary()) :: binary()
   def sign(priv, message) when is_binary(message) do
-    :public_key.sign(message, :none, priv)
+    :public_key.sign(message, :none, complete(priv))
   end
 
   @doc """

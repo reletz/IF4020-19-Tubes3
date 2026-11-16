@@ -74,4 +74,12 @@ defmodule Nadina.Profile.Ed25519Test do
     assert Ed25519.check_key(p256) == {:error, :wrong_parameters}
     assert Ed25519.check_key(:sampah) == {:error, :wrong_key_type}
   end
+
+  test "kunci privat hasil decode PKCS8 (tanpa titik publik) tetap dapat dipakai" do
+    {priv, pub} = Ed25519.generate_key()
+    pem = Nadina.Keys.encode_private_pem(priv)
+    assert {:ok, Ed25519, decoded, ^pub} = Nadina.Keys.decode_private_pem(pem)
+    assert Ed25519.sign(decoded, "m") == Ed25519.sign(priv, "m")
+    assert Ed25519.verify(pub, "m", Ed25519.sign(decoded, "m"))
+  end
 end
