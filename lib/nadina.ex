@@ -8,11 +8,11 @@ defmodule Nadina do
 
   Modul utama
 
-  - `Nadina.CLI` antarmuka baris perintah
-  - `Nadina.Keys` kunci, PEM, fingerprint
-  - `Nadina.Profile` kontrak profil algoritma
-  - `Nadina.Manifest` dan `Nadina.Bundle` format data
-  - `Nadina.Sign`, `Nadina.Verify`, `Nadina.Trust` alur utama
+  - Nadina.CLI antarmuka baris perintah
+  - Nadina.Keys kunci, PEM, fingerprint
+  - Nadina.Profile kontrak profil algoritma
+  - Nadina.Manifest dan Nadina.Bundle format data
+  - Nadina.Sign, Nadina.Verify, Nadina.Trust alur utama
   """
 
   @version Mix.Project.config()[:version]

@@ -31,7 +31,7 @@ defmodule Nadina.CLI do
     -version      tampilkan nomor versi program
   """
 
-  @doc "Titik masuk dari `bin/nadina eval`. Tidak kembali, memanggil halt."
+  @doc "Titik masuk dari bin/nadina eval. Tidak kembali, memanggil halt."
   @spec main([String.t()]) :: no_return()
   def main(argv) do
     {code, stdout, stderr} = run(argv)

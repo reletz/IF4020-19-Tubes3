@@ -7,11 +7,11 @@ defmodule Nadina.Trust do
       {"schema":"minisign-trust/v1","keys":[
         {"keyid":"...","algorithm":"...","public_key_pem":"...","packages":["..."]}]}
 
-  `parse/1` memeriksa struktur, tipe, keunikan keyid, daftar paket (tidak kosong, tanpa
+  parse/1 memeriksa struktur, tipe, keunikan keyid, daftar paket (tidak kosong, tanpa
   duplikat, tanpa wildcard), serta kesesuaian profil dan fingerprint dengan kunci publik.
   Semua kegagalan format menghasilkan error, yang bagi verifier berarti FORMAT_ERROR.
 
-  Trust store hanya berubah lewat `add/3` dan `remove/2`. Tidak ada pembaruan otomatis
+  Trust store hanya berubah lewat add/3 dan remove/2. Tidak ada pembaruan otomatis
   dari bundle. Perubahan ditulis ke berkas sementara di direktori yang sama lalu rename,
   sehingga berkas lama tidak rusak bila penulisan gagal.
   """
@@ -178,8 +178,8 @@ defmodule Nadina.Trust do
   end
 
   @doc """
-  Seperti `load/1`, tetapi berkas yang belum ada dianggap trust store kosong. Dipakai
-  oleh `trust add`, yang membuat trust store bila belum tersedia.
+  Seperti load/1, tetapi berkas yang belum ada dianggap trust store kosong. Dipakai
+  oleh trust add, yang membuat trust store bila belum tersedia.
   """
   @spec load_or_empty(Path.t()) :: {:ok, t()} | {:error, error()}
   def load_or_empty(path) do
