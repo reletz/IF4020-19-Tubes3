@@ -2,6 +2,8 @@ name: ci
 
 # Pull request dan push ke cabang selain main. Untuk main dan tag v*, CI
 # dipanggil dari release.yml (workflow_call) supaya rilis selalu menunggu CI.
+# Trigger pull_request (bukan pull_request_target), jadi PR dari fork berjalan
+# tanpa secret dan tanpa token tulis.
 on:
   pull_request:
   push:
@@ -25,12 +27,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124 # v1.24.1
         with:
           otp-version: "29"
           elixir-version: "1.20"
-      - name: Dependensi
-        run: mix deps.get
+      - name: Dependensi (harus sesuai mix.lock)
+        run: mix deps.get --check-locked
+      - name: Audit dependensi (retired atau advisory)
+        run: mix hex.audit
       - name: Format
         run: mix format --check-formatted
       - name: Credo
@@ -52,6 +58,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Test di dalam Alpine
         run: |
           docker run --rm -v "$PWD:/src:ro" "$ELIXIR_IMAGE" sh -c '
@@ -69,6 +77,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
       - name: Build image uji
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
