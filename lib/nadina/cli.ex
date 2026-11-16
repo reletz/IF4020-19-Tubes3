@@ -10,7 +10,7 @@ defmodule Nadina.CLI do
   sebelum program berhenti.
   """
 
-  alias Nadina.{Keys, Sign, Trust, Verify}
+  alias Nadina.{Keys, SBOM, Sign, Trust, Verify}
 
   @usage """
   Pemakaian: nadina <perintah> [opsi]
@@ -23,6 +23,10 @@ defmodule Nadina.CLI do
     trust add     -key <public.pem> -package <nama> -store <trust.json>
     trust list    -store <trust.json>
     trust remove  -keyid <fingerprint> -store <trust.json>
+    sbom generate -file <artefak> -lock <mix.lock> -out <sbom.json>
+    sbom sign     -sbom <sbom.json> -package <nama> -version <versi> -key <private.pem> -out <sbom-bundle.json>
+    sbom verify   -file <artefak> -bundle <bundle.json> -sbom <sbom.json> -sbom-bundle <sbom-bundle.json>
+                  -trust-store <trust.json> -package <nama> -version <versi> [-json]
 
   Profil: rsa-pss-sha256, ecdsa-p256-sha256, ed25519
 
@@ -82,6 +86,11 @@ defmodule Nadina.CLI do
   defp dispatch("verify", args), do: verify(args)
   defp dispatch("trust", [sub | args]) when sub in ["add", "list", "remove"], do: trust(sub, args)
   defp dispatch("trust", _), do: usage_error("Subperintah trust tidak dikenal atau kosong.")
+
+  defp dispatch("sbom", [sub | args]) when sub in ["generate", "sign", "verify"],
+    do: sbom(sub, args)
+
+  defp dispatch("sbom", _), do: usage_error("Subperintah sbom tidak dikenal atau kosong.")
   defp dispatch(cmd, _), do: usage_error("Perintah tidak dikenal: #{cmd}.")
 
   # ---- parsing opsi
@@ -247,6 +256,87 @@ defmodule Nadina.CLI do
       {0, "Dihapus: #{opts[:keyid]}\n", ""}
     else
       {:error, message} -> fail(message)
+    end
+  end
+
+  # ---- sbom
+
+  defp sbom("generate", args) do
+    strict = [file: :string, lock: :string, out: :string]
+    with_opts(args, strict, [:file, :lock, :out], &sbom_generate/1)
+  end
+
+  defp sbom("sign", args) do
+    strict = [sbom: :string, package: :string, version: :string, key: :string, out: :string]
+    with_opts(args, strict, [:sbom, :package, :version, :key, :out], &sbom_sign/1)
+  end
+
+  defp sbom("verify", args) do
+    strict = [
+      file: :string,
+      bundle: :string,
+      sbom: :string,
+      sbom_bundle: :string,
+      trust_store: :string,
+      package: :string,
+      version: :string,
+      json: :boolean
+    ]
+
+    case parse(args, strict) do
+      {:ok, opts} ->
+        verify_output(opts, SBOM.verify(opts))
+
+      {:error, message} ->
+        verify_usage_error(args, message)
+    end
+  end
+
+  defp sbom_generate(opts) do
+    case SBOM.generate(opts[:file], opts[:lock]) do
+      {:ok, bytes} ->
+        case write_new(opts[:out], bytes <> "\n") do
+          :ok -> {0, "SBOM ditulis ke #{opts[:out]}\n", ""}
+          {:error, reason} -> fail(describe(reason))
+        end
+
+      {:error, reason} ->
+        fail(describe(reason))
+    end
+  end
+
+  defp sbom_sign(opts) do
+    case Sign.run(Keyword.put(opts, :file, opts[:sbom])) do
+      {:ok, %{keyid: keyid, algorithm: algorithm}} ->
+        {0, "Bundle SBOM ditulis ke #{opts[:out]}\nkeyid: #{keyid}\nalgorithm: #{algorithm}\n",
+         ""}
+
+      {:error, reason} ->
+        fail(describe(reason))
+    end
+  end
+
+  # Penulisan SBOM tidak menimpa berkas yang sudah ada.
+  defp write_new(path, bytes) do
+    if File.exists?(path) do
+      {:error, :exists}
+    else
+      tmp = path <> ".tmp-" <> Base.encode16(:crypto.strong_rand_bytes(6), case: :lower)
+
+      result =
+        with :ok <- File.mkdir_p(Path.dirname(path)),
+             :ok <- File.write(tmp, bytes, [:exclusive]) do
+          File.rename(tmp, path)
+        end
+
+      case result do
+        :ok ->
+          :ok
+
+        {:error, posix} ->
+          File.rm(tmp)
+          {:error, {:io, posix}}
+      end
     end
   end
 
