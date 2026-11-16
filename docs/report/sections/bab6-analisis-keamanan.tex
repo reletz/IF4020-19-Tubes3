@@ -1,11 +1,100 @@
 \section{Analisis Keamanan}
 
 \subsection{Langkah Mitigasi}
-% TODO: kebocoran kunci privat, penggunaan ulang nonce ECDSA, kesalahan parameter,
-% kunci publik dari sumber tidak tepercaya.
+
+\paragraph{Kebocoran kunci privat.}
+Berkas kunci privat dibuat dengan izin \texttt{0600} pada berkas sementara di direktori
+yang sama, lalu di-\textit{rename}, sehingga isi kunci tidak pernah terbaca pihak lain dan
+berkas lama tidak rusak bila penulisan gagal. Berkas tidak ditimpa tanpa opsi
+\texttt{force} yang eksplisit. Modul kunci tidak mencatat isi kunci pada log. Pada
+container, \texttt{.dockerignore} menolak \texttt{*.key.pem} sehingga kunci tidak masuk
+ke layer, dan kunci diberikan saat eksekusi lewat berkas sementara yang di-mount
+\textit{read-only}.
+
+\paragraph{Kesalahan parameter.}
+Setiap kunci divalidasi terhadap profilnya sebelum dipakai: RSA harus bermodulus tepat
+3072 bit dengan $e = 65537$, ECDSA harus pada P-256 dengan titik SEC1 \textit{uncompressed},
+dan Ed25519 mengikuti RFC 8410. Pada RSA-PSS, salt 32 byte dan MGF1-SHA-256 dipaksakan
+saat verifikasi, sehingga tanda tangan PKCS\#1 v1.5 atau PSS dengan salt lain ditolak
+(diuji pada \textit{interop} dengan OpenSSL). SHA-256 diterapkan satu kali oleh pustaka,
+sehingga tidak terjadi \textit{double hashing}. Fungsi \texttt{verify} setiap profil tidak
+pernah melempar galat: panjang atau nilai tidak sah menghasilkan \texttt{false}.
+
+\paragraph{Kunci publik dari sumber tidak tepercaya.}
+Keputusan kepercayaan hanya berasal dari \textit{trust store} yang disiapkan pengguna,
+bukan dari bundle. Fingerprint kunci dihitung dari DER SPKI hasil ekspor ulang, sehingga
+perbedaan \textit{line ending} atau pemenggalan PEM tidak mengubah \texttt{keyid}.
+
+\subsection{Nonce dan Randomness (U14)}
+
+Skenario U14 menandatangani manifest yang identik dua kali dengan kunci yang sama.
+Hasilnya ditentukan oleh sumber randomness tiap algoritma (berkas
+\texttt{test/nonce\_analysis\_test.exs}):
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+Profil & Randomness & Dua tanda tangan atas pesan sama \\
+\midrule
+ECDSA P-256 & nonce $k$ dari CSPRNG & berbeda \\
+RSA-PSS & salt 32 byte dari CSPRNG & berbeda \\
+Ed25519 & nonce dari hash kunci dan pesan (RFC 8032) & identik \\
+\bottomrule
+\end{tabular}
+\caption{Perilaku tanda tangan untuk manifest yang identik.}
+\end{table}
+
+Pada ECDSA, 200 tanda tangan atas manifest yang sama menghasilkan 200 nilai $r$ yang
+berbeda dan seluruhnya lolos verifikasi. Nilai $r$ yang berulang akan menandakan nonce
+dipakai ulang. Pada RSA-PSS, 10 tanda tangan berbeda semuanya sah karena salt acak
+mengubah blok yang ditandatangani. Pada Ed25519, nonce diturunkan secara deterministik
+dari kunci dan pesan, sehingga tanda tangan identik dan tidak bergantung pada kualitas
+generator acak saat menandatangani.
+
+\paragraph{Dampak penggunaan ulang nonce ECDSA.}
+Bila dua pesan $m_1 \neq m_2$ ditandatangani dengan $k$ yang sama, maka $r$ sama dan
+\begin{align*}
+s_i &= k^{-1}(z_i + r d) \bmod n, \quad z_i = \mathrm{SHA256}(m_i),\\
+k &= (z_1 - z_2)(s_1 - s_2)^{-1} \bmod n,\\
+d &= (s_1 k - z_1)\, r^{-1} \bmod n .
+\end{align*}
+Kunci privat $d$ pulih dari dua tanda tangan publik. Peragaan ini dijalankan pada kunci
+uji dalam berkas yang sama dan memulihkan $k$ serta $d$ dengan tepat. Mitigasi pada
+program ini adalah nonce dari CSPRNG OTP untuk setiap tanda tangan, tanpa seed tetap
+(seed tetap hanya untuk \textit{test vector}). Alternatifnya adalah nonce deterministik
+RFC 6979, yang diperbolehkan spesifikasi tetapi tidak dipakai karena pustaka OTP tidak
+menyediakannya.
+
+\subsection{Rantai Pasok (Supply Chain)}
+
+\begin{itemize}
+  \item Seluruh \textit{action} GitHub dikunci per SHA commit, dan citra dasar Docker dikunci per
+        digest.
+  \item Dependensi program hanya pustaka OTP (\texttt{crypto}, \texttt{public\_key}),
+        tanpa pustaka kripto eksternal. Dependensi pengembangan (ExDoc, Credo, Dialyxir)
+        tidak masuk ke \textit{release}. CI memakai \texttt{mix deps.get --check-locked}
+        dan \texttt{mix hex.audit} terhadap \texttt{mix.lock}.
+  \item Izin workflow dibatasi \texttt{contents: read}. \textit{Checkout} memakai
+        \texttt{persist-credentials: false}. CI berjalan pada \texttt{pull\_request}
+        (bukan \texttt{pull\_request\_target}), sehingga PR dari \textit{fork} tidak
+        menerima \textit{secret}. Run lama pada PR dibatalkan lewat \texttt{concurrency}.
+  \item Token Docker Hub hanya ada pada \textit{environment} \texttt{nadina}, dipakai satu
+        langkah \texttt{docker/login-action} pada job rilis setelah CI lulus.
+  \item Image dipindai Trivy dan rilis gagal bila ada temuan HIGH atau CRITICAL.
+        Pengecualian hanya lewat \texttt{.trivyignore} dengan alasan dan tanggal kedaluwarsa.
+  \item Image berjalan sebagai pengguna non-root tanpa distribusi Erlang, dan tetap
+        berfungsi dengan UID acak serta \texttt{--network none}.
+\end{itemize}
 
 \subsection{Rollback Attack}
-% TODO: apakah rancangan mencegahnya; jika tidak, trusted state tambahan yang diperlukan.
+Rancangan saat ini tidak mencegah \textit{rollback attack}. Bundle lama yang sah (tanda
+tangan benar, kunci tepercaya, metadata cocok dengan masukan pengguna) tetap lolos bila
+pengguna menyebut versi lama itu, karena tidak ada informasi tentang versi terbaru yang
+pernah diterima. Pendeteksian membutuhkan \textit{trusted state} tambahan, misalnya
+versi terendah yang diterima per paket yang disimpan di trust store, atau metadata
+bertimestamp dan berkedaluwarsa seperti pada TUF.
 
 \subsection{Keterbatasan}
-% TODO
+% TODO: dilengkapi setelah seluruh fitur selesai (kompromi kunci dicabut lewat trust remove,
+% kunci demo, tidak ada transparency log).
