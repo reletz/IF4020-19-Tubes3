@@ -4,7 +4,63 @@
 % TODO: ExDoc, tautan hasil hosting.
 
 \subsection{Signed SBOM}
-% TODO: format, subcommand tambahan (tabel parameter dan keluaran), pengujian, dan hasilnya.
+
+SBOM dibuat dari \texttt{mix.lock} dan berformat JSON dengan schema \texttt{minisign-sbom/v1}.
+Isinya \textit{subject}, yaitu nama, ukuran, dan SHA-256 artefak rilis yang dirujuk, serta
+daftar \textit{components} yang diurutkan menurut nama. Setiap komponen memuat nama, versi,
+\textit{purl} (\texttt{pkg:hex/<nama>@<versi>}), dan checksum tarball SHA-256 dari
+\texttt{mix.lock}. Pembentukan bersifat deterministik: masukan yang sama selalu menghasilkan
+byte yang sama.
+
+SBOM ditandatangani sebagai artefak terpisah memakai alur penandatanganan yang sama dengan
+rilis, sehingga bundle SBOM memakai format bundle yang sama (Tabel 2.4). Verifikasi
+memeriksa dua bundle dan mencocokkan subject dengan artefak rilis.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}llp{7.5cm}@{}}
+\toprule
+Subcommand & Parameter & Keluaran \\
+\midrule
+\texttt{sbom generate} & \texttt{-file}, \texttt{-lock}, \texttt{-out} &
+SBOM JSON pada \texttt{-out}. Tidak menimpa berkas yang sudah ada. \\
+\texttt{sbom sign} & \texttt{-sbom}, \texttt{-package}, \texttt{-version}, \texttt{-key}, \texttt{-out} &
+Bundle SBOM pada \texttt{-out}. \\
+\texttt{sbom verify} & \texttt{-file}, \texttt{-bundle}, \texttt{-sbom}, \texttt{-sbom-bundle}, \texttt{-trust-store},
+\texttt{-package}, \texttt{-version}, \texttt{-json} (opsional) &
+Hasil verifikasi sesuai Tabel 2.9. Exit code sesuai Tabel 2.10. \\
+\bottomrule
+\end{tabular}
+\caption{Subcommand tambahan untuk SBOM.}
+\end{table}
+
+Verifikasi SBOM berjalan berurutan dan berhenti pada kegagalan pertama. Langkah pertama
+memverifikasi bundle SBOM dengan alur tujuh langkah yang sama. Langkah kedua memverifikasi
+bundle rilis. Langkah ketiga mencocokkan nama, ukuran, dan SHA-256 pada subject dengan
+artefak rilis. Kegagalan langkah ketiga dilaporkan sebagai ARTIFACT\_MISMATCH, dan SBOM yang
+formatnya tidak sesuai dilaporkan sebagai FORMAT\_ERROR.
+
+\paragraph{Pengujian.}
+Pengujian SBOM dijalankan lewat CLI pada berkas \texttt{test/sbom\_test.exs} (14 tes, seluruhnya
+lolos) dan diuji ulang di dalam image dengan UID acak dan \texttt{--network none}.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+Kasus uji & Hasil yang diharapkan & Hasil \\
+\midrule
+SBOM valid dan saling merujuk & OK, exit 0 & OK, exit 0 \\
+Isi SBOM diubah & ARTIFACT\_MISMATCH, exit 1 & ARTIFACT\_MISMATCH, exit 1 \\
+Artefak rilis diganti isinya & ARTIFACT\_MISMATCH, exit 1 & ARTIFACT\_MISMATCH, exit 1 \\
+SBOM milik artefak lain, bundle sah & ARTIFACT\_MISMATCH, exit 1 & ARTIFACT\_MISMATCH, exit 1 \\
+Bundle SBOM dari kunci tak tepercaya & KEY\_NOT\_TRUSTED, exit 1 & KEY\_NOT\_TRUSTED, exit 1 \\
+SBOM rusak namun ditandatangani & FORMAT\_ERROR, exit 1 & FORMAT\_ERROR, exit 1 \\
+Berkas SBOM tidak ada & INPUT\_ERROR, exit 2 & INPUT\_ERROR, exit 2 \\
+\bottomrule
+\end{tabular}
+\caption{Hasil pengujian SBOM.}
+\end{table}
 
 \subsection{Video}
 % TODO: \videourl
