@@ -23,8 +23,9 @@ fi
 docker build -t "$image" .
 
 # Direktori data harus bisa ditulis oleh user image (10001).
+# Tanpa hostname di /etc/hosts, boot BEAM menunggu timeout DNS sekitar 5 detik.
 mkdir -p docs/report/data/benchmark
-docker run --rm --network none \
+docker run --rm --network none --hostname nadina --add-host nadina:127.0.0.1 \
   -v "$mount_src:/work" -w /work \
   -e BENCH_RUNS -e BENCH_WARMUP -e BENCH_KEYGEN \
   -e "BENCH_HOST_OS=$BENCH_HOST_OS" \
