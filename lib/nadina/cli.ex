@@ -23,10 +23,10 @@ defmodule Nadina.CLI do
     trust add     -key <public.pem> -package <nama> -store <trust.json>
     trust list    -store <trust.json>
     trust remove  -keyid <fingerprint> -store <trust.json>
-    sbom bind     -file <artefak> -sbom <sbom-eksternal.json> -out <pembungkus.json>
-    sbom extract  -sbom <pembungkus.json> -out <sbom-eksternal.json>
-    sbom sign     -sbom <pembungkus.json> -package <nama> -version <versi> -key <private.pem> -out <sbom-bundle.json>
-    sbom verify   -file <artefak> -bundle <bundle.json> -sbom <pembungkus.json> -sbom-bundle <sbom-bundle.json>
+    sbom bind     -file <artefak> -sbom <sbom-eksternal.json> -out <wrapper.json>
+    sbom extract  -sbom <wrapper.json> -out <sbom-eksternal.json>
+    sbom sign     -sbom <wrapper.json> -package <nama> -version <versi> -key <private.pem> -out <sbom-bundle.json>
+    sbom verify   -file <artefak> -bundle <bundle.json> -sbom <wrapper.json> -sbom-bundle <sbom-bundle.json>
                   -trust-store <trust.json> -package <nama> -version <versi> [-json]
 
   Profil: rsa-pss-sha256, ecdsa-p256-sha256, ed25519
@@ -341,13 +341,13 @@ defmodule Nadina.CLI do
   defp sbom_bind(opts) do
     with {:ok, wrapper} <- SBOM.bind(opts[:file], opts[:sbom]) |> map_error(),
          :ok <- write_new(opts[:out], wrapper) |> map_error() do
-      {0, "Pembungkus SBOM ditulis ke #{opts[:out]}\n", ""}
+      {0, "Wrapper SBOM ditulis ke #{opts[:out]}\n", ""}
     else
       {:error, message} -> fail(message)
     end
   end
 
-  # Byte SBOM diambil apa adanya dari pembungkus, tanpa tambahan baris baru.
+  # Byte SBOM diambil apa adanya dari wrapper, tanpa tambahan baris baru.
   defp sbom_extract(opts) do
     with {:ok, wrapper} <- read_file(opts[:sbom]),
          {:ok, _subject, sbom_bytes} <- SBOM.extract(wrapper) |> map_error(),
@@ -420,7 +420,7 @@ defmodule Nadina.CLI do
   defp describe(:keyid_not_found), do: "keyid tidak ditemukan pada trust store."
   defp describe(:too_large), do: "Berkas melebihi batas ukuran."
   defp describe(:not_json_object), do: "SBOM harus berupa objek JSON."
-  defp describe(:invalid_sbom), do: "Pembungkus SBOM tidak sesuai format."
+  defp describe(:invalid_sbom), do: "Wrapper SBOM tidak sesuai format."
   defp describe(:invalid_json), do: "Trust store bukan JSON yang sesuai format."
   defp describe(:invalid_schema), do: "Trust store memiliki schema yang salah."
   defp describe(:invalid_entry), do: "Trust store memuat entri kunci yang tidak sah."

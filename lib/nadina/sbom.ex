@@ -6,12 +6,12 @@ defmodule Nadina.SBOM do
   pun yang berupa objek JSON. Nadina tidak menafsirkan isinya dan hanya memastikan bahwa
   byte SBOM tersimpan utuh dan terikat ke artefak rilis.
 
-  Pembungkus minisign-sbom/v1 memuat subject (name, size, sha256 artefak rilis) dan
-  sbom_b64 (Base64 standar dari byte SBOM asli, tanpa perubahan). Pembungkus inilah yang
+  Wrapper minisign-sbom/v1 memuat subject (name, size, sha256 artefak rilis) dan
+  sbom_b64 (Base64 standar dari byte SBOM asli, tanpa perubahan). Wrapper inilah yang
   ditandatangani sebagai artefak dengan alur sign biasa, sehingga bundle SBOM memakai format
   bundle yang sama.
 
-  Verifikasi memeriksa dua bundle, yaitu bundle pembungkus dan bundle rilis, lalu mencocokkan
+  Verifikasi memeriksa dua bundle, yaitu bundle wrapper dan bundle rilis, lalu mencocokkan
   subject dengan artefak rilis dan memastikan sbom_b64 berisi objek JSON.
   """
 
@@ -37,7 +37,7 @@ defmodule Nadina.SBOM do
 
   @doc """
   Membungkus SBOM eksternal dengan subject artefak. Byte SBOM harus berupa objek JSON
-  dan tidak lebih dari 16 MiB. Mengembalikan JSON pembungkus tanpa baris baru di akhir.
+  dan tidak lebih dari 16 MiB. Mengembalikan JSON wrapper tanpa baris baru di akhir.
 
   ## Contoh
 
@@ -56,7 +56,7 @@ defmodule Nadina.SBOM do
   end
 
   @doc """
-  Membaca berkas artefak dan berkas SBOM, lalu membentuk pembungkus. Berkas yang tidak
+  Membaca berkas artefak dan berkas SBOM, lalu membentuk wrapper. Berkas yang tidak
   dapat dibaca menghasilkan error io.
   """
   @spec bind(Path.t(), Path.t()) ::
@@ -72,7 +72,7 @@ defmodule Nadina.SBOM do
   defp io_only({:error, {:io, _}} = err), do: err
 
   @doc """
-  Mengambil subject dan byte SBOM asli dari pembungkus. Tidak melakukan perubahan apa pun
+  Mengambil subject dan byte SBOM asli dari wrapper. Tidak melakukan perubahan apa pun
   pada byte SBOM.
   """
   @spec extract(binary()) :: {:ok, subject(), binary()} | {:error, :too_large | :invalid_sbom}
@@ -94,15 +94,15 @@ defmodule Nadina.SBOM do
   end
 
   @doc """
-  Memverifikasi pembungkus dan rilis. Langkah dijalankan berurutan dan berhenti pada
+  Memverifikasi wrapper dan rilis. Langkah dijalankan berurutan dan berhenti pada
   kegagalan pertama.
 
-  1. Bundle pembungkus diverifikasi terhadap berkas pembungkus, dengan trust store dan paket
+  1. Bundle wrapper diverifikasi terhadap berkas wrapper, dengan trust store dan paket
      yang sama.
   2. Bundle rilis diverifikasi terhadap artefak rilis.
   3. Subject harus merujuk artefak rilis, dan sbom_b64 harus berupa objek JSON.
 
-  Opsi: sbom (berkas pembungkus), sbom_bundle, file, bundle, trust_store, package, version.
+  Opsi: sbom (berkas wrapper), sbom_bundle, file, bundle, trust_store, package, version.
   Hasil memakai bentuk yang sama dengan Verify.run/1.
   """
   @spec verify(keyword()) :: Verify.result()
@@ -146,7 +146,7 @@ defmodule Nadina.SBOM do
   defp parse_wrapper(bytes) do
     case extract(bytes) do
       {:ok, subject, sbom_bytes} -> {:ok, subject, sbom_bytes}
-      {:error, _} -> {:error, :format_error, "Format pembungkus SBOM tidak sesuai ketentuan."}
+      {:error, _} -> {:error, :format_error, "Format wrapper SBOM tidak sesuai ketentuan."}
     end
   end
 

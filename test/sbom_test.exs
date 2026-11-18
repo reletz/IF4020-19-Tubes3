@@ -16,7 +16,7 @@ defmodule Nadina.SBOMTest do
     JSON.decode!(String.trim_trailing(out, "\n"))
   end
 
-  # Rilis lengkap: kunci, trust store, bundle rilis, pembungkus SBOM, dan bundle pembungkus.
+  # Rilis lengkap: kunci, trust store, bundle rilis, wrapper SBOM, dan bundle wrapper.
   setup %{tmp_dir: dir} do
     prefix = Path.join(dir, "k")
     {0, _fp, ""} = cli(["keygen", "-algorithm", "ed25519", "-out", prefix])
@@ -126,7 +126,7 @@ defmodule Nadina.SBOMTest do
       end
     end
 
-    test "subject pembungkus merujuk artefak", %{dir: dir, artifact: artifact} do
+    test "subject wrapper merujuk artefak", %{dir: dir, artifact: artifact} do
       wrapper = Path.join(dir, "w.json")
       {0, _, ""} = cli(["sbom", "bind", "-file", artifact, "-sbom", @spdx, "-out", wrapper])
       {:ok, size, sha} = Artifact.digest(artifact)
@@ -152,7 +152,7 @@ defmodule Nadina.SBOMTest do
       end
     end
 
-    test "pembungkus yang diubah atau tidak sah ditolak extract", %{dir: dir} do
+    test "wrapper yang diubah atau tidak sah ditolak extract", %{dir: dir} do
       assert {:error, :invalid_sbom} = SBOM.extract("{}")
       assert {:error, :invalid_sbom} = SBOM.extract(~s({"schema":"minisign-sbom/v2"}))
 
@@ -178,7 +178,6 @@ defmodule Nadina.SBOMTest do
     end
 
     test "bind dan extract tidak menimpa berkas yang sudah ada", %{
-      dir: dir,
       artifact: artifact,
       sbom: sbom
     } do
@@ -191,12 +190,12 @@ defmodule Nadina.SBOMTest do
     end
   end
 
-  describe "verifikasi pembungkus dan rilis" do
+  describe "verifikasi wrapper dan rilis" do
     test "valid: kedua bundle sah dan subject merujuk artefak", r do
       assert {0, %{"valid" => true, "status" => "OK"}} = verify(r)
     end
 
-    test "pembungkus diubah: ditolak pada bundle pembungkus", r do
+    test "wrapper diubah: ditolak pada bundle wrapper", r do
       File.write!(r.sbom, String.replace(File.read!(r.sbom), "\"size\":", "\"size\":0,\"size\":"))
       assert {1, %{"status" => "ARTIFACT_MISMATCH", "valid" => false}} = verify(r)
     end
@@ -206,7 +205,7 @@ defmodule Nadina.SBOMTest do
       assert {1, %{"status" => "ARTIFACT_MISMATCH"}} = verify(r)
     end
 
-    test "pembungkus milik artefak lain dengan bundle sah: ditolak pada keterikatan", r do
+    test "wrapper milik artefak lain dengan bundle sah: ditolak pada keterikatan", r do
       other = Path.join(r.dir, "lain.zip")
       File.write!(other, "artefak lain sama sekali")
       other_sbom = Path.join(r.dir, "sbom-lain.json")
@@ -235,7 +234,7 @@ defmodule Nadina.SBOMTest do
       assert message =~ "tidak merujuk"
     end
 
-    test "bundle pembungkus dari kunci tak tepercaya: KEY_NOT_TRUSTED", r do
+    test "bundle wrapper dari kunci tak tepercaya: KEY_NOT_TRUSTED", r do
       lain = Path.join(r.dir, "lain")
       {0, _, _} = cli(["keygen", "-algorithm", "ed25519", "-out", lain])
       lain_bundle = Path.join(r.dir, "lain-bundle.json")
@@ -259,7 +258,7 @@ defmodule Nadina.SBOMTest do
       assert {1, %{"status" => "KEY_NOT_TRUSTED"}} = verify(r, sbom_bundle: lain_bundle)
     end
 
-    test "pembungkus rusak namun ditandatangani: FORMAT_ERROR", r do
+    test "wrapper rusak namun ditandatangani: FORMAT_ERROR", r do
       bad = Path.join(r.dir, "bad-sbom.json")
       File.write!(bad, "{}\n")
       bad_bundle = Path.join(r.dir, "bad-bundle.json")
@@ -283,8 +282,8 @@ defmodule Nadina.SBOMTest do
       assert {1, %{"status" => "FORMAT_ERROR"}} = verify(r, sbom: bad, sbom_bundle: bad_bundle)
     end
 
-    test "isi SBOM bukan objek JSON tetapi pembungkus sah: FORMAT_ERROR", r do
-      # Pembungkus dibuat langsung, melewati bind, sehingga isi yang bukan JSON lolos ke verifikasi.
+    test "isi SBOM bukan objek JSON tetapi wrapper sah: FORMAT_ERROR", r do
+      # Wrapper dibuat langsung, melewati bind, sehingga isi yang bukan JSON lolos ke verifikasi.
       {:ok, size, sha} = Artifact.digest(r.artifact)
       inner = "bukan json"
 
@@ -314,7 +313,7 @@ defmodule Nadina.SBOMTest do
       assert {1, %{"status" => "FORMAT_ERROR"}} = verify(r, sbom: path, sbom_bundle: bundle)
     end
 
-    test "berkas pembungkus tidak ada: INPUT_ERROR dengan exit 2", r do
+    test "berkas wrapper tidak ada: INPUT_ERROR dengan exit 2", r do
       assert {2, %{"status" => "INPUT_ERROR"}} =
                verify(r, sbom: Path.join(r.dir, "tidak-ada.json"))
     end
@@ -329,7 +328,7 @@ defmodule Nadina.SBOMTest do
     end
   end
 
-  test "bundle pembungkus memakai format bundle yang sama dengan rilis", r do
+  test "bundle wrapper memakai format bundle yang sama dengan rilis", r do
     {:ok, b} = Bundle.parse(File.read!(r.sbom_bundle))
     assert byte_size(b.manifest) > 0
   end
