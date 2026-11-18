@@ -1,19 +1,234 @@
 \section{Implementasi}
 
 \subsection{Lingkungan dan Dependensi}
-% TODO: Elixir/OTP, library (OTP \texttt{crypto} dan \texttt{public\_key}), versi, tautan dokumentasi.
+Program ditulis dalam bahasa Elixir 1.20 di atas Erlang/OTP 29. Pada rilis, program hanya
+bergantung pada pustaka yang sudah termasuk dalam OTP dan Elixir, yaitu \texttt{crypto},
+\texttt{public\_key}, dan modul \texttt{JSON} bawaan Elixir. Dengan demikian tidak ada dependensi
+\textit{runtime} dari Hex. Dependensi pengembangan hanya dipakai untuk dokumentasi, analisis statis,
+dan tes, sehingga tidak masuk ke rilis maupun ke image. Daftar dependensi beserta versi dan tautan
+dokumentasinya dapat dilihat pada Tabel~\ref{tab:dependensi}.
+
+\begin{table}[H]
+\centering
+{\small
+\begin{tabular}{@{}p{3.4cm}p{2.2cm}p{4.2cm}p{4.6cm}@{}}
+\toprule
+Dependensi & Versi & Peran & Dokumentasi \\
+\midrule
+Elixir & 1.20 & Bahasa dan modul \texttt{JSON} & \url{https://hexdocs.pm/elixir} \\
+Erlang/OTP & 29 & Runtime, \texttt{crypto}, \texttt{public\_key} & \url{https://www.erlang.org/doc} \\
+OpenSSL & Paket Alpine 3.24 & Backend kriptografi OTP & \url{https://docs.openssl.org} \\
+ExDoc & 0.40.4 & Dokumentasi API (dev) & \url{https://hexdocs.pm/ex_doc} \\
+Credo & 1.7.19 & Analisis gaya kode (dev, test) & \url{https://hexdocs.pm/credo} \\
+Dialyxir & 1.4.9 & Antarmuka Dialyzer (dev, test) & \url{https://hexdocs.pm/dialyxir} \\
+Jason & 1.4.5 & Transitif dari Credo (dev) & \url{https://hexdocs.pm/jason} \\
+\bottomrule
+\end{tabular}}
+\caption{Dependensi program.}
+\label{tab:dependensi}
+\end{table}
+
+Versi setiap dependensi dikunci dalam \texttt{mix.lock} beserta \textit{checksum} Hex. CI memakai
+\texttt{mix deps.get --check-locked} agar daftar dependensi tidak berubah diam-diam, dan
+\texttt{mix hex.audit} untuk memeriksa paket yang sudah ditarik dari Hex atau memiliki
+\textit{advisory}.
 
 \subsection{Implementasi Tiap Algoritma}
-% TODO: parameter dan pemanggilan API untuk RSA-PSS, ECDSA (konversi DER ke $r \mid s$), Ed25519.
+Modul profil tidak mengimplementasikan kriptografi sendiri. Setiap profil memanggil API OTP dan
+memenuhi \textit{behaviour} \texttt{Nadina.Profile}. Parameter yang dipakai ringkasnya dapat dilihat
+pada Tabel~\ref{tab:profil}.
+
+\begin{table}[H]
+\centering
+{\small
+\begin{tabular}{@{}p{3.9cm}p{2.5cm}p{2.3cm}p{3.0cm}p{3.4cm}@{}}
+\toprule
+Profil & Kunci & \textit{Hash} & Nonce atau salt & Pemanggilan OTP \\
+\midrule
+\texttt{rsa-pss-sha256} & RSA 3072, $e = 65537$ & SHA-256, MGF1-SHA-256 & Salt 32 byte, 384 byte tanda tangan & \texttt{sign/4} dengan opsi PSS \\
+\texttt{ecdsa-p256-sha256} & P-256 (secp256r1) & SHA-256 & Nonce acak, $r \mid s$ 64 byte & \texttt{sign/3}, lalu konversi DER \\
+\texttt{ed25519} & Ed25519 & SHA-512 di dalam algoritma & Deterministik, 64 byte tanda tangan & \texttt{sign/3} dengan \texttt{:none} \\
+\bottomrule
+\end{tabular}}
+\caption{Parameter setiap profil. Fungsi \texttt{sign} berasal dari modul \texttt{:public\_key}.}
+\label{tab:profil}
+\end{table}
+
+\subsubsection*{RSASSA-PSS}
+Penandatanganan RSA-PSS dilakukan oleh satu panggilan ke OTP dengan opsi yang mengunci parameter
+(Listing~\ref{lst:rsa}). Opsi \texttt{rsa\_padding} memilih PSS, \texttt{rsa\_pss\_saltlen}
+mengatur salt 32 byte, dan \texttt{rsa\_mgf1\_md} mengatur MGF1 berbasis SHA-256. Pustaka
+menghitung SHA-256 tepat satu kali atas pesan, sehingga kode program tidak melakukan
+\textit{hashing} sendiri dan tidak terjadi \textit{double hashing}. Salt dibangkitkan oleh OpenSSL
+dari sumber acak sistem, sehingga dua tanda tangan atas pesan yang sama berbeda. Verifikasi memakai
+opsi yang sama, sehingga tanda tangan PKCS\#1 v1.5 atau PSS dengan salt lain ditolak.
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Penandatanganan RSA-PSS pada profil \texttt{rsa-pss-sha256}},label={lst:rsa},numbers=none]
+@pss_opts [
+  rsa_padding: :rsa_pkcs1_pss_padding,
+  rsa_pss_saltlen: @salt_len,
+  rsa_mgf1_md: :sha256
+]
+
+def sign(priv, message) when is_binary(message) do
+  :public_key.sign(message, :sha256, priv, @pss_opts)
+end
+\end{lstlisting}
+
+\subsubsection*{ECDSA P-256}
+Pustaka OTP menghasilkan tanda tangan dalam format DER, sedangkan format yang disimpan dalam
+\textit{bundle} adalah $r \mid s$ sepanjang 64 byte. Konversi dilakukan dua arah
+(Listing~\ref{lst:ecdsa}). Pada penandatanganan, DER didekode menjadi dua bilangan bulat dan
+dikemas menjadi 32 byte big-endian per nilai. Pada verifikasi, proses dibalik: $r \mid s$ dipecah
+dan dikodekan kembali menjadi DER sebelum diberikan ke OTP. Pemanggilan verifikasi dibungkus
+\texttt{rescue} dan \texttt{catch} sehingga masukan yang rusak menghasilkan \texttt{false}. Nilai
+$r$ atau $s$ di luar rentang 1 sampai $n-1$ ditolak oleh pustaka. Normalisasi \textit{low-S} tidak
+dilakukan, dan verifikasi menerima kedua bentuk $s$.
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Penandatanganan ECDSA P-256 dan konversi DER ke $r \mid s$},label={lst:ecdsa},numbers=none]
+def sign(priv, message) when is_binary(message) do
+  der = :public_key.sign(message, :sha256, priv)
+  der_to_rs(der)
+end
+
+def der_to_rs(der) do
+  {:"ECDSA-Sig-Value", r, s} = :public_key.der_decode(:"ECDSA-Sig-Value", der)
+  <<r::unsigned-big-256, s::unsigned-big-256>>
+end
+\end{lstlisting}
+
+\subsubsection*{Ed25519}
+Ed25519 adalah PureEdDSA: pesan diberikan langsung ke OTP dengan \textit{hash} \texttt{:none},
+sehingga tidak ada \textit{pre-hash} eksternal. Ed25519ph tidak dipakai. Ada satu hal teknis. PKCS\#8
+Ed25519 hanya menyimpan \textit{seed} 32 byte, sehingga titik publik kosong ketika kunci dimuat
+dari berkas. Fungsi \texttt{complete/1} menurunkan titik publik dari \textit{seed} sebelum kunci
+dipakai (Listing~\ref{lst:ed}).
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Melengkapi titik publik Ed25519 dari \textit{seed}},label={lst:ed},numbers=none]
+defp complete({:ECPrivateKey, ver, <<_::binary-size(32)>> = seed, params, point, attrs})
+     when not is_binary(point) do
+  {derived, _seed} = :crypto.generate_key(:eddsa, :ed25519, seed)
+  {:ECPrivateKey, ver, seed, params, derived, attrs}
+end
+
+defp complete(priv), do: priv
+\end{lstlisting}
 
 \subsection{Antarmuka CLI}
-% TODO: subcommand dan contoh pemakaian.
+Antarmuka baris perintah berada di modul \texttt{Nadina.CLI}. Setiap subperintah memvalidasi
+opsinya dahulu, dan kesalahan pemakaian menghasilkan pesan di stderr dengan exit code 2. Daftar
+subperintah dapat dilihat pada Tabel~\ref{tab:cli}. Opsi boleh ditulis dengan satu atau dua tanda
+hubung, misalnya \texttt{-key} dan \texttt{--key}, dan program tidak membaca stdin sehingga aman
+dijalankan tanpa TTY.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}p{3.6cm}p{11cm}@{}}
+\toprule
+Subperintah & Fungsi \\
+\midrule
+\texttt{keygen} & Membangkitkan \textit{key pair} untuk profil dan menulis \texttt{<prefix>.key.pem} serta \texttt{<prefix>.pub.pem}. \\
+\texttt{sign} & Menandatangani artefak dan menulis bundle. \\
+\texttt{verify} & Memverifikasi bundle dengan tujuh langkah, dan dengan \texttt{-json} menulis hasil JSON. \\
+\texttt{trust add / list / remove} & Mengelola \textit{trust store}. \\
+\texttt{sbom bind / extract / sign / verify} & Membungkus, membuka, menandatangani, dan memverifikasi SBOM. \\
+\texttt{-help}, \texttt{-version} & Petunjuk penggunaan dan nomor versi program. \\
+\bottomrule
+\end{tabular}
+\caption{Subperintah pada antarmuka CLI.}
+\label{tab:cli}
+\end{table}
+
+Titik masuk CLI dipanggil dari \textit{entrypoint} image. \texttt{main/1} menjalankan perintah,
+menulis stdout dan stderr secara terpisah, lalu menghentikan VM dengan \texttt{flush: true}
+(Listing~\ref{lst:main}). Opsi \texttt{flush} memastikan keluaran sudah terkirim sebelum
+proses berhenti, sehingga exit code yang dikembalikan kepada pipeline adalah exit code asli
+program dan tidak pernah diubah menjadi 0.
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Titik masuk CLI},label={lst:main},numbers=none]
+def main(argv) do
+  {code, stdout, stderr} = run(argv)
+  :ok = IO.write(:stdio, stdout)
+  :ok = IO.write(:stderr, stderr)
+  :erlang.halt(code, flush: true)
+end
+\end{lstlisting}
+
+Contoh pemakaian dari awal sampai verifikasi ditunjukkan di bawah. Setiap langkah berjalan tanpa
+interaksi pengguna.
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Contoh pemakaian CLI},label={lst:pakai},numbers=none]
+nadina keygen -algorithm ed25519 -out keys/publisher
+nadina trust add -key keys/publisher.pub.pem -package contoh-app -store trust.json
+nadina sign -file contoh-app.zip -package contoh-app -version 1.0.0 \
+  -key keys/publisher.key.pem -out release.json
+nadina verify -file contoh-app.zip -bundle release.json -trust-store trust.json \
+  -package contoh-app -version 1.0.0 -json
+\end{lstlisting}
 
 \subsection{Distribusi Container}
-% TODO: Dockerfile, base image, multi-arch, digest, pemetaan versi program, tag repositori, dan digest image.
+Image dibangun dengan Dockerfile dua tahap. Tahap pertama memakai image Elixir Alpine dan
+menjalankan \textit{mix release} dengan ERTS ikut dibundel. Tahap kedua memakai image Alpine
+minimal dan hanya menyalin hasil rilis. Kedua image dikunci per \textit{digest}, sehingga
+\textit{build} yang sama menghasilkan \textit{base image} yang sama. Pustaka native yang dibutuhkan
+ERTS hanya \texttt{libstdc++}, \texttt{ncurses-libs}, \texttt{openssl}, dan \texttt{lksctp-tools}.
+
+Image berjalan sebagai pengguna non-root dengan UID 10001, tetapi UID dapat ditimpa saat
+\texttt{docker run --user}. Variabel \texttt{HOME} dan \texttt{RELEASE\_TMP} diarahkan ke
+\texttt{/tmp}, sehingga UID acak tetap dapat menulis. \texttt{RELEASE\_DISTRIBUTION=none}
+mematikan distribusi Erlang (Listing~\ref{lst:runtime}). Dengan begitu, image dapat dijalankan
+dengan \texttt{--network none} dan UID acak.
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Tahap akhir Dockerfile},label={lst:runtime},numbers=none]
+ENV HOME=/tmp \
+    RELEASE_TMP=/tmp \
+    RELEASE_DISTRIBUTION=none \
+    LANG=C.UTF-8
+USER 10001:10001
+WORKDIR /work
+ENTRYPOINT ["/usr/local/bin/nadina"]
+\end{lstlisting}
+
+Image dipublikasikan untuk \texttt{linux/amd64} dan \texttt{linux/arm64} sebagai satu index.
+Listing~\ref{lst:digest} mencatat digest index beserta digest tiap platform untuk tag \texttt{edge}
+pada saat laporan ini ditulis. Tag versi seperti \texttt{1.0.0} akan dicatat pada README setelah
+rilis pertama diterbitkan.
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Digest image \texttt{reletz/nadina:edge} saat laporan ditulis},label={lst:digest},numbers=none]
+index    sha256:efc62f9783ef27e2f4a99bbdc3229bdce3f25af0f6618e873509e4cc76cfb526
+linux/amd64 sha256:28444945f4426dbf337af4b6a951d1e7891217830bcafe2060629fde7fc916c4
+linux/arm64 sha256:5b606ba2f15867149d46c6c7cec6ada40b7052f38f54b3610a76c1239082bdcc
+\end{lstlisting}
 
 \subsection{Integrasi CI/CD}
-% TODO: workflow build image, workflow pemakai (Anmategra), pengelolaan secret dan trust store.
+Workflow \texttt{ci.yml} berjalan pada \texttt{pull\_request}, pada \textit{push} ke cabang selain
+\texttt{main}, dan dapat dipanggil oleh workflow lain. Job \texttt{test} memeriksa format,
+dependensi, kompilasi tanpa warning, credo, tes, dan dialyzer. Job \texttt{test-alpine}
+menjalankan tes di dalam image Elixir Alpine yang sama dengan image rilis, sehingga musl dan
+OpenSSL yang dipakai sama dengan image yang dikirim. Job \texttt{image-scan} membangun image uji
+dan memindainya dengan Trivy, dengan gagal bila ada temuan HIGH atau CRITICAL.
+
+Workflow \texttt{release.yml} berjalan pada \textit{push} ke \texttt{main} dan pada tag \texttt{v*}.
+Job \texttt{publish} hanya berjalan setelah \texttt{ci} lulus dan memakai \textit{environment}
+\texttt{nadina}. Pemindaian Trivy dilakukan sebelum login dan \textit{push}, sehingga image yang
+gagal pindai tidak pernah dikirim ke registry (Listing~\ref{lst:trivy}).
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Gerbang Trivy pada job \texttt{publish}},label={lst:trivy},numbers=none]
+- name: Trivy (gagal jika ada HIGH atau CRITICAL)
+  uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+  with:
+    image-ref: nadina:scan
+    scanners: vuln
+    severity: HIGH,CRITICAL
+    exit-code: "1"
+    trivyignores: .trivyignore
+\end{lstlisting}
+
+Beberapa aturan keamanan diterapkan pada kedua workflow. Izin \texttt{GITHUB\_TOKEN} dibatasi
+\texttt{contents: read}. \textit{Checkout} memakai \texttt{persist-credentials: false}. Setiap
+\textit{action} dikunci ke SHA commit. Token Docker Hub disimpan sebagai secret pada
+\textit{environment} \texttt{nadina}, sedangkan nama pengguna disimpan sebagai variable pada
+\textit{environment} yang sama, sehingga tidak ada kredensial di dalam repositori. Workflow pemakai di repositori anmategra berada di luar cakupan bab ini dan hasilnya akan dicatat pada bab pengujian.
 
 \subsection{Subcommand SBOM}
 Pembuatan \textit{wrapper} dilakukan oleh \texttt{sbom bind}, yang membaca \textit{artifact} dan \textit{file} SBOM, memastikan

@@ -6,7 +6,7 @@
     align=center, inner sep=1pt, font=\small},
   akhir/.style={rectangle, rounded corners=6pt, draw, fill=green!10, text width=7.4cm, align=center,
     minimum height=0.7cm, font=\small},
-  galat/.style={rectangle, draw, fill=red!9, text width=4.2cm, align=center,
+  galat/.style={rectangle, rounded corners=6pt, draw, fill=red!9, text width=4.2cm, align=center,
     minimum height=0.7cm, font=\small},
   panah/.style={-{Stealth[length=2.2mm]}, thick},
 }
@@ -131,7 +131,7 @@ Kegagalan \textit{input} atau I/O menghasilkan exit code 2.
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[node distance=0.42cm and 0.6cm]
-\node[akhir] (mulai) {Masukan: artefak, kunci privat, nama paket, versi, berkas keluaran};
+\node[akhir] (mulai) {Input: artefak, kunci privat, nama paket, versi, berkas keluaran};
 \node[proses, below=of mulai] (hash) {Hitung ukuran dan SHA-256 artefak per 1 MiB};
 \node[proses, below=of hash] (muat) {Muat kunci privat dari PEM dan tentukan profil};
 \node[keputusan, below=of muat] (kunci) {Kunci sesuai profil?};
@@ -280,7 +280,7 @@ objek JSON. Dengan begitu, SBOM yang sah tetapi milik \textit{artifact} lain tet
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[node distance=0.42cm and 0.6cm]
-\node[akhir] (mulai) {Masukan: artefak, bundle rilis, \textit{wrapper} SBOM, bundle \textit{wrapper}, trust store, paket, versi};
+\node[akhir] (mulai) {Input: artefak, bundle rilis, \textit{wrapper} SBOM, bundle \textit{wrapper}, trust store, paket, versi};
 \node[keputusan, below=of mulai] (b1) {Bundle \textit{wrapper} valid (langkah 1 sampai 7)?};
 \node[galat, right=of b1] (g1) {Status sesuai langkah yang gagal};
 \node[keputusan, below=of b1] (b2) {Bundle rilis valid terhadap artefak?};
