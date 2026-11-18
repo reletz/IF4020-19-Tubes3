@@ -41,33 +41,6 @@ Hasil verifikasi sesuai Tabel 2.9. Exit code sesuai Tabel 2.10. \\
 \caption{Subcommand tambahan untuk SBOM.}
 \end{table}
 
-\subsubsection*{Pengkodean Base64 pada pembungkus}
-Byte SBOM disimpan di dalam pembungkus dalam bentuk Base64 standar, bukan sebagai objek JSON
-bersarang. Ada dua alasan utama.
-
-\begin{enumerate}
-  \item \textbf{Byte SBOM tetap utuh.} Tanda tangan dibuat atas byte pembungkus, sehingga
-    byte SBOM di dalamnya juga harus dijaga. Jika SBOM ditulis sebagai objek JSON bersarang,
-    parser akan membacanya lalu menulisnya ulang. Spasi, urutan key, dan escape dapat berubah
-    dalam proses itu. Akibatnya \texttt{extract} tidak lagi identik dengan keluaran kakasnya.
-    Dengan Base64, \texttt{extract} mengembalikan byte asli yang diuji dengan \texttt{cmp}.
-  \item \textbf{JSON tidak membawa byte sembarang dengan aman.} String JSON harus berupa UTF-8,
-    dan beberapa karakter wajib di-escape. Base64 hanya memuat huruf, angka, \texttt{+}, \texttt{/},
-    dan \texttt{=}, sehingga aman disisipkan sebagai string tanpa escape.
-\end{enumerate}
-
-Pilihan ini juga menghindari masalah parser yang ketat. Kakas seperti Trivy dapat menulis
-\texttt{null}, yang ditolak oleh \texttt{StrictJSON}. Karena isi SBOM tidak diparse oleh
-\texttt{StrictJSON}, \texttt{null} di dalamnya tidak menjadi masalah. Program hanya memeriksa
-bahwa isinya objek JSON, memakai \texttt{JSON.decode} bawaan.
-
-Pilihan ini memiliki \textit{trade-off}. Pertama, ukuran naik sekitar sepertiga akibat Base64,
-sehingga batas SBOM ditetapkan 16 MiB dan ukuran pembungkus dihitung dari batas tersebut.
-Kedua, pembungkus tidak dapat dibaca langsung oleh manusia dan perlu didekode dengan
-\texttt{sbom extract} untuk melihat isi SBOM. Ketiga, program tidak memeriksa isi SBOM lebih
-jauh daripada bentuk objek JSON, sehingga kelengkapan komponen menjadi tanggung jawab kakas
-pembuat SBOM.
-
 Contoh alur dengan Trivy:
 
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Alur SBOM dengan kakas eksternal},label={lst:sbom-flow},numbers=none]
