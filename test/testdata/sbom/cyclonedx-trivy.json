@@ -1,0 +1,94 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7",
+  "serialNumber": "urn:uuid:fa25aa29-cf6b-40a9-a168-02e004d1a11f",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-18T06:55:16+00:00",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "manufacturer": {
+            "name": "Aqua Security Software Ltd."
+          },
+          "group": "aquasecurity",
+          "name": "trivy",
+          "version": "0.76.2"
+        }
+      ]
+    },
+    "component": {
+      "bom-ref": "7cba37b2-6d9c-494f-8c3b-db9a733f236a",
+      "type": "application",
+      "name": "proj",
+      "properties": [
+        {
+          "name": "aquasecurity:trivy:SchemaVersion",
+          "value": "2"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "e4d6ae46-4fde-44b7-92a5-9f47e408d763",
+      "type": "application",
+      "name": "package-lock.json",
+      "properties": [
+        {
+          "name": "aquasecurity:trivy:Class",
+          "value": "lang-pkgs"
+        },
+        {
+          "name": "aquasecurity:trivy:Type",
+          "value": "npm"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:npm/lodash@4.17.21",
+      "type": "library",
+      "name": "lodash",
+      "version": "4.17.21",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/lodash@4.17.21",
+      "properties": [
+        {
+          "name": "aquasecurity:trivy:PkgID",
+          "value": "lodash@4.17.21"
+        },
+        {
+          "name": "aquasecurity:trivy:PkgType",
+          "value": "npm"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "7cba37b2-6d9c-494f-8c3b-db9a733f236a",
+      "dependsOn": [
+        "e4d6ae46-4fde-44b7-92a5-9f47e408d763"
+      ]
+    },
+    {
+      "ref": "e4d6ae46-4fde-44b7-92a5-9f47e408d763",
+      "dependsOn": [
+        "pkg:npm/lodash@4.17.21"
+      ]
+    },
+    {
+      "ref": "pkg:npm/lodash@4.17.21",
+      "dependsOn": []
+    }
+  ],
+  "vulnerabilities": []
+}

@@ -1,0 +1,106 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "proj",
+  "documentNamespace": "http://trivy.dev/filesystem/proj-33ea952c-c3cc-425b-958b-9ab95ec607f9",
+  "creationInfo": {
+    "creators": [
+      "Organization: aquasecurity",
+      "Tool: trivy-0.76.2"
+    ],
+    "created": "2026-11-18T06:55:12Z"
+  },
+  "packages": [
+    {
+      "name": "package-lock.json",
+      "SPDXID": "SPDXRef-Application-6401eeaf7b6ee158",
+      "downloadLocation": "NONE",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "primaryPackagePurpose": "APPLICATION",
+      "annotations": [
+        {
+          "annotator": "Tool: trivy-0.76.2",
+          "annotationDate": "2026-11-18T06:55:12Z",
+          "annotationType": "OTHER",
+          "comment": "Class: lang-pkgs"
+        },
+        {
+          "annotator": "Tool: trivy-0.76.2",
+          "annotationDate": "2026-11-18T06:55:12Z",
+          "annotationType": "OTHER",
+          "comment": "Type: npm"
+        }
+      ]
+    },
+    {
+      "name": "lodash",
+      "SPDXID": "SPDXRef-Package-885c44cc1101014f",
+      "versionInfo": "4.17.21",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NONE",
+      "filesAnalyzed": false,
+      "sourceInfo": "package found in: package-lock.json",
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/lodash@4.17.21"
+        }
+      ],
+      "primaryPackagePurpose": "LIBRARY",
+      "annotations": [
+        {
+          "annotator": "Tool: trivy-0.76.2",
+          "annotationDate": "2026-11-18T06:55:12Z",
+          "annotationType": "OTHER",
+          "comment": "PkgID: lodash@4.17.21"
+        },
+        {
+          "annotator": "Tool: trivy-0.76.2",
+          "annotationDate": "2026-11-18T06:55:12Z",
+          "annotationType": "OTHER",
+          "comment": "PkgType: npm"
+        }
+      ]
+    },
+    {
+      "name": "proj",
+      "SPDXID": "SPDXRef-Filesystem-bcf76f6afdbde584",
+      "downloadLocation": "NONE",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "primaryPackagePurpose": "SOURCE",
+      "annotations": [
+        {
+          "annotator": "Tool: trivy-0.76.2",
+          "annotationDate": "2026-11-18T06:55:12Z",
+          "annotationType": "OTHER",
+          "comment": "SchemaVersion: 2"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-Application-6401eeaf7b6ee158",
+      "relatedSpdxElement": "SPDXRef-Package-885c44cc1101014f",
+      "relationshipType": "CONTAINS"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relatedSpdxElement": "SPDXRef-Filesystem-bcf76f6afdbde584",
+      "relationshipType": "DESCRIBES"
+    },
+    {
+      "spdxElementId": "SPDXRef-Filesystem-bcf76f6afdbde584",
+      "relatedSpdxElement": "SPDXRef-Application-6401eeaf7b6ee158",
+      "relationshipType": "CONTAINS"
+    }
+  ]
+}
