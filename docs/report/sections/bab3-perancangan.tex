@@ -19,14 +19,22 @@
 % TODO: izin per paket, penulisan atomik, tidak diperbarui otomatis dari bundle.
 
 \subsection{SBOM dan Keterikatannya dengan Rilis}
-SBOM dibentuk dari \texttt{mix.lock} dan dibungkus dengan format JSON sendiri, sehingga bentuk
-byte-nya tetap untuk masukan yang sama. Urutan field dan komponen juga tetap. SBOM menggunakan
-schema \texttt{minisign-sbom/v1}. Isinya terdiri dari dua bagian. Bagian
-\textit{subject} memuat nama, ukuran, dan SHA-256 artefak rilis yang dirujuk. Bagian
-\textit{components} memuat daftar paket dari \texttt{mix.lock}, diurutkan menurut nama, dengan
-nama, versi, \textit{purl} berbentuk \texttt{pkg:hex/<nama>@<versi>}, dan checksum tarball.
+SBOM dibuat oleh kakas eksternal, misalnya Trivy, Syft, atau cdxgen, dalam format apa pun yang
+berupa objek JSON. Program tidak menafsirkan isinya. Yang diperiksa hanya bahwa byte SBOM
+tersimpan utuh dan terikat ke artefak rilis.
 
-Bundle SBOM memakai format bundle yang sama dengan rilis (Tabel 2.4), sehingga tidak perlu
-format baru. Verifikasi dilakukan berlapis dan berhenti pada kegagalan pertama: bundle SBOM
-diperiksa lebih dulu, lalu bundle rilis, lalu subject dicocokkan dengan artefak rilis.
-Dengan begitu, SBOM yang sah tetapi milik artefak lain tetap ditolak.
+Keterikatan dijaga oleh pembungkus dengan schema \texttt{minisign-sbom/v1}. Pembungkus memuat
+dua bagian. Bagian \textit{subject} berisi nama, ukuran, dan SHA-256 artefak rilis. Bagian
+\texttt{sbom\_b64} berisi byte SBOM asli dalam Base64 standar, tanpa normalisasi. Dengan
+begitu, tanda tangan mencakup byte SBOM yang sebenarnya dan bukan hasil penulisan ulang.
+Alasan memakai pembungkus, bukan SBOM mentah, adalah bahwa kakas eksternal umumnya tidak
+mencantumkan SHA-256 artefak rilis, padahal spek mewajibkannya.
+
+Pembungkus ditandatangani sebagai artefak dengan alur penandatanganan yang sama, sehingga
+bundle SBOM memakai format bundle yang sama (Tabel 2.4). Verifikasi dilakukan berlapis dan
+berhenti pada kegagalan pertama: bundle pembungkus diperiksa lebih dulu, lalu bundle rilis,
+lalu subject dicocokkan dengan artefak rilis, dan terakhir \texttt{sbom\_b64} harus berupa
+objek JSON. Dengan begitu, SBOM yang sah tetapi milik artefak lain tetap ditolak.
+
+Batasannya: program tidak memeriksa kelengkapan komponen. Kelengkapan bergantung pada kakas
+yang membuat SBOM.

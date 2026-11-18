@@ -16,10 +16,11 @@
 % TODO: workflow build image, workflow pemakai (Anmategra), pengelolaan secret dan trust store.
 
 \subsection{Subcommand SBOM}
-Pembentukan SBOM dibaca dari \texttt{mix.lock} sebagai term Elixir, sama seperti Mix
-membacanya. Diagnostik parser pada berkas itu ditangkap agar tidak mengotori stderr. Entri
-selain hex, misalnya git atau path, ditolak supaya SBOM tidak diam-diam tidak lengkap.
-Penulisan SBOM tidak menimpa berkas yang sudah ada.
+Pembungkusan dilakukan oleh \texttt{sbom bind}, yang membaca artefak dan berkas SBOM, memastikan
+SBOM berupa objek JSON dan tidak lebih dari 16 MiB, lalu menuliskan pembungkus. Penulisan tidak
+menimpa berkas yang sudah ada. \texttt{sbom extract} mengembalikan byte SBOM asli dari
+pembungkus tanpa perubahan, sehingga kakas hilir dapat membaca berkas yang sama dengan keluaran
+kakas asalnya.
 
 \begin{table}[H]
 \centering
@@ -27,10 +28,12 @@ Penulisan SBOM tidak menimpa berkas yang sudah ada.
 \toprule
 Subcommand & Parameter & Keluaran \\
 \midrule
-\texttt{sbom generate} & \texttt{-file}, \texttt{-lock}, \texttt{-out} &
-SBOM JSON pada \texttt{-out}. Tidak menimpa berkas yang sudah ada. \\
+\texttt{sbom bind} & \texttt{-file}, \texttt{-sbom}, \texttt{-out} &
+Pembungkus JSON pada \texttt{-out}. \\
+\texttt{sbom extract} & \texttt{-sbom}, \texttt{-out} &
+Byte SBOM asli pada \texttt{-out}. \\
 \texttt{sbom sign} & \texttt{-sbom}, \texttt{-package}, \texttt{-version}, \texttt{-key}, \texttt{-out} &
-Bundle SBOM pada \texttt{-out}. \\
+Bundle pembungkus pada \texttt{-out}. \\
 \texttt{sbom verify} & \texttt{-file}, \texttt{-bundle}, \texttt{-sbom}, \texttt{-sbom-bundle}, \texttt{-trust-store},
 \texttt{-package}, \texttt{-version}, \texttt{-json} (opsional) &
 Hasil verifikasi sesuai Tabel 2.9. Exit code sesuai Tabel 2.10. \\
@@ -38,3 +41,15 @@ Hasil verifikasi sesuai Tabel 2.9. Exit code sesuai Tabel 2.10. \\
 \end{tabular}
 \caption{Subcommand tambahan untuk SBOM.}
 \end{table}
+
+Contoh alur dengan Trivy:
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Alur SBOM dengan kakas eksternal},label={lst:sbom-flow},numbers=none]
+trivy fs --format cyclonedx --scanners secret --output sbom.json dist/
+nadina sbom bind --file dist/contoh-app.zip --sbom sbom.json --out pembungkus.json
+nadina sbom sign --sbom pembungkus.json --package contoh-app --version 1.0.0 \
+  --key kunci.key.pem --out sbom-bundle.json
+nadina sbom verify --file dist/contoh-app.zip --bundle rilis.json --sbom pembungkus.json \
+  --sbom-bundle sbom-bundle.json --trust-store trust.json \
+  --package contoh-app --version 1.0.0 --json
+\end{lstlisting}

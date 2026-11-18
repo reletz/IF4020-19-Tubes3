@@ -359,8 +359,11 @@ DER tanpa enkripsi. Tanda tangan diukur sebelum Base64.}
 % TODO: isi setelah benchmark penuh (runs=30) selesai.
 
 \subsection{Pengujian SBOM}
-Pengujian SBOM berada di \texttt{test/sbom\_test.exs} dengan 14 tes, dan lolos seluruhnya.
-Pengujian juga diulang di dalam image dengan UID acak dan \texttt{--network none}.
+Pengujian SBOM berada di \texttt{test/sbom\_test.exs} dengan 16 tes, dan lolos seluruhnya.
+Fixture berupa keluaran asli Trivy dalam format CycloneDX dan SPDX, yang disimpan di
+\texttt{test/testdata/sbom/}. Alur ujung ke ujung juga dijalankan di dalam image dengan UID acak
+dan \texttt{--network none}: verifikasi valid menghasilkan exit 0, artefak yang diubah
+menghasilkan exit 1, dan hasil \texttt{extract} identik byte demi byte dengan keluaran Trivy.
 
 \begin{table}[H]
 \centering
@@ -369,12 +372,15 @@ Pengujian juga diulang di dalam image dengan UID acak dan \texttt{--network none
 Kasus uji & Hasil yang diharapkan & Hasil \\
 \midrule
 SBOM valid dan saling merujuk & OK, exit 0 & OK, exit 0 \\
-Isi SBOM diubah & ARTIFACT\_MISMATCH, exit 1 & ARTIFACT\_MISMATCH, exit 1 \\
+CycloneDX dan SPDX dari Trivy di-bind lalu di-extract & byte identik & byte identik \\
+Masukan SBOM bukan objek JSON & ditolak saat bind, exit 2 & ditolak, exit 2 \\
+Pembungkus diubah & ARTIFACT\_MISMATCH, exit 1 & ARTIFACT\_MISMATCH, exit 1 \\
 Artefak rilis diganti isinya & ARTIFACT\_MISMATCH, exit 1 & ARTIFACT\_MISMATCH, exit 1 \\
-SBOM milik artefak lain, bundle sah & ARTIFACT\_MISMATCH, exit 1 & ARTIFACT\_MISMATCH, exit 1 \\
-Bundle SBOM dari kunci tak tepercaya & KEY\_NOT\_TRUSTED, exit 1 & KEY\_NOT\_TRUSTED, exit 1 \\
-SBOM rusak namun ditandatangani & FORMAT\_ERROR, exit 1 & FORMAT\_ERROR, exit 1 \\
-Berkas SBOM tidak ada & INPUT\_ERROR, exit 2 & INPUT\_ERROR, exit 2 \\
+Pembungkus milik artefak lain, bundle sah & ARTIFACT\_MISMATCH, exit 1 & ARTIFACT\_MISMATCH, exit 1 \\
+Bundle pembungkus dari kunci tak tepercaya & KEY\_NOT\_TRUSTED, exit 1 & KEY\_NOT\_TRUSTED, exit 1 \\
+Pembungkus rusak namun ditandatangani & FORMAT\_ERROR, exit 1 & FORMAT\_ERROR, exit 1 \\
+Isi SBOM bukan JSON namun pembungkus sah & FORMAT\_ERROR, exit 1 & FORMAT\_ERROR, exit 1 \\
+Berkas pembungkus tidak ada & INPUT\_ERROR, exit 2 & INPUT\_ERROR, exit 2 \\
 \bottomrule
 \end{tabular}
 \caption{Hasil pengujian SBOM.}
