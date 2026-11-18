@@ -17,3 +17,16 @@
 
 \subsection{Pengelolaan Trust Store}
 % TODO: izin per paket, penulisan atomik, tidak diperbarui otomatis dari bundle.
+
+\subsection{SBOM dan Keterikatannya dengan Rilis}
+SBOM dibentuk dari \texttt{mix.lock} dan dibungkus dengan format JSON sendiri, sehingga bentuk
+byte-nya tetap untuk masukan yang sama. Urutan field dan komponen juga tetap. SBOM menggunakan
+schema \texttt{minisign-sbom/v1}. Isinya terdiri dari dua bagian. Bagian
+\textit{subject} memuat nama, ukuran, dan SHA-256 artefak rilis yang dirujuk. Bagian
+\textit{components} memuat daftar paket dari \texttt{mix.lock}, diurutkan menurut nama, dengan
+nama, versi, \textit{purl} berbentuk \texttt{pkg:hex/<nama>@<versi>}, dan checksum tarball.
+
+Bundle SBOM memakai format bundle yang sama dengan rilis (Tabel 2.4), sehingga tidak perlu
+format baru. Verifikasi dilakukan berlapis dan berhenti pada kegagalan pertama: bundle SBOM
+diperiksa lebih dulu, lalu bundle rilis, lalu subject dicocokkan dengan artefak rilis.
+Dengan begitu, SBOM yang sah tetapi milik artefak lain tetap ditolak.

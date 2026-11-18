@@ -14,3 +14,27 @@
 
 \subsection{Integrasi CI/CD}
 % TODO: workflow build image, workflow pemakai (Anmategra), pengelolaan secret dan trust store.
+
+\subsection{Subcommand SBOM}
+Pembentukan SBOM dibaca dari \texttt{mix.lock} sebagai term Elixir, sama seperti Mix
+membacanya. Diagnostik parser pada berkas itu ditangkap agar tidak mengotori stderr. Entri
+selain hex, misalnya git atau path, ditolak supaya SBOM tidak diam-diam tidak lengkap.
+Penulisan SBOM tidak menimpa berkas yang sudah ada.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}llp{7.5cm}@{}}
+\toprule
+Subcommand & Parameter & Keluaran \\
+\midrule
+\texttt{sbom generate} & \texttt{-file}, \texttt{-lock}, \texttt{-out} &
+SBOM JSON pada \texttt{-out}. Tidak menimpa berkas yang sudah ada. \\
+\texttt{sbom sign} & \texttt{-sbom}, \texttt{-package}, \texttt{-version}, \texttt{-key}, \texttt{-out} &
+Bundle SBOM pada \texttt{-out}. \\
+\texttt{sbom verify} & \texttt{-file}, \texttt{-bundle}, \texttt{-sbom}, \texttt{-sbom-bundle}, \texttt{-trust-store},
+\texttt{-package}, \texttt{-version}, \texttt{-json} (opsional) &
+Hasil verifikasi sesuai Tabel 2.9. Exit code sesuai Tabel 2.10. \\
+\bottomrule
+\end{tabular}
+\caption{Subcommand tambahan untuk SBOM.}
+\end{table}

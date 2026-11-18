@@ -14,3 +14,39 @@
 
 \subsection{Model Kepercayaan: Manifest, Bundle, dan Trust Store}
 % TODO
+
+\subsection{Software Bill of Materials (SBOM)}
+SBOM adalah daftar komponen yang menyusun sebuah perangkat lunak, beserta versi dan
+\textit{checksum}-nya. Daftar ini membantu pengguna memeriksa dependensi yang masuk ke sebuah
+rilis. Format SBOM beragam, misalnya CycloneDX dan SPDX. Setiap komponen biasanya dinyatakan
+dengan \textit{package URL} (purl), yaitu skema penamaan paket yang berbentuk
+\texttt{pkg:<tipe>/<nama>@<versi>}.
+
+SBOM dapat ikut ditandatangani agar isinya tidak diubah setelah dibuat. Dengan menyimpan
+SHA-256 artefak di dalam SBOM, pemeriksa juga dapat memastikan bahwa SBOM memang merujuk
+artefak yang sedang diperiksa. Contoh SBOM sederhana dapat dilihat pada Kode~\ref{lst:sbom}.
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Contoh SBOM dalam format JSON},label={lst:sbom},numbers=none]
+{
+  "schema": "minisign-sbom/v1",
+  "subject": {
+    "name": "contoh-app.zip",
+    "size": 1048576,
+    "sha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+  },
+  "components": [
+    {
+      "name": "credo",
+      "version": "1.7.19",
+      "purl": "pkg:hex/credo@1.7.19",
+      "sha256": "2d8bc95d5a7bb99dd2613621d4f08c6a3575c3fd4b62e6a2b48a100352a557b8"
+    },
+    {
+      "name": "jason",
+      "version": "1.4.5",
+      "purl": "pkg:hex/jason@1.4.5",
+      "sha256": "b0c823996102bcd0239b3c2444eb00409b72f6a140c1950bc8b457d836b30684"
+    }
+  ]
+}
+\end{lstlisting}
