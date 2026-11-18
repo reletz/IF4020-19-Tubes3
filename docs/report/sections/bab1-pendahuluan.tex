@@ -1,10 +1,48 @@
 \section{Pendahuluan}
 
 \subsection{Latar Belakang}
-% TODO: peran tanda tangan digital pada rilis perangkat lunak, risiko rantai pasok,
-% dan posisi Nadina sebagai kakas penandatanganan di pipeline CI/CD.
+Perangkat lunak modern jarang dibangun dari nol. Sebuah rilis biasanya dirakit dari kode
+sendiri, pustaka pihak ketiga, dan artefak yang dibangun otomatis di pipeline CI/CD, lalu
+diunggah ke \textit{registry} dan diunduh oleh pengguna. Setiap tahap dalam rantai ini dapat menjadi
+titik masuk bagi perubahan yang tidak diinginkan, baik karena kesalahan maupun serangan. Risiko
+ini dikenal sebagai risiko rantai pasok (\textit{supply chain}). Pengguna yang menerima artefak
+perlu cara untuk memastikan bahwa berkas yang ia pasang benar-benar berasal dari penerbit yang
+dipercaya dan tidak berubah sejak ditandatangani.
+
+\textit{Digital signature} menjawab kebutuhan tersebut. Penerbit menandatangani sebuah pesan
+dengan kunci privatnya, dan siapa pun yang memiliki kunci publik yang sesuai dapat memeriksa
+tanda tangan itu. Dengan begitu, penerima dapat memastikan dua hal, yakni \textit{authenticity} (tanda
+tangan dibuat oleh pemilik kunci privat) dan \textit{integrity} (pesan tidak diubah sesudah
+ditandatangani). Tanda tangan digital tidak menyatakan bahwa perangkat lunak bebas dari malware
+atau kerentanan. Yang dijamin hanyalah asal dan keutuhan berkas, sedangkan kepercayaan terhadap
+penerbit ditentukan oleh kunci publik mana yang diterima pengguna.
+
+Nadina dirancang sebagai kakas baris perintah yang dijalankan di dalam pipeline CI/CD untuk
+menandatangani artefak hasil build dan memverifikasinya sebelum publikasi atau deployment.
+Program didistribusikan sebagai image container agar pipeline tidak perlu memasang
+dependensinya sendiri. Dua tahap dipisahkan, yakni penandatanganan yang memerlukan
+kunci privat, kemudian tahap verifikasi yang hanya membutuhkan artefak, bundle, dan trust store,
+sehingga verifikasi dapat dijalankan tanpa menyentuh kunci penerbit. Pengelolaan \textit{trusted public key} 
+dilakukan pengguna lewat trust store yang terpisah dari artefak. Konsep alur
+penandatanganan ini mengikuti Sigstore Cosign, dengan algoritma dan format yang ditetapkan
+spesifikasi tugas.
 
 \subsection{Tujuan dan Ruang Lingkup}
-% TODO: tiga profil algoritma, release manifest, bundle, trust store, distribusi container.
-% Cantumkan juga hal yang tidak dikerjakan (transparency log, layanan sertifikat,
-% deteksi malware, signing image container).
+Program ini harus memenuhi beberapa tujuan berikut:
+\begin{itemize} 
+    \item Program yang dirancang harus dapat melakukan proses penandatanganan dan verifikasi
+rilis perangkat lunak (software release) menggunakan algoritma RSA, ECDSA, dan EdDSA.
+    \item Program ditujukan untuk digunakan sebagai kakas pada pipeline CI/CD. Program
+didistribusikan sebagai image container yang dapat diambil dari registry, kemudian
+dijalankan untuk menandatangani artefak hasil build dan memverifikasinya sebelum
+publikasi atau deployment.
+    \item Program wajib menyediakan pembangkitan pasangan kunci,
+pembentukan release manifest, dan pengelolaan kunci publik tepercaya
+    \item Pengujian dan analisis dilakukan pada ketiga algoritma untuk membandingkan kebenaran hasil, keamanan
+sistem, dan performa program.
+    \item Program yang dibuat mengadaptasi alur penandatanganan berkas pada Sigstore Cosign.
+\end{itemize}
+Berkas rilis yang akan ditandatangani selanjutnya disebut artefak. Informasi mengenai
+artefak, seperti nama paket, versi, ukuran berkas, dan nilai hash, disimpan dalam release
+manifest. Tanda tangan digital diberikan pada manifest tersebut, kemudian manifest dan
+tanda tangannya disimpan dalam satu berkas yang disebut bundle.

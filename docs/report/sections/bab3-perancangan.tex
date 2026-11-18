@@ -32,7 +32,7 @@ mencantumkan SHA-256 artefak rilis.
 
 Contoh \textit{wrapper} hasil \texttt{sbom bind} untuk artefak \texttt{contoh-app.zip} yang berisi
 \texttt{isi rilis} dapat dilihat pada Kode~\ref{lst:wrapper}. Nilai SHA-256 pada subject dihitung
-oleh program dari byte artefak. Nilai \texttt{sbom\_b64} adalah Base64 dari SBOM masukan
+oleh program dari byte artefak. Nilai \texttt{sbom\_b64} adalah Base64 dari SBOM input
 berupa objek JSON CycloneDX 1.7 yang minimal.
 
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Contoh \textit{wrapper} minisign-sbom/v1},label={lst:wrapper},numbers=none]
@@ -46,6 +46,32 @@ berupa objek JSON CycloneDX 1.7 yang minimal.
   "sbom_b64": "eyJib21Gb3JtYXQiOiJDeWNsb25lRFgiLCJzcGVjVmVyc2lvbiI6IjEuNyJ9"
 }
 \end{lstlisting}
+
+\subsubsection*{Pengkodean Base64 pada \textit{wrapper}}
+Byte SBOM disimpan di dalam \textit{wrapper} dalam bentuk Base64 standar, bukan sebagai objek JSON. Ada dua alasan utama.
+
+\begin{enumerate}
+  \item \textbf{Byte SBOM tetap utuh.} Tanda tangan dibuat atas byte \textit{wrapper}, sehingga
+    byte SBOM di dalamnya juga harus dijaga. Jika SBOM ditulis sebagai objek JSON bersarang,
+    parser akan membacanya lalu menulisnya ulang. Spasi, urutan key, dan escape dapat berubah
+    dalam proses itu. Akibatnya \texttt{extract} tidak lagi identik dengan keluaran kakasnya.
+    Dengan Base64, \texttt{extract} mengembalikan byte asli yang diuji dengan \texttt{cmp}.
+  \item \textbf{JSON tidak membawa byte sembarang dengan aman.} String JSON harus berupa UTF-8,
+    dan beberapa karakter wajib di-escape. Base64 hanya memuat huruf, angka, \texttt{+}, \texttt{/},
+    dan \texttt{=}, sehingga aman disisipkan sebagai string tanpa escape.
+\end{enumerate}
+
+Pilihan ini juga menghindari masalah parser yang ketat. Kakas seperti Trivy dapat menulis
+\texttt{null}, yang ditolak oleh \texttt{StrictJSON}. Karena isi SBOM tidak diparse oleh
+\texttt{StrictJSON}, \texttt{null} di dalamnya tidak menjadi masalah. Program hanya memeriksa
+bahwa isinya objek JSON, memakai \texttt{JSON.decode} bawaan.
+
+Pilihan ini memiliki \textit{trade-off}. Pertama, ukuran naik sekitar sepertiga akibat Base64,
+sehingga batas SBOM ditetapkan 16 MiB dan ukuran \textit{wrapper} dihitung dari batas tersebut.
+Kedua, \textit{wrapper} tidak dapat dibaca langsung oleh manusia dan perlu didekode dengan
+\texttt{sbom extract} untuk melihat isi SBOM. Ketiga, program tidak memeriksa isi SBOM lebih
+jauh daripada bentuk objek JSON, sehingga kelengkapan komponen menjadi tanggung jawab kakas
+pembuat SBOM.
 
 \textit{Wrapper} ditandatangani sebagai artefak dengan alur penandatanganan yang sama, sehingga
 bundle SBOM memakai format bundle yang sama (Tabel 2.4). Verifikasi dilakukan berlapis dan
