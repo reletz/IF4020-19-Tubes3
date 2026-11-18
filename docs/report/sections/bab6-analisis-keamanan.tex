@@ -3,7 +3,7 @@
 \subsection{Langkah Mitigasi}
 
 \paragraph{Kebocoran \textit{private key}.}
-\textit{File} \textit{private key} dibuat dengan izin \texttt{0600} pada \textit{file} sementara di direktori
+\textit{private key} \textit{file} dibuat dengan izin \texttt{0600} pada \textit{file} sementara di direktori
 yang sama, lalu di-\textit{rename}, sehingga isi \textit{key} tidak pernah terbaca pihak lain dan
 \textit{file} lama tidak rusak bila penulisan gagal. \textit{File} tidak ditimpa tanpa opsi
 \texttt{force} yang eksplisit. Modul \textit{key} tidak mencatat isi \textit{key} pada log. Pada
@@ -27,7 +27,7 @@ perbedaan \textit{line ending} atau pemenggalan PEM tidak mengubah \texttt{keyid
 
 \subsection{Nonce dan Randomness (U14)}
 
-Skenario U14 \textit{sign} manifest yang identik dua kali dengan \textit{key} yang sama.
+Skenario U14 melakukan \textit{sign} pada manifest yang identik dua kali dengan \textit{key} yang sama.
 Hasilnya ditentukan oleh sumber randomness tiap algoritma (\textit{file}
 \texttt{test/nonce\_analysis\_test.exs}):
 

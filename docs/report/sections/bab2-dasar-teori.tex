@@ -8,7 +8,7 @@ sesuai dapat memeriksa \textit{signature} itu tanpa mengetahui \textit{private k
 pemeriksaan akan gagal. Dalam skema yang umum, \textit{message} tidak dienkripsi, sehingga \textit{digital signature} memberikan integritas dan autentikasi, tetapi tidak kerahasiaan.
 
 Ada tiga keluarga algoritma yang dibahas di sini: RSA dengan skema RSASSA-PSS, ECDSA pada
-kurva P-256, dan EdDSA pada kurva Ed25519. Ketiganya memakai \textit{key pair} publik dan privat,
+kurva P-256, dan EdDSA pada kurva Ed25519. Ketiganya memakai \textit{public and private key pairs},
 tetapi berbeda dalam matematika, ukuran \textit{key}, ukuran \textit{signature}, dan sumber keacakannya.
 
 \subsubsection{Format Kunci dan Encoding}
@@ -21,7 +21,7 @@ penting karena fingerprint dan \textit{signature} bergantung pada byte yang pers
 \textit{Privacy-Enhanced Mail} (PEM) membungkus DER dengan Base64 dan dua baris penanda, misalnya
 \texttt{-----BEGIN PUBLIC KEY-----}. PEM hanya mengubah tampilan, bukan isi \textit{key}. Dua format
 DER yang umum dipakai untuk \textit{key} adalah \textit{SubjectPublicKeyInfo} (SPKI) untuk \textit{public key},
-yang berisi identitas algoritma dan titik publik, dan PKCS\#8 untuk \textit{private key}. Identitas
+yang berisi identitas algoritma dan \textit{public point}, dan PKCS\#8 untuk \textit{private key}. Identitas
 algoritma pada keduanya ditentukan oleh \textit{object identifier} (OID). Untuk kurva P-256
 OID-nya \texttt{1.2.840.10045.3.1.7}, sedangkan untuk Ed25519 \texttt{1.3.101.112}.
 

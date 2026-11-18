@@ -2,7 +2,7 @@
 
 \subsection{Arsitektur Program}
 Program disusun dari modul-modul dengan tanggung jawab terpisah. Pembagian ini membuat aturan
-keamanan mudah ditelusuri, misalnya bahwa hanya modul profil dan modul kunci yang menyentuh API
+keamanan mudah ditelusuri, misalnya bahwa hanya modul profil dan modul \textit{key} yang menyentuh API
 kriptografi OTP. Ringkasannya dapat dilihat pada Tabel~\ref{tab:modul}.
 
 \begin{table}[H]
@@ -12,14 +12,14 @@ kriptografi OTP. Ringkasannya dapat dilihat pada Tabel~\ref{tab:modul}.
 Modul & Tanggung jawab \\
 \midrule
 \texttt{Nadina.CLI} & Titik masuk. Membaca opsi, memanggil subperintah, dan menentukan exit code. \\
-\texttt{Nadina.Keys} & Pembangkitan \textit{key pair}, PEM, \textit{fingerprint}, dan penulisan berkas kunci. \\
+\texttt{Nadina.Keys} & Pembangkitan \textit{key pair}, PEM, \textit{fingerprint}, dan penulisan \textit{file} \textit{key}. \\
 \texttt{Nadina.Profile} & \textit{Behaviour} profil, dengan implementasi \texttt{RsaPss}, \texttt{EcdsaP256}, dan \texttt{Ed25519}. \\
 \texttt{Nadina.StrictJSON} & Parser JSON yang menolak \textit{duplicate key}, \texttt{null}, dan bilangan non-integer. \\
 \texttt{Nadina.Manifest}, \texttt{Nadina.Bundle} & Format data beserta validasi dan serialisasi \textit{canonical}. \\
 \texttt{Nadina.Artifact} & Membaca ukuran dan SHA-256 \textit{artifact} secara bertahap. \\
-\texttt{Nadina.Sign}, \texttt{Nadina.Verify} & Alur utama penandatanganan dan verifikasi. \\
+\texttt{Nadina.Sign}, \texttt{Nadina.Verify} & Alur utama \textit{signing} dan \textit{verification}. \\
 \texttt{Nadina.Trust} & Pengelolaan \textit{trust store} dengan penulisan atomik. \\
-\texttt{Nadina.SBOM}, \texttt{Nadina.JSONOut} & Pengikatan SBOM dan penulis JSON untuk keluaran. \\
+\texttt{Nadina.SBOM}, \texttt{Nadina.JSONOut} & Pengikatan SBOM dan penulis JSON untuk \textit{output}. \\
 \bottomrule
 \end{tabular}
 \caption{Modul utama program.}
@@ -27,16 +27,15 @@ Modul & Tanggung jawab \\
 \end{table}
 
 Program hanya bergantung pada pustaka bawaan OTP, yaitu \texttt{crypto} dan \texttt{public\_key},
-sehingga tidak ada dependensi kriptografi pihak ketiga yang masuk ke rilis.
+sehingga tidak ada dependensi kriptografi pihak ketiga yang masuk ke \textit{release}.
 
 \subsection{Format Release Manifest dan Bundle}
-Setiap format data dalam program memiliki schema dengan awalan \texttt{minisign-}, misalnya
-\texttt{minisign-manifest/v1}, \texttt{minisign-bundle/v1}, \texttt{minisign-trust/v1}, dan
-\texttt{minisign-sbom/v1}. Awalan ini hanya mengikuti nama contoh pada spesifikasi tugas dan
-berfungsi sebagai penanda versi format. Program tidak memakai, tidak kompatibel dengan, dan tidak
-memanggil alat \textit{minisign} yang sebenarnya, yang menghasilkan berkas \texttt{.minisig} dengan
-\textit{Ed25519}. Format seluruh berkas di sini dibuat sendiri, dan hanya berkas-berkas JSON dan
-PEM yang dijelaskan pada subbab ini yang dihasilkan dan dibaca program.
+Setiap format data dalam program memiliki schema dengan awalan \texttt{minisign-}, yaitu
+\texttt{manifest/v1}, \texttt{bundle/v1}, \texttt{trust/v1}, dan \texttt{sbom/v1}.
+Awalan ini hanya mengikuti nama contoh pada spesifikasi tugas dan
+berfungsi sebagai penanda versi format. Program tidak memakai, tidak kompatibel dengan, dan tidak memanggil
+alat \textit{minisign} yang sebenarnya. Alat itu menghasilkan \textit{file} \texttt{.minisig}
+dan menggunakan \textit{Ed25519}.
 
 \textit{Release manifest} adalah objek JSON dengan urutan field yang tetap: \texttt{schema},
 \texttt{package}, \texttt{version}, \texttt{algorithm}, \texttt{keyid}, dan \texttt{artifact}.
@@ -67,59 +66,59 @@ spasi, sedangkan listing ditampilkan dengan indentasi hanya agar mudah dibaca.
 
 Serialisasi \textit{canonical} memiliki aturan yang tegas. Tidak ada spasi di luar string, tidak
 ada baris baru di akhir, tidak ada escape \texttt{\textbackslash uXXXX}, dan bilangan bulat tidak
-memiliki angka nol di depan. Saat verifikasi, manifest diparse dengan ketat, lalu dibentuk ulang,
-dan hasilnya dibandingkan byte demi byte dengan manifest asli. Jika tidak identik, verifikasi
-ditolak sebagai \texttt{FORMAT\_ERROR}. Dengan cara ini, byte yang ditandatangani dan byte yang
+memiliki angka nol di depan. Saat \textit{verification}, manifest diparse dengan ketat, lalu dibentuk ulang,
+dan hasilnya dibandingkan byte demi byte dengan manifest asli. Jika tidak identik, \textit{verification}
+ditolak sebagai \texttt{FORMAT\_ERROR}. Dengan cara ini, byte yang \textit{signed} dan byte yang
 diperiksa pasti sama.
 
 \textit{Bundle} adalah objek JSON dengan tiga field: \texttt{schema} bernilai
 \texttt{minisign-bundle/v1}, \texttt{manifest\_b64}, dan \texttt{signature\_b64}. Kedua field
 terakhir berupa Base64 standar dengan padding. Encoding diperiksa dengan cara men-decode lalu
-meng-encode ulang dan membandingkan hasilnya dengan string masukan, sehingga padding yang tidak
+meng-encode ulang dan membandingkan hasilnya dengan string \textit{input}, sehingga padding yang tidak
 standar ikut ditolak. Ukuran bundle dibatasi 64 KiB. Urutan field dan spasi di dalam bundle
-dibebaskan, karena yang ditandatangani adalah byte manifest yang tersimpan di dalamnya.
+dibebaskan, karena yang \textit{signed} adalah byte manifest yang tersimpan di dalamnya.
 
-\subsection{Berkas Kunci dan Fingerprint}
-Kunci privat disimpan sebagai \textit{PKCS\#8} dalam PEM dengan label \texttt{PRIVATE KEY}, tanpa
-enkripsi. Kunci publik disimpan sebagai \textit{SPKI} dalam PEM dengan label \texttt{PUBLIC KEY}.
-Profil ditentukan dari tipe kunci dan OID kurva. Kunci RSA diidentifikasi dari record
+\subsection{\textit{Key File} dan Fingerprint}
+\textit{Private key} disimpan sebagai \textit{PKCS\#8} dalam PEM dengan label \texttt{PRIVATE KEY}, tanpa
+enkripsi. \textit{Public key} disimpan sebagai \textit{SPKI} dalam PEM dengan label \texttt{PUBLIC KEY}.
+Profil ditentukan dari tipe \textit{key} dan OID kurva. \textit{Key} RSA diidentifikasi dari record
 \texttt{RSAPrivateKey} atau \texttt{RSAPublicKey}, kurva P-256 dari OID \texttt{1.2.840.10045.3.1.7},
 dan Ed25519 dari OID \texttt{1.3.101.112}. Setelah profil ditentukan, modul profil memeriksa
 parameter. RSA harus bermodulus tepat 3072 bit dengan $e = 65537$, kurva harus P-256 dengan titik
-SEC1 \textit{uncompressed}, dan Ed25519 mengikuti RFC 8410. Pada PKCS\#8 Ed25519, titik publik
+SEC1 \textit{uncompressed}, dan Ed25519 mengikuti RFC 8410. Pada PKCS\#8 Ed25519, \textit{public point}
 tidak disertakan, sehingga titik tersebut diturunkan ulang dari \textit{seed}.
 
 \textit{Fingerprint} atau \texttt{keyid} dihitung sebagai hex huruf kecil dari SHA-256 atas DER
-SPKI. DER diperoleh dengan mengekspor ulang kunci publik, bukan dari teks PEM. Akibatnya,
+SPKI. DER diperoleh dengan mengekspor ulang \textit{public key}, bukan dari teks PEM. Akibatnya,
 perbedaan \textit{line ending} atau pemenggalan baris PEM tidak mengubah \texttt{keyid}.
 
-Berkas kunci privat dibuat dengan izin 0600 dan berkas kunci publik dengan izin 0644. Penulisan
-dilakukan lewat berkas sementara pada direktori yang sama, lalu di-\textit{rename}, sehingga
-berkas lama tidak rusak jika penulisan gagal. Berkas yang sudah ada tidak ditimpa kecuali
-pengguna memberi opsi \texttt{-force}. Isi kunci privat tidak pernah dicatat pada log.
+\textit{Private key} \textit{file} dibuat dengan izin 0600 dan \textit{file} \textit{public key} dengan izin 0644. Penulisan
+dilakukan lewat \textit{file} sementara pada direktori yang sama, lalu di-\textit{rename}, sehingga
+\textit{file} lama tidak rusak jika penulisan gagal. \textit{File} yang sudah ada tidak ditimpa kecuali
+pengguna memberi opsi \texttt{-force}. Isi \textit{private key} tidak pernah dicatat pada log.
 
 \subsection{Alur Penandatanganan}
-Penandatanganan dijalankan oleh \texttt{Nadina.Sign.run/1} dengan langkah berikut.
+\textit{Signing} dijalankan oleh \texttt{Nadina.Sign.run/1} dengan langkah berikut.
 
 \begin{enumerate}
-  \item Ukuran dan SHA-256 \textit{artifact} dihitung dengan membaca berkas per 1 MiB.
-  \item Kunci privat dimuat dari PEM. Profil ditentukan dari kunci, lalu \texttt{keyid} diturunkan
-    dari kunci publik turunannya.
-  \item Manifest dibentuk dengan \texttt{Manifest.new/7}. Nama artefak diambil dari basename
-    berkas, dan algoritma harus termasuk tiga profil yang didukung.
+  \item Ukuran dan SHA-256 \textit{artifact} dihitung dengan membaca \textit{file} per 1 MiB.
+  \item \textit{Private key} dimuat dari PEM. Profil ditentukan dari \textit{key}, lalu \texttt{keyid} diturunkan
+    dari \textit{public key} turunannya.
+  \item Manifest dibentuk dengan \texttt{Manifest.new/7}. Nama \textit{artifact} diambil dari basename
+    \textit{file}, dan algoritma harus termasuk tiga profil yang didukung.
   \item Manifest diserialisasi menjadi byte $M$ secara \textit{canonical}.
-  \item Byte $M$ ditandatangani oleh profil. SHA-256 diterapkan tepat satu kali oleh pustaka,
+  \item Byte $M$ \textit{signed} oleh profil. SHA-256 diterapkan tepat satu kali oleh pustaka,
     sedangkan Ed25519 menerima $M$ tanpa \textit{hashing} tambahan.
   \item Manifest dan \textit{signature} dibungkus ke dalam bundle, lalu ditulis secara atomik
-    ke berkas keluaran.
+    ke \textit{file} \textit{output}.
 \end{enumerate}
 
-Kegagalan masukan atau I/O menghasilkan exit code 2.
+Kegagalan \textit{input} atau I/O menghasilkan exit code 2.
 
 \subsection{Alur Verifikasi}
-Verifikasi dijalankan oleh \texttt{Nadina.Verify.run/1}. Pemeriksaan dilakukan berurutan dan
+\textit{Verification} dijalankan oleh \texttt{Nadina.Verify.run/1}. Pemeriksaan dilakukan berurutan dan
 berhenti pada kegagalan pertama, sesuai ketentuan spesifikasi. Setiap langkah menghasilkan status yang
-dapat dibaca pada keluaran JSON.
+dapat dibaca pada \textit{output} JSON.
 
 \begin{table}[H]
 \centering
@@ -127,42 +126,42 @@ dapat dibaca pada keluaran JSON.
 \toprule
 No. & Status jika gagal & Pemeriksaan \\
 \midrule
-1 & \texttt{INPUT\_ERROR} & Opsi wajib diberikan dan semua berkas masukan dapat dibaca. \\
+1 & \texttt{INPUT\_ERROR} & Opsi wajib diberikan dan semua \textit{file} \textit{input} dapat dibaca. \\
 2 & \texttt{FORMAT\_ERROR} & Struktur bundle, manifest, dan \textit{trust store} sesuai aturan, termasuk Base64 dan serialisasi \textit{canonical}. \\
 3 & \texttt{UNSUPPORTED\_ALGORITHM} & Nilai \texttt{algorithm} termasuk tiga profil yang didukung. \\
-4 & \texttt{KEY\_NOT\_TRUSTED} & \texttt{keyid} ada di \textit{trust store}, profil cocok, dan paket diizinkan untuk kunci tersebut. \\
+4 & \texttt{KEY\_NOT\_TRUSTED} & \texttt{keyid} ada di \textit{trust store}, profil cocok, dan \textit{package} diizinkan untuk \textit{key} tersebut. \\
 5 & \texttt{INVALID\_SIGNATURE} & \textit{Signature} sah atas byte manifest, dengan panjang yang benar. \\
-6 & \texttt{METADATA\_MISMATCH} & \texttt{package}, \texttt{version}, dan \texttt{artifact.name} sama dengan masukan pengguna. \\
+6 & \texttt{METADATA\_MISMATCH} & \texttt{package}, \texttt{version}, dan \texttt{artifact.name} sama dengan \textit{input} pengguna. \\
 7 & \texttt{ARTIFACT\_MISMATCH} & Ukuran dan SHA-256 \textit{artifact} sama dengan nilai pada manifest. \\
 8 & \texttt{OK} & Seluruh pemeriksaan berhasil. \\
 \bottomrule
 \end{tabular}
-\caption{Urutan pemeriksaan verifikasi.}
+\caption{Urutan pemeriksaan \textit{verification}.}
 \end{table}
 
-Kunci yang digunakan untuk verifikasi hanya berasal dari \textit{trust store} lokal. Kunci yang
-ada di dalam bundle tidak pernah dipercaya. Exit code 0 berarti verifikasi berhasil, exit code 1
-berarti verifikasi ditolak, dan exit code 2 berarti kesalahan pemakaian, I/O, atau lingkungan.
+\textit{Key} yang digunakan untuk \textit{verification} hanya berasal dari \textit{trust store} lokal. \textit{Key} yang
+ada di dalam bundle tidak pernah dipercaya. Exit code 0 berarti \textit{verification} berhasil, exit code 1
+berarti \textit{verification} ditolak, dan exit code 2 berarti kesalahan pemakaian, I/O, atau lingkungan.
 
 \subsection{Pengelolaan Trust Store}
 \textit{Trust store} adalah objek JSON dengan schema \texttt{minisign-trust/v1} dan array
 \texttt{keys}. Setiap entri memuat \texttt{keyid}, \texttt{algorithm}, \texttt{public\_key\_pem},
 dan \texttt{packages}. Saat dibaca, setiap entri diperiksa: \texttt{keyid} harus unik dan sesuai
-\textit{fingerprint} kunci, \texttt{algorithm} harus sesuai profil kunci, \texttt{packages} tidak
+\textit{fingerprint} \textit{key}, \texttt{algorithm} harus sesuai profil \textit{key}, \texttt{packages} tidak
 boleh kosong, tidak boleh memuat duplikat, dan tidak boleh memakai \textit{wildcard}. Ukuran
-\textit{trust store} dibatasi 1 MiB. \textit{Trust store} kosong tidak memberi kepercayaan kepada
-kunci mana pun.
+\textit{trust store} dibatasi 1 MiB. \textit{Trust store} kosong tidak memberi \textit{trust} kepada
+\textit{key} mana pun.
 
 Tiga perintah dapat digunakan untuk mengelola \textit{trust store}. \texttt{trust add} menambahkan
-kunci untuk satu paket dan membuat \textit{trust store} jika belum ada. Jika kunci sudah ada,
-paket ditambahkan ke daftar paketnya, dan jika pasangan \texttt{keyid} dan paket sudah ada,
+\textit{key} untuk satu \textit{package} dan membuat \textit{trust store} jika belum ada. Jika \textit{key} sudah ada,
+\textit{package} ditambahkan ke daftar \textit{package}-nya, dan jika pasangan \texttt{keyid} dan \textit{package} sudah ada,
 perintah tidak mengubah apa pun. \texttt{trust list} menampilkan isi \textit{trust store}, dan
 \texttt{trust remove} menghapus entri berdasarkan \texttt{keyid}. Jika \texttt{keyid} tidak ditemukan,
 perintah menghasilkan exit code 2.
 
-Setiap perubahan ditulis secara atomik seperti pada berkas kunci. Kegagalan penulisan tidak
+Setiap perubahan ditulis secara atomik seperti pada \textit{file} \textit{key}. Kegagalan penulisan tidak
 merusak \textit{trust store} sebelumnya. \textit{Trust store} tidak pernah diperbarui secara otomatis
-dari bundle, dan kepercayaan hanya ditentukan oleh isi \textit{trust store} pada saat verifikasi.
+dari bundle, dan \textit{trust} hanya ditentukan oleh isi \textit{trust store} pada saat \textit{verification}.
 
 \subsection{SBOM dan Keterikatannya dengan Rilis}
 SBOM dibuat oleh \textit{tool} eksternal, misalnya Trivy, Syft, atau cdxgen, dalam format apa pun yang
@@ -220,7 +219,7 @@ jauh daripada bentuk objek JSON, sehingga kelengkapan komponen menjadi tanggung 
 pembuat SBOM.
 
 \textit{Wrapper} \textit{signed} sebagai \textit{artifact} dengan alur \textit{signing} yang sama, sehingga
-bundle SBOM memakai format bundle yang sama dengan bundle rilis. \textit{Verification} dilakukan berlapis dan
+bundle SBOM memakai format bundle yang sama dengan bundle \textit{release}. \textit{Verification} dilakukan berlapis dan
 berhenti pada kegagalan pertama: bundle \textit{wrapper} diperiksa lebih dulu, lalu bundle \textit{release},
 lalu subject dicocokkan dengan \textit{artifact} \textit{release}, dan terakhir \texttt{sbom\_b64} harus berupa
 objek JSON. Dengan begitu, SBOM yang sah tetapi milik \textit{artifact} lain tetap ditolak.

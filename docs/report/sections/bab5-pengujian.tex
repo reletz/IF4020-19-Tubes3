@@ -109,7 +109,7 @@ Setiap profil diuji terhadap vektor dari sumber publik, terpisah dari CLI:
     parameternya sama persis dengan profil (RSA 3072, SHA-256, MGF1-SHA-256, salt 32 byte).
     Semua kasus \textit{valid} diterima dan semua kasus \textit{invalid} ditolak.
   \item ECDSA P-256: vektor RFC 6979 lampiran A.2.5 untuk \textit{message} \texttt{sample}. \textit{Signature} diterima, \textit{message} \texttt{Sample} ditolak, dan \textit{private key} vektor menurunkan
-    titik publik yang sama.
+    \textit{public point} yang sama.
   \item Ed25519: RFC 8032 bagian 7.1 TEST 1 (\textit{message} kosong) dan TEST 2 (\textit{message} 1 byte).
     \textit{Public key}, \textit{signature}, dan hasil \textit{verification} sama dengan vektor.
 \end{itemize}
