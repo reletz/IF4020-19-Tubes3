@@ -19,20 +19,20 @@
 % TODO: izin per paket, penulisan atomik, tidak diperbarui otomatis dari bundle.
 
 \subsection{SBOM dan Keterikatannya dengan Rilis}
-SBOM dibuat oleh kakas eksternal, misalnya Trivy, Syft, atau cdxgen, dalam format apa pun yang
+SBOM dibuat oleh \textit{tool} eksternal, misalnya Trivy, Syft, atau cdxgen, dalam format apa pun yang
 berupa objek JSON. Program tidak menafsirkan isinya. Yang diperiksa hanya bahwa byte SBOM
-tersimpan utuh dan terikat ke artefak rilis.
+tersimpan utuh dan terikat ke \textit{artifact} \textit{release}.
 
 Keterikatan dijaga oleh \textit{wrapper} dengan schema \texttt{minisign-sbom/v1}. \textit{Wrapper} memuat
-dua bagian. Bagian \textit{subject} berisi nama, ukuran, dan SHA-256 artefak rilis. Bagian
+dua bagian. Bagian \textit{subject} berisi nama, ukuran, dan SHA-256 \textit{artifact} \textit{release}. Bagian
 \texttt{sbom\_b64} berisi byte SBOM asli dalam Base64 standar, tanpa normalisasi. Dengan
 begitu, \textit{signature} mencakup byte SBOM yang sebenarnya dan bukan hasil penulisan ulang.
-Alasan memakai \textit{wrapper}, bukan SBOM mentah, adalah bahwa kakas eksternal umumnya tidak
-mencantumkan SHA-256 artefak rilis.
+Alasan memakai \textit{wrapper}, bukan SBOM mentah, adalah bahwa \textit{tool} eksternal umumnya tidak
+mencantumkan SHA-256 \textit{artifact} \textit{release}.
 
-Contoh \textit{wrapper} hasil \texttt{sbom bind} untuk artefak \texttt{contoh-app.zip} yang berisi
+Contoh \textit{wrapper} hasil \texttt{sbom bind} untuk \textit{artifact} \texttt{contoh-app.zip} yang berisi
 \texttt{isi rilis} dapat dilihat pada Kode~\ref{lst:wrapper}. Nilai SHA-256 pada subject dihitung
-oleh program dari byte artefak. Nilai \texttt{sbom\_b64} adalah Base64 dari SBOM input
+oleh program dari byte \textit{artifact}. Nilai \texttt{sbom\_b64} adalah Base64 dari SBOM input
 berupa objek JSON CycloneDX 1.7 yang minimal.
 
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Contoh \textit{wrapper} minisign-sbom/v1},label={lst:wrapper},numbers=none]
@@ -51,17 +51,17 @@ berupa objek JSON CycloneDX 1.7 yang minimal.
 Byte SBOM disimpan di dalam \textit{wrapper} dalam bentuk Base64 standar, bukan sebagai objek JSON. Ada dua alasan utama.
 
 \begin{enumerate}
-  \item \textbf{Byte SBOM tetap utuh.} Tanda tangan dibuat atas byte \textit{wrapper}, sehingga
+  \item \textbf{Byte SBOM tetap utuh.} \textit{Signature} dibuat atas byte \textit{wrapper}, sehingga
     byte SBOM di dalamnya juga harus dijaga. Jika SBOM ditulis sebagai objek JSON bersarang,
     parser akan membacanya lalu menulisnya ulang. Spasi, urutan key, dan escape dapat berubah
-    dalam proses itu. Akibatnya \texttt{extract} tidak lagi identik dengan keluaran kakasnya.
+    dalam proses itu. Akibatnya \texttt{extract} tidak lagi identik dengan \textit{output} \textit{tool}-nya.
     Dengan Base64, \texttt{extract} mengembalikan byte asli yang diuji dengan \texttt{cmp}.
   \item \textbf{JSON tidak membawa byte sembarang dengan aman.} String JSON harus berupa UTF-8,
     dan beberapa karakter wajib di-escape. Base64 hanya memuat huruf, angka, \texttt{+}, \texttt{/},
     dan \texttt{=}, sehingga aman disisipkan sebagai string tanpa escape.
 \end{enumerate}
 
-Pilihan ini juga menghindari masalah parser yang ketat. Kakas seperti Trivy dapat menulis
+Pilihan ini juga menghindari masalah parser yang ketat. \textit{Tool} seperti Trivy dapat menulis
 \texttt{null}, yang ditolak oleh \texttt{StrictJSON}. Karena isi SBOM tidak diparse oleh
 \texttt{StrictJSON}, \texttt{null} di dalamnya tidak menjadi masalah. Program hanya memeriksa
 bahwa isinya objek JSON, memakai \texttt{JSON.decode} bawaan.
@@ -70,14 +70,14 @@ Pilihan ini memiliki \textit{trade-off}. Pertama, ukuran naik sekitar sepertiga 
 sehingga batas SBOM ditetapkan 16 MiB dan ukuran \textit{wrapper} dihitung dari batas tersebut.
 Kedua, \textit{wrapper} tidak dapat dibaca langsung oleh manusia dan perlu didekode dengan
 \texttt{sbom extract} untuk melihat isi SBOM. Ketiga, program tidak memeriksa isi SBOM lebih
-jauh daripada bentuk objek JSON, sehingga kelengkapan komponen menjadi tanggung jawab kakas
+jauh daripada bentuk objek JSON, sehingga kelengkapan komponen menjadi tanggung jawab \textit{tool}
 pembuat SBOM.
 
-\textit{Wrapper} ditandatangani sebagai artefak dengan alur penandatanganan yang sama, sehingga
-bundle SBOM memakai format bundle yang sama (Tabel 2.4). Verifikasi dilakukan berlapis dan
-berhenti pada kegagalan pertama: bundle \textit{wrapper} diperiksa lebih dulu, lalu bundle rilis,
-lalu subject dicocokkan dengan artefak rilis, dan terakhir \texttt{sbom\_b64} harus berupa
-objek JSON. Dengan begitu, SBOM yang sah tetapi milik artefak lain tetap ditolak.
+\textit{Wrapper} \textit{signed} sebagai \textit{artifact} dengan alur \textit{signing} yang sama, sehingga
+bundle SBOM memakai format bundle yang sama (Tabel 2.4). \textit{Verification} dilakukan berlapis dan
+berhenti pada kegagalan pertama: bundle \textit{wrapper} diperiksa lebih dulu, lalu bundle \textit{release},
+lalu subject dicocokkan dengan \textit{artifact} \textit{release}, dan terakhir \texttt{sbom\_b64} harus berupa
+objek JSON. Dengan begitu, SBOM yang sah tetapi milik \textit{artifact} lain tetap ditolak.
 
-Batasannya: program tidak memeriksa kelengkapan komponen. Kelengkapan bergantung pada kakas
+Batasannya: program tidak memeriksa kelengkapan komponen. Kelengkapan bergantung pada \textit{tool}
 yang membuat SBOM.

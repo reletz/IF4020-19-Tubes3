@@ -1,48 +1,47 @@
 \section{Pendahuluan}
 
 \subsection{Latar Belakang}
-Perangkat lunak modern jarang dibangun dari nol. Sebuah rilis biasanya dirakit dari kode
-sendiri, pustaka pihak ketiga, dan artefak yang dibangun otomatis di pipeline CI/CD, lalu
+Perangkat lunak modern jarang dibangun dari nol. Sebuah \textit{release} biasanya dirakit dari kode
+sendiri, pustaka pihak ketiga, dan \textit{artifact} yang dibangun otomatis di pipeline CI/CD, lalu
 diunggah ke \textit{registry} dan diunduh oleh pengguna. Setiap tahap dalam rantai ini dapat menjadi
 titik masuk bagi perubahan yang tidak diinginkan, baik karena kesalahan maupun serangan. Risiko
-ini dikenal sebagai risiko rantai pasok (\textit{supply chain}). Pengguna yang menerima artefak
-perlu cara untuk memastikan bahwa berkas yang ia pasang benar-benar berasal dari penerbit yang
-dipercaya dan tidak berubah sejak ditandatangani.
+ini dikenal sebagai risiko rantai pasok (\textit{supply chain}). Pengguna yang menerima \textit{artifact}
+perlu cara untuk memastikan bahwa \textit{file} yang ia pasang benar-benar berasal dari \textit{publisher} yang
+dipercaya dan tidak berubah sejak \textit{signed}.
 
-\textit{Digital signature} menjawab kebutuhan tersebut. Penerbit menandatangani sebuah pesan
-dengan kunci privatnya, dan siapa pun yang memiliki kunci publik yang sesuai dapat memeriksa
-tanda tangan itu. Dengan begitu, penerima dapat memastikan dua hal, yakni \textit{authenticity} (tanda
-tangan dibuat oleh pemilik kunci privat) dan \textit{integrity} (pesan tidak diubah sesudah
-ditandatangani). Tanda tangan digital tidak menyatakan bahwa perangkat lunak bebas dari malware
-atau kerentanan. Yang dijamin hanyalah asal dan keutuhan berkas, sedangkan kepercayaan terhadap
-penerbit ditentukan oleh kunci publik mana yang diterima pengguna.
+\textit{Digital signature} menjawab kebutuhan tersebut. \textit{Publisher} \textit{sign} sebuah \textit{message}
+dengan \textit{private key}-nya, dan siapa pun yang memiliki \textit{public key} yang sesuai dapat memeriksa
+\textit{signature} itu. Dengan begitu, penerima dapat memastikan dua hal, yakni \textit{authenticity} (\textit{signature} dibuat oleh pemilik \textit{private key}) dan \textit{integrity} (\textit{message} tidak diubah sesudah
+\textit{signed}). \textit{Digital signature} tidak menyatakan bahwa perangkat lunak bebas dari malware
+atau kerentanan. Yang dijamin hanyalah asal dan keutuhan \textit{file}, sedangkan \textit{trust} terhadap
+\textit{publisher} ditentukan oleh \textit{public key} mana yang diterima pengguna.
 
-Nadina dirancang sebagai kakas baris perintah yang dijalankan di dalam pipeline CI/CD untuk
-menandatangani artefak hasil build dan memverifikasinya sebelum publikasi atau deployment.
+Nadina dirancang sebagai \textit{tool} baris perintah yang dijalankan di dalam pipeline CI/CD untuk
+\textit{sign} \textit{artifact} hasil build dan \textit{verify}-nya sebelum publikasi atau deployment.
 Program didistribusikan sebagai image container agar pipeline tidak perlu memasang
-dependensinya sendiri. Dua tahap dipisahkan, yakni penandatanganan yang memerlukan
-kunci privat, kemudian tahap verifikasi yang hanya membutuhkan artefak, bundle, dan trust store,
-sehingga verifikasi dapat dijalankan tanpa menyentuh kunci penerbit. Pengelolaan \textit{trusted public key} 
-dilakukan pengguna lewat trust store yang terpisah dari artefak. Konsep alur
-penandatanganan ini mengikuti Sigstore Cosign, dengan algoritma dan format yang ditetapkan
+dependensinya sendiri. Dua tahap dipisahkan, yakni \textit{signing} yang memerlukan
+\textit{private key}, kemudian tahap \textit{verification} yang hanya membutuhkan \textit{artifact}, bundle, dan trust store,
+sehingga \textit{verification} dapat dijalankan tanpa menyentuh \textit{key} \textit{publisher}. Pengelolaan \textit{trusted public key} 
+dilakukan pengguna lewat trust store yang terpisah dari \textit{artifact}. Konsep alur
+\textit{signing} ini mengikuti Sigstore Cosign, dengan algoritma dan format yang ditetapkan
 spesifikasi tugas.
 
 \subsection{Tujuan dan Ruang Lingkup}
 Program ini harus memenuhi beberapa tujuan berikut:
 \begin{itemize} 
-    \item Program yang dirancang harus dapat melakukan proses penandatanganan dan verifikasi
-rilis perangkat lunak (software release) menggunakan algoritma RSA, ECDSA, dan EdDSA.
-    \item Program ditujukan untuk digunakan sebagai kakas pada pipeline CI/CD. Program
+    \item Program yang dirancang harus dapat melakukan proses \textit{signing} dan \textit{verification}
+\textit{release} perangkat lunak (software release) menggunakan algoritma RSA, ECDSA, dan EdDSA.
+    \item Program ditujukan untuk digunakan sebagai \textit{tool} pada pipeline CI/CD. Program
 didistribusikan sebagai image container yang dapat diambil dari registry, kemudian
-dijalankan untuk menandatangani artefak hasil build dan memverifikasinya sebelum
+dijalankan untuk \textit{sign} \textit{artifact} hasil build dan \textit{verify}-nya sebelum
 publikasi atau deployment.
-    \item Program wajib menyediakan pembangkitan pasangan kunci,
-pembentukan release manifest, dan pengelolaan kunci publik tepercaya
-    \item Pengujian dan analisis dilakukan pada ketiga algoritma untuk membandingkan kebenaran hasil, keamanan
+    \item Program wajib menyediakan \textit{key pair} generation,
+pembentukan release manifest, dan pengelolaan \textit{public key} tepercaya
+    \item \textit{Testing} dan analisis dilakukan pada ketiga algoritma untuk membandingkan kebenaran hasil, keamanan
 sistem, dan performa program.
-    \item Program yang dibuat mengadaptasi alur penandatanganan berkas pada Sigstore Cosign.
+    \item Program yang dibuat mengadaptasi alur \textit{signing} \textit{file} pada Sigstore Cosign.
 \end{itemize}
-Berkas rilis yang akan ditandatangani selanjutnya disebut artefak. Informasi mengenai
-artefak, seperti nama paket, versi, ukuran berkas, dan nilai hash, disimpan dalam release
-manifest. Tanda tangan digital diberikan pada manifest tersebut, kemudian manifest dan
-tanda tangannya disimpan dalam satu berkas yang disebut bundle.
+\textit{release} \textit{file} yang akan \textit{signed} selanjutnya disebut \textit{artifact}. Informasi mengenai
+\textit{artifact}, seperti nama \textit{package}, versi, ukuran \textit{file}, dan nilai hash, disimpan dalam release
+manifest. \textit{Digital signature} diberikan pada manifest tersebut, kemudian manifest dan
+\textit{signature}-nya disimpan dalam satu \textit{file} yang disebut bundle.

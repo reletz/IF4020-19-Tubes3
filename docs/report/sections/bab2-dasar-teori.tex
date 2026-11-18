@@ -1,85 +1,81 @@
 \section{Dasar Teori}
 
 \subsection{Tanda Tangan Digital}
-Tanda tangan digital adalah mekanisme kriptografi untuk membuktikan keaslian dan integritas
-sebuah pesan. Penandatangan menghitung nilai ringkas (\textit{hash}) dari pesan, lalu
-menghasilkan tanda tangan dengan kunci privatnya. Siapa pun yang memegang kunci publik yang
-sesuai dapat memeriksa tanda tangan itu tanpa mengetahui kunci privat. Jika pesan diubah,
-pemeriksaan akan gagal. Dalam skema yang umum, pesan tidak dienkripsi, sehingga tanda tangan
-digital memberikan integritas dan autentikasi, tetapi tidak kerahasiaan.
+\textit{Digital signature} adalah mekanisme kriptografi untuk membuktikan keaslian dan integritas
+sebuah \textit{message}. \textit{Signer} menghitung nilai ringkas (\textit{hash}) dari \textit{message}, lalu
+menghasilkan \textit{signature} dengan \textit{private key}-nya. Siapa pun yang memegang \textit{public key} yang
+sesuai dapat memeriksa \textit{signature} itu tanpa mengetahui \textit{private key}. Jika \textit{message} diubah,
+pemeriksaan akan gagal. Dalam skema yang umum, \textit{message} tidak dienkripsi, sehingga \textit{digital signature} memberikan integritas dan autentikasi, tetapi tidak kerahasiaan.
 
 Ada tiga keluarga algoritma yang dibahas di sini: RSA dengan skema RSASSA-PSS, ECDSA pada
-kurva P-256, dan EdDSA pada kurva Ed25519. Ketiganya memakai pasangan kunci publik dan privat,
-tetapi berbeda dalam matematika, ukuran kunci, ukuran tanda tangan, dan sumber keacakannya.
+kurva P-256, dan EdDSA pada kurva Ed25519. Ketiganya memakai \textit{key pair} publik dan privat,
+tetapi berbeda dalam matematika, ukuran \textit{key}, ukuran \textit{signature}, dan sumber keacakannya.
 
 \subsubsection{Format Kunci dan Encoding}
-Kunci publik dan privat disimpan dalam format standar agar dapat dibaca pustaka lain.
+\textit{Public key} dan \textit{private key} disimpan dalam format standar agar dapat dibaca pustaka lain.
 \textit{Distinguished Encoding Rules} (DER) adalah encoding biner dari ASN.1, yaitu notasi
 untuk mendeskripsikan struktur data. Setiap nilai dalam DER ditulis sebagai tag, panjang, dan
 isi, dengan aturan yang membuat satu nilai hanya memiliki satu bentuk byte. Keunikan ini
-penting karena fingerprint dan tanda tangan bergantung pada byte yang persis sama.
+penting karena fingerprint dan \textit{signature} bergantung pada byte yang persis sama.
 
 \textit{Privacy-Enhanced Mail} (PEM) membungkus DER dengan Base64 dan dua baris penanda, misalnya
-\texttt{-----BEGIN PUBLIC KEY-----}. PEM hanya mengubah tampilan, bukan isi kunci. Dua format
-DER yang umum dipakai untuk kunci adalah \textit{SubjectPublicKeyInfo} (SPKI) untuk kunci publik,
-yang berisi identitas algoritma dan titik publik, dan PKCS\#8 untuk kunci privat. Identitas
+\texttt{-----BEGIN PUBLIC KEY-----}. PEM hanya mengubah tampilan, bukan isi \textit{key}. Dua format
+DER yang umum dipakai untuk \textit{key} adalah \textit{SubjectPublicKeyInfo} (SPKI) untuk \textit{public key},
+yang berisi identitas algoritma dan titik publik, dan PKCS\#8 untuk \textit{private key}. Identitas
 algoritma pada keduanya ditentukan oleh \textit{object identifier} (OID). Untuk kurva P-256
 OID-nya \texttt{1.2.840.10045.3.1.7}, sedangkan untuk Ed25519 \texttt{1.3.101.112}.
 
 \subsection{RSASSA-PSS}
-RSASSA-PSS adalah skema tanda tangan RSA dengan \textit{Probabilistic Signature Scheme} yang
-didefinisikan dalam RFC 8017 bagian 8.1. Skema ini memakai salt acak, sehingga dua tanda
-tangan atas pesan yang sama berbeda. Pesan di-\textit{hash} dengan SHA-256, lalu hasilnya
+RSASSA-PSS adalah skema \textit{signature} RSA dengan \textit{Probabilistic Signature Scheme} yang
+didefinisikan dalam RFC 8017 bagian 8.1. Skema ini memakai salt acak, sehingga dua \textit{signature} atas \textit{message} yang sama berbeda. \textit{Message} di-\textit{hash} dengan SHA-256, lalu hasilnya
 dikodekan dengan \textit{Mask Generation Function} MGF1 yang juga berbasis SHA-256 sebelum
 dikenai eksponensiasi RSA.
 
 Dibandingkan skema PKCS\#1 v1.5 yang deterministik, PSS memiliki bukti keamanan yang lebih
 kuat, dan karena itu dipilih untuk profil ini. Parameter yang dikunci adalah modulus RSA 3072
 bit dengan eksponen publik $e = 65537$, SHA-256, MGF1-SHA-256, dan salt 32 byte. Panjang
-tanda tangan sama dengan panjang modulus, yaitu 384 byte. RSA sendiri tidak boleh dipakai
+\textit{signature} sama dengan panjang modulus, yaitu 384 byte. RSA sendiri tidak boleh dipakai
 tanpa padding, karena RSA murni (\textit{textbook RSA}) bersifat deterministik dan mudah
 dimanipulasi.
 
 \subsection{ECDSA P-256}
 ECDSA (\textit{Elliptic Curve Digital Signature Algorithm}) adalah varian DSA yang bekerja pada
-kelompok titik kurva eliptik, seperti dibahas pada materi tanda tangan digital. Kurva P-256,
+kelompok titik kurva eliptik, seperti dibahas pada materi \textit{digital signature}. Kurva P-256,
 yang juga disebut secp256r1, adalah kurva yang distandarkan NIST. Hash SHA-256 dihitung sekali
-atas pesan, lalu pasangan $(r, s)$ dihitung dengan nilai acak $k$ sebagai nonce.
+atas \textit{message}, lalu pasangan $(r, s)$ dihitung dengan nilai acak $k$ sebagai nonce.
 
-Keamanan ECDSA bergantung pada nonce. Jika dua tanda tangan memakai $k$ yang sama, kunci
-privat dapat dihitung dari keduanya. Karena itu nonce harus berasal dari sumber acak yang aman,
-atau dihasilkan secara deterministik dengan RFC 6979 yang menurunkan $k$ dari kunci privat dan
-pesan. Pustaka OpenSSL dan OTP menghasilkan tanda tangan dalam format DER sebagai dua bilangan
+Keamanan ECDSA bergantung pada nonce. Jika dua \textit{signature} memakai $k$ yang sama, \textit{private key} dapat dihitung dari keduanya. Karena itu nonce harus berasal dari sumber acak yang aman,
+atau dihasilkan secara deterministik dengan RFC 6979 yang menurunkan $k$ dari \textit{private key} dan
+\textit{message}. Pustaka OpenSSL dan OTP menghasilkan \textit{signature} dalam format DER sebagai dua bilangan
 bulat ASN.1. Ukuran DER berubah-ubah, sedangkan format \textit{raw} $r \mid s$ berukuran tetap
 64 byte, dengan setiap nilai 32 byte big-endian. Konversi antara keduanya diperlukan agar
-tanda tangan berukuran tetap. Normalisasi low-S tidak wajib dalam profil ini.
+\textit{signature} berukuran tetap. Normalisasi low-S tidak wajib dalam profil ini.
 
 \subsection{Ed25519}
 Ed25519 adalah varian \textit{Edwards-curve Digital Signature Algorithm} (EdDSA) pada kurva
-Edwards25519, sesuai RFC 8032. Varian yang dipakai adalah PureEdDSA, yaitu pesan diberikan
+Edwards25519, sesuai RFC 8032. Varian yang dipakai adalah PureEdDSA, yaitu \textit{message} diberikan
 langsung ke algoritma tanpa \textit{pre-hash} di luar algoritma dan tanpa \textit{context}.
 Varian Ed25519ph tidak digunakan.
 
-Nonce pada Ed25519 diturunkan secara deterministik dari kunci privat dan pesan, sehingga tidak
-bergantung pada sumber acak saat menandatangani. Dua tanda tangan atas pesan yang sama akan
-identik. Kunci publik berukuran 32 byte dan tanda tangan 64 byte. Sesuai RFC 8410, identifier
-algoritma pada SPKI dan PKCS\#8 tidak memiliki field parameter, sehingga encoding kunci Ed25519
+Nonce pada Ed25519 diturunkan secara deterministik dari \textit{private key} dan \textit{message}, sehingga tidak
+bergantung pada sumber acak saat \textit{sign}. Dua \textit{signature} atas \textit{message} yang sama akan
+identik. \textit{Public key} berukuran 32 byte dan \textit{signature} 64 byte. Sesuai RFC 8410, identifier
+algoritma pada SPKI dan PKCS\#8 tidak memiliki field parameter, sehingga encoding \textit{key} Ed25519
 berbeda dari encoding kurva P-256 yang mencantumkan kurva sebagai parameter.
 
 \subsection{Manifest, Bundle, dan Trust Store}
-Model kepercayaan memisahkan tiga hal. \textit{Manifest} adalah data yang dilindungi oleh tanda
-tangan, misalnya nama paket, versi, algoritma, identitas kunci, dan informasi artefak. Pesan
-yang ditandatangani adalah seluruh byte manifest, bukan artefak itu sendiri, sehingga perubahan
-metadata juga terdeteksi. \textit{Bundle} menyimpan manifest beserta tanda tangannya agar
-pemeriksa cukup membaca satu berkas.
+Model \textit{trust} memisahkan tiga hal. \textit{Manifest} adalah data yang dilindungi oleh \textit{signature}, misalnya nama \textit{package}, versi, algoritma, identitas \textit{key}, dan informasi \textit{artifact}. \textit{Message}
+yang \textit{signed} adalah seluruh byte manifest, bukan \textit{artifact} itu sendiri, sehingga perubahan
+metadata juga terdeteksi. \textit{Bundle} menyimpan manifest beserta \textit{signature}-nya agar
+pemeriksa cukup membaca satu \textit{file}.
 
-\textit{Trust store} adalah daftar kunci publik yang dipercaya oleh pemeriksa, beserta paket
-yang boleh ditandatangani kunci tersebut. Pemeriksa hanya menerima kunci yang ada di trust
-store lokal. Kunci yang terdapat di dalam bundle tidak pernah dipercaya dengan sendirinya,
-karena penyerang dapat membuat bundle baru dengan kuncinya sendiri. Trust store juga tidak
+\textit{Trust store} adalah daftar \textit{public key} yang dipercaya oleh pemeriksa, beserta \textit{package}
+yang boleh \textit{signed} \textit{key} tersebut. Pemeriksa hanya menerima \textit{key} yang ada di trust
+store lokal. \textit{Key} yang terdapat di dalam bundle tidak pernah dipercaya dengan sendirinya,
+karena penyerang dapat membuat bundle baru dengan \textit{key}-nya sendiri. Trust store juga tidak
 diperbarui secara otomatis dari bundle.
 
-Model ini tidak mencegah \textit{rollback attack}. Bundle lama yang sah tetap lolos verifikasi,
+Model ini tidak mencegah \textit{rollback attack}. Bundle lama yang sah tetap lolos \textit{verification},
 karena pemeriksa tidak mengetahui versi terbaru yang pernah diterima. Pencegahannya memerlukan
 \textit{trusted state} tambahan, misalnya versi terendah yang diterima, atau metadata
 berkedaluwarsa seperti pada TUF.
@@ -87,13 +83,13 @@ berkedaluwarsa seperti pada TUF.
 \subsection{Software Bill of Materials (SBOM)}
 SBOM adalah daftar komponen yang menyusun sebuah perangkat lunak, beserta versi dan
 \textit{checksum}-nya. Daftar ini membantu pengguna memeriksa dependensi yang masuk ke sebuah
-rilis. Format SBOM beragam, misalnya CycloneDX dan SPDX. Setiap komponen biasanya dinyatakan
-dengan \textit{package URL} (purl), yaitu skema penamaan paket yang berbentuk
+\textit{release}. Format SBOM beragam, misalnya CycloneDX dan SPDX. Setiap komponen biasanya dinyatakan
+dengan \textit{package URL} (purl), yaitu skema penamaan \textit{package} yang berbentuk
 \texttt{pkg:<tipe>/<nama>@<versi>}.
 
-SBOM dapat ikut ditandatangani agar isinya tidak diubah setelah dibuat. Dengan menyimpan
-SHA-256 artefak di dalam SBOM, pemeriksa juga dapat memastikan bahwa SBOM memang merujuk
-artefak yang sedang diperiksa. Contoh keluaran kakas eksternal dapat dilihat pada Kode~\ref{lst:sbom}.
+SBOM dapat ikut \textit{signed} agar isinya tidak diubah setelah dibuat. Dengan menyimpan
+SHA-256 \textit{artifact} di dalam SBOM, pemeriksa juga dapat memastikan bahwa SBOM memang merujuk
+\textit{artifact} yang sedang diperiksa. Contoh \textit{output} \textit{tool} eksternal dapat dilihat pada Kode~\ref{lst:sbom}.
 
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Potongan SBOM CycloneDX yang dihasilkan Trivy},label={lst:sbom},numbers=none]
 {
