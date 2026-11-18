@@ -23,16 +23,33 @@ SBOM dibuat oleh kakas eksternal, misalnya Trivy, Syft, atau cdxgen, dalam forma
 berupa objek JSON. Program tidak menafsirkan isinya. Yang diperiksa hanya bahwa byte SBOM
 tersimpan utuh dan terikat ke artefak rilis.
 
-Keterikatan dijaga oleh pembungkus dengan schema \texttt{minisign-sbom/v1}. Pembungkus memuat
+Keterikatan dijaga oleh \textit{wrapper} dengan schema \texttt{minisign-sbom/v1}. \textit{Wrapper} memuat
 dua bagian. Bagian \textit{subject} berisi nama, ukuran, dan SHA-256 artefak rilis. Bagian
 \texttt{sbom\_b64} berisi byte SBOM asli dalam Base64 standar, tanpa normalisasi. Dengan
-begitu, tanda tangan mencakup byte SBOM yang sebenarnya dan bukan hasil penulisan ulang.
-Alasan memakai pembungkus, bukan SBOM mentah, adalah bahwa kakas eksternal umumnya tidak
-mencantumkan SHA-256 artefak rilis, padahal spek mewajibkannya.
+begitu, \textit{signature} mencakup byte SBOM yang sebenarnya dan bukan hasil penulisan ulang.
+Alasan memakai \textit{wrapper}, bukan SBOM mentah, adalah bahwa kakas eksternal umumnya tidak
+mencantumkan SHA-256 artefak rilis.
 
-Pembungkus ditandatangani sebagai artefak dengan alur penandatanganan yang sama, sehingga
+Contoh \textit{wrapper} hasil \texttt{sbom bind} untuk artefak \texttt{contoh-app.zip} yang berisi
+\texttt{isi rilis} dapat dilihat pada Kode~\ref{lst:wrapper}. Nilai SHA-256 pada subject dihitung
+oleh program dari byte artefak, dan \texttt{sbom\_b64} adalah Base64 dari SBOM masukan
+\texttt{\{"bomFormat":"CycloneDX","specVersion":"1.7"\}}.
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Contoh \textit{wrapper} minisign-sbom/v1},label={lst:wrapper},numbers=none]
+{
+  "schema": "minisign-sbom/v1",
+  "subject": {
+    "name": "contoh-app.zip",
+    "size": 10,
+    "sha256": "b8a3c507bd7e53dcf879b8b7d692352cadca429c9d83bae2d250e37686325c85"
+  },
+  "sbom_b64": "eyJib21Gb3JtYXQiOiJDeWNsb25lRFgiLCJzcGVjVmVyc2lvbiI6IjEuNyJ9"
+}
+\end{lstlisting}
+
+\textit{Wrapper} ditandatangani sebagai artefak dengan alur penandatanganan yang sama, sehingga
 bundle SBOM memakai format bundle yang sama (Tabel 2.4). Verifikasi dilakukan berlapis dan
-berhenti pada kegagalan pertama: bundle pembungkus diperiksa lebih dulu, lalu bundle rilis,
+berhenti pada kegagalan pertama: bundle \textit{wrapper} diperiksa lebih dulu, lalu bundle rilis,
 lalu subject dicocokkan dengan artefak rilis, dan terakhir \texttt{sbom\_b64} harus berupa
 objek JSON. Dengan begitu, SBOM yang sah tetapi milik artefak lain tetap ditolak.
 
