@@ -23,9 +23,10 @@ defmodule Nadina.CLI do
     trust add     -key <public.pem> -package <nama> -store <trust.json>
     trust list    -store <trust.json>
     trust remove  -keyid <fingerprint> -store <trust.json>
-    sbom generate -file <artefak> -lock <mix.lock> -out <sbom.json>
-    sbom sign     -sbom <sbom.json> -package <nama> -version <versi> -key <private.pem> -out <sbom-bundle.json>
-    sbom verify   -file <artefak> -bundle <bundle.json> -sbom <sbom.json> -sbom-bundle <sbom-bundle.json>
+    sbom bind     -file <artefak> -sbom <sbom-eksternal.json> -out <pembungkus.json>
+    sbom extract  -sbom <pembungkus.json> -out <sbom-eksternal.json>
+    sbom sign     -sbom <pembungkus.json> -package <nama> -version <versi> -key <private.pem> -out <sbom-bundle.json>
+    sbom verify   -file <artefak> -bundle <bundle.json> -sbom <pembungkus.json> -sbom-bundle <sbom-bundle.json>
                   -trust-store <trust.json> -package <nama> -version <versi> [-json]
 
   Profil: rsa-pss-sha256, ecdsa-p256-sha256, ed25519
@@ -87,7 +88,7 @@ defmodule Nadina.CLI do
   defp dispatch("trust", [sub | args]) when sub in ["add", "list", "remove"], do: trust(sub, args)
   defp dispatch("trust", _), do: usage_error("Subperintah trust tidak dikenal atau kosong.")
 
-  defp dispatch("sbom", [sub | args]) when sub in ["generate", "sign", "verify"],
+  defp dispatch("sbom", [sub | args]) when sub in ["bind", "extract", "sign", "verify"],
     do: sbom(sub, args)
 
   defp dispatch("sbom", _), do: usage_error("Subperintah sbom tidak dikenal atau kosong.")
@@ -261,9 +262,14 @@ defmodule Nadina.CLI do
 
   # ---- sbom
 
-  defp sbom("generate", args) do
-    strict = [file: :string, lock: :string, out: :string]
-    with_opts(args, strict, [:file, :lock, :out], &sbom_generate/1)
+  defp sbom("bind", args) do
+    strict = [file: :string, sbom: :string, out: :string]
+    with_opts(args, strict, [:file, :sbom, :out], &sbom_bind/1)
+  end
+
+  defp sbom("extract", args) do
+    strict = [sbom: :string, out: :string]
+    with_opts(args, strict, [:sbom, :out], &sbom_extract/1)
   end
 
   defp sbom("sign", args) do
@@ -292,16 +298,23 @@ defmodule Nadina.CLI do
     end
   end
 
-  defp sbom_generate(opts) do
-    case SBOM.generate(opts[:file], opts[:lock]) do
-      {:ok, bytes} ->
-        case write_new(opts[:out], bytes <> "\n") do
-          :ok -> {0, "SBOM ditulis ke #{opts[:out]}\n", ""}
-          {:error, reason} -> fail(describe(reason))
-        end
+  defp sbom_bind(opts) do
+    with {:ok, wrapper} <- SBOM.bind(opts[:file], opts[:sbom]) |> map_error(),
+         :ok <- write_new(opts[:out], wrapper) |> map_error() do
+      {0, "Pembungkus SBOM ditulis ke #{opts[:out]}\n", ""}
+    else
+      {:error, message} -> fail(message)
+    end
+  end
 
-      {:error, reason} ->
-        fail(describe(reason))
+  # Byte SBOM diambil apa adanya dari pembungkus, tanpa tambahan baris baru.
+  defp sbom_extract(opts) do
+    with {:ok, wrapper} <- read_file(opts[:sbom]),
+         {:ok, _subject, sbom_bytes} <- SBOM.extract(wrapper) |> map_error(),
+         :ok <- write_new(opts[:out], sbom_bytes) |> map_error() do
+      {0, "SBOM ditulis ke #{opts[:out]}\n", ""}
+    else
+      {:error, message} -> fail(message)
     end
   end
 
@@ -340,6 +353,13 @@ defmodule Nadina.CLI do
     end
   end
 
+  defp read_file(path) do
+    case File.read(path) do
+      {:ok, bytes} -> {:ok, bytes}
+      {:error, posix} -> {:error, describe({:io, posix})}
+    end
+  end
+
   defp map_error({:error, reason}), do: {:error, describe(reason)}
   defp map_error(other), do: other
 
@@ -358,7 +378,9 @@ defmodule Nadina.CLI do
   defp describe({:unsupported_algorithm, _}), do: "Algoritma tidak didukung."
   defp describe(:invalid_package), do: "Nama paket tidak sesuai pola."
   defp describe(:keyid_not_found), do: "keyid tidak ditemukan pada trust store."
-  defp describe(:too_large), do: "Trust store terlalu besar."
+  defp describe(:too_large), do: "Berkas melebihi batas ukuran."
+  defp describe(:not_json_object), do: "SBOM harus berupa objek JSON."
+  defp describe(:invalid_sbom), do: "Pembungkus SBOM tidak sesuai format."
   defp describe(:invalid_json), do: "Trust store bukan JSON yang sesuai format."
   defp describe(:invalid_schema), do: "Trust store memiliki schema yang salah."
   defp describe(:invalid_entry), do: "Trust store memuat entri kunci yang tidak sah."
