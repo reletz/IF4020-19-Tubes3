@@ -32,8 +32,8 @@ mencantumkan SHA-256 artefak rilis.
 
 Contoh \textit{wrapper} hasil \texttt{sbom bind} untuk artefak \texttt{contoh-app.zip} yang berisi
 \texttt{isi rilis} dapat dilihat pada Kode~\ref{lst:wrapper}. Nilai SHA-256 pada subject dihitung
-oleh program dari byte artefak, dan \texttt{sbom\_b64} adalah Base64 dari SBOM masukan
-\texttt{\{"bomFormat":"CycloneDX","specVersion":"1.7"\}}.
+oleh program dari byte artefak. Nilai \texttt{sbom\_b64} adalah Base64 dari SBOM masukan
+berupa objek JSON CycloneDX 1.7 yang minimal.
 
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Contoh \textit{wrapper} minisign-sbom/v1},label={lst:wrapper},numbers=none]
 {
