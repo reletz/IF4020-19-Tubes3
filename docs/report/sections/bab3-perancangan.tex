@@ -30,6 +30,14 @@ Program hanya bergantung pada pustaka bawaan OTP, yaitu \texttt{crypto} dan \tex
 sehingga tidak ada dependensi kriptografi pihak ketiga yang masuk ke rilis.
 
 \subsection{Format Release Manifest dan Bundle}
+Setiap format data dalam program memiliki schema dengan awalan \texttt{minisign-}, misalnya
+\texttt{minisign-manifest/v1}, \texttt{minisign-bundle/v1}, \texttt{minisign-trust/v1}, dan
+\texttt{minisign-sbom/v1}. Awalan ini hanya mengikuti nama contoh pada spesifikasi tugas dan
+berfungsi sebagai penanda versi format. Program tidak memakai, tidak kompatibel dengan, dan tidak
+memanggil alat \textit{minisign} yang sebenarnya, yang menghasilkan berkas \texttt{.minisig} dengan
+\textit{Ed25519}. Format seluruh berkas di sini dibuat sendiri, dan hanya berkas-berkas JSON dan
+PEM yang dijelaskan pada subbab ini yang dihasilkan dan dibaca program.
+
 \textit{Release manifest} adalah objek JSON dengan urutan field yang tetap: \texttt{schema},
 \texttt{package}, \texttt{version}, \texttt{algorithm}, \texttt{keyid}, dan \texttt{artifact}.
 Objek \texttt{artifact} memuat tepat tiga field, yaitu \texttt{name}, \texttt{size}, dan
