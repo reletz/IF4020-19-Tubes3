@@ -227,12 +227,16 @@ defmodule Nadina.Trust do
     end
   end
 
-  @doc "Menghapus entri berdasarkan keyid."
-  @spec remove(t(), String.t()) :: {:ok, t()} | {:error, :keyid_not_found}
-  def remove(entries, keyid) do
-    case find(entries, keyid) do
-      nil -> {:error, :keyid_not_found}
-      _ -> {:ok, Enum.reject(entries, &(&1.keyid == keyid))}
+  @doc "Menghapus entri berdasarkan satu atau beberapa keyid."
+  @spec remove(t(), String.t() | [String.t()]) :: {:ok, t()} | {:error, :keyid_not_found}
+  def remove(entries, keyids) when is_list(keyids), do: remove_all(entries, Enum.uniq(keyids))
+  def remove(entries, keyid), do: remove_all(entries, [keyid])
+
+  defp remove_all(entries, keyids) do
+    if Enum.all?(keyids, fn keyid -> find(entries, keyid) != nil end) do
+      {:ok, Enum.reject(entries, &(&1.keyid in keyids))}
+    else
+      {:error, :keyid_not_found}
     end
   end
 

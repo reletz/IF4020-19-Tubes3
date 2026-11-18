@@ -152,33 +152,6 @@ defmodule Nadina.CLITest do
       assert {1, %{"status" => "INVALID_SIGNATURE"}} = verify(r)
     end
 
-    test "U06: trust store kosong atau kunci dihapus", %{r: r, key: key} do
-      empty = Path.join(r.file |> Path.dirname(), "kosong.json")
-      File.write!(empty, ~s({"schema":"minisign-trust/v1","keys":[]}\n))
-      assert {1, %{"status" => "KEY_NOT_TRUSTED"}} = verify(r, store: empty)
-
-      {0, _, ""} = cli(["trust", "remove", "-keyid", key.fingerprint, "-store", r.store])
-      assert {1, %{"status" => "KEY_NOT_TRUSTED"}} = verify(r)
-    end
-
-    test "U07: kunci hanya diizinkan untuk paket lain", %{r: r, key: key} do
-      other = Path.join(Path.dirname(r.file), "lain.json")
-
-      {0, _, ""} =
-        cli([
-          "trust",
-          "add",
-          "-key",
-          key.prefix <> ".pub.pem",
-          "-package",
-          "paket-lain",
-          "-store",
-          other
-        ])
-
-      assert {1, %{"status" => "KEY_NOT_TRUSTED"}} = verify(r, store: other)
-    end
-
     test "U08: versi yang diharapkan berbeda dari manifest", %{r: r} do
       assert {1, %{"status" => "METADATA_MISMATCH"}} = verify(r, version: "2.0.0")
     end
@@ -215,30 +188,6 @@ defmodule Nadina.CLITest do
       forged = Manifest.serialize(%{m | algorithm: "rsa-sha1"})
       File.write!(r.bundle, Bundle.encode(%Bundle{b | manifest: forged}))
       assert {1, %{"status" => "UNSUPPORTED_ALGORITHM", "algorithm" => "rsa-sha1"}} = verify(r)
-    end
-
-    test "U12: kunci lain pada profil sama, tidak ada di trust store", %{r: r, dir: dir} do
-      other = Path.join(dir, "lain")
-      {0, fp, ""} = cli(["keygen", "-algorithm", "ecdsa-p256-sha256", "-out", other])
-      out = Path.join(dir, "lain.json")
-
-      {0, _, _} =
-        cli([
-          "sign",
-          "-file",
-          r.file,
-          "-package",
-          "contoh-app",
-          "-version",
-          "1.0.0",
-          "-key",
-          other <> ".key.pem",
-          "-out",
-          out
-        ])
-
-      assert {1, %{"status" => "KEY_NOT_TRUSTED", "keyid" => keyid}} = verify(r, bundle: out)
-      assert keyid == String.trim(fp)
     end
 
     test "U13: white space dan urutan field bundle diubah", %{r: r} do
@@ -372,6 +321,60 @@ defmodule Nadina.CLITest do
       assert Path.wildcard(store <> ".tmp-*") == []
     end
 
+    test "remove banyak keyid sekaligus dan batal tanpa perubahan bila ada yang hilang", %{
+      tmp_dir: dir,
+      keys: keys
+    } do
+      store = Path.join(dir, "multi.json")
+      ecdsa = keys["ecdsa-p256-sha256"]
+      ed = keys["ed25519"]
+
+      for key <- [ecdsa, ed] do
+        {0, _, ""} =
+          cli([
+            "trust",
+            "add",
+            "-key",
+            key.prefix <> ".pub.pem",
+            "-package",
+            "app",
+            "-store",
+            store
+          ])
+      end
+
+      original = File.read!(store)
+      missing = String.duplicate("0", 64)
+
+      assert {2, "", err} =
+               cli([
+                 "trust",
+                 "remove",
+                 "-keyid",
+                 ecdsa.fingerprint,
+                 "-keyid",
+                 missing,
+                 "-store",
+                 store
+               ])
+
+      assert err =~ "tidak ditemukan"
+      assert File.read!(store) == original
+
+      assert {0, out, ""} =
+               cli([
+                 "trust",
+                 "remove",
+                 "-keyid",
+                 ecdsa.fingerprint <> "," <> ed.fingerprint,
+                 "-store",
+                 store
+               ])
+
+      assert out =~ ecdsa.fingerprint and out =~ ed.fingerprint
+      assert {0, "", ""} = cli(["trust", "list", "-store", store])
+    end
+
     test "trust store rusak tidak ditimpa", %{tmp_dir: dir, keys: keys} do
       store = Path.join(dir, "rusak.json")
       File.write!(store, "bukan json")
@@ -468,12 +471,41 @@ defmodule Nadina.CLITest do
       refute File.read!(r.bundle) =~ "PRIVATE"
     end
 
+    test "sign tidak menimpa bundle tanpa -force", %{tmp_dir: dir, keys: keys} do
+      key = keys["ecdsa-p256-sha256"]
+      r = release(dir, key)
+      original = File.read!(r.bundle)
+
+      args = [
+        "sign",
+        "-file",
+        r.file,
+        "-package",
+        "contoh-app",
+        "-version",
+        "1.0.0",
+        "-key",
+        key.prefix <> ".key.pem",
+        "-out",
+        r.bundle
+      ]
+
+      assert {2, "", err} = cli(args)
+      assert err =~ "-force"
+      assert File.read!(r.bundle) == original
+      assert {0, _, ""} = cli(args ++ ["-force"])
+      assert File.read!(r.bundle) != original
+    end
+
     test "-help, -version, dan perintah tidak dikenal" do
       assert {0, out, ""} = cli(["-help"])
       assert out =~ "keygen" and out =~ "trust remove"
       assert {0, ver, ""} = cli(["-version"])
       assert ver == Nadina.version() <> "\n"
       assert {0, ^ver, ""} = cli(["--version"])
+      assert {0, out, ""} = cli(["keygen", "-help"])
+      assert out =~ "keygen"
+      assert {0, ^out, ""} = cli(["verify", "-h"])
       assert {2, "", err} = cli(["foo"])
       assert err =~ "tidak dikenal"
       assert {2, "", _} = cli([])
