@@ -1,9 +1,13 @@
 defmodule Nadina.SBOMTest do
   use ExUnit.Case, async: true
 
-  alias Nadina.SBOM
+  alias Nadina.{Artifact, Bundle, SBOM}
 
   @moduletag :tmp_dir
+
+  @fixtures Path.expand("testdata/sbom", __DIR__)
+  @cyclonedx Path.join(@fixtures, "cyclonedx-trivy.json")
+  @spdx Path.join(@fixtures, "spdx-trivy.json")
 
   defp cli(args), do: Nadina.CLI.run(args)
 
@@ -12,7 +16,7 @@ defmodule Nadina.SBOMTest do
     JSON.decode!(String.trim_trailing(out, "\n"))
   end
 
-  # Rilis lengkap: kunci, trust store, bundle rilis, SBOM, dan bundle SBOM.
+  # Rilis lengkap: kunci, trust store, bundle rilis, pembungkus SBOM, dan bundle pembungkus.
   setup %{tmp_dir: dir} do
     prefix = Path.join(dir, "k")
     {0, _fp, ""} = cli(["keygen", "-algorithm", "ed25519", "-out", prefix])
@@ -50,7 +54,7 @@ defmodule Nadina.SBOMTest do
       ])
 
     sbom = Path.join(dir, "sbom.json")
-    {0, _, ""} = cli(["sbom", "generate", "-file", artifact, "-lock", "mix.lock", "-out", sbom])
+    {0, _, ""} = cli(["sbom", "bind", "-file", artifact, "-sbom", @cyclonedx, "-out", sbom])
     sbom_bundle = Path.join(dir, "sbom-bundle.json")
 
     {0, _, ""} =
@@ -105,72 +109,108 @@ defmodule Nadina.SBOMTest do
     {code, json!(out)}
   end
 
-  describe "pembentukan dari mix.lock" do
-    test "komponen hex, diurutkan, dengan checksum SHA-256" do
-      assert {:ok, comps} = SBOM.components_from_lock("mix.lock")
-      assert comps == Enum.sort_by(comps, & &1.name)
-      assert Enum.any?(comps, &(&1.name == "credo"))
-      assert Enum.all?(comps, &Regex.match?(~r/\A[0-9a-f]{64}\z/, &1.sha256))
+  describe "bind dan extract" do
+    test "CycloneDX dan SPDX dari Trivy: byte SBOM kembali identik", %{
+      dir: dir,
+      artifact: artifact
+    } do
+      for fixture <- [@cyclonedx, @spdx] do
+        wrapper = Path.join(dir, "w-#{Path.basename(fixture)}")
+        out = Path.join(dir, "x-#{Path.basename(fixture)}")
+
+        assert {0, _, ""} =
+                 cli(["sbom", "bind", "-file", artifact, "-sbom", fixture, "-out", wrapper])
+
+        assert {0, _, ""} = cli(["sbom", "extract", "-sbom", wrapper, "-out", out])
+        assert File.read!(out) == File.read!(fixture)
+      end
     end
 
-    test "SBOM deterministik dan memuat subject yang benar", %{artifact: artifact} do
-      assert {:ok, a} = SBOM.generate(artifact, "mix.lock")
-      assert {:ok, b} = SBOM.generate(artifact, "mix.lock")
-      assert a == b
-      assert {:ok, subject, comps} = SBOM.parse(a)
-      assert subject.name == "contoh-app.zip"
-      assert subject.size == byte_size("isi artefak rilis")
-      assert comps != []
+    test "subject pembungkus merujuk artefak", %{dir: dir, artifact: artifact} do
+      wrapper = Path.join(dir, "w.json")
+      {0, _, ""} = cli(["sbom", "bind", "-file", artifact, "-sbom", @spdx, "-out", wrapper])
+      {:ok, size, sha} = Artifact.digest(artifact)
+      assert {:ok, subject, _} = SBOM.extract(File.read!(wrapper))
+      assert subject == %{name: "contoh-app.zip", size: size, sha256: sha}
     end
 
-    test "entri selain hex ditolak", %{dir: dir} do
-      lock = Path.join(dir, "git.lock")
-      File.write!(lock, ~s(%{"x" => {:git, "https://example.invalid/x.git", "abc", []}}))
-      assert SBOM.components_from_lock(lock) == {:error, :unsupported_source}
+    test "SBOM dengan null tetap diterima, karena isinya buram", %{dir: dir, artifact: artifact} do
+      sbom = Path.join(dir, "null.json")
+      File.write!(sbom, ~s({"bomFormat":"X","meta":null}\n))
+      wrapper = Path.join(dir, "w.json")
+      assert {0, _, ""} = cli(["sbom", "bind", "-file", artifact, "-sbom", sbom, "-out", wrapper])
     end
 
-    test "lock rusak dan lock yang tidak ada", %{dir: dir} do
-      bad = Path.join(dir, "bad.lock")
-      File.write!(bad, "bukan term elixir (")
-      assert SBOM.components_from_lock(bad) == {:error, :invalid_lock}
-      assert {:error, {:io, :enoent}} = SBOM.components_from_lock(Path.join(dir, "tidak-ada"))
+    test "masukan yang bukan objek JSON ditolak", %{dir: dir, artifact: artifact} do
+      for {name, content} <- [teks: "bukan json", larik: "[1,2]", skalar: "42"] do
+        sbom = Path.join(dir, "#{name}.json")
+        File.write!(sbom, content)
+        out = Path.join(dir, "w-#{name}.json")
+        assert {2, "", err} = cli(["sbom", "bind", "-file", artifact, "-sbom", sbom, "-out", out])
+        assert err =~ "objek JSON"
+        refute File.exists?(out)
+      end
     end
 
-    test "generate menolak artefak yang tidak ada", %{dir: dir} do
-      assert {:error, {:io, :enoent}} = SBOM.generate(Path.join(dir, "tidak-ada.zip"), "mix.lock")
+    test "pembungkus yang diubah atau tidak sah ditolak extract", %{dir: dir} do
+      assert {:error, :invalid_sbom} = SBOM.extract("{}")
+      assert {:error, :invalid_sbom} = SBOM.extract(~s({"schema":"minisign-sbom/v2"}))
+
+      bad_b64 =
+        ~s({"schema":"minisign-sbom/v1","subject":{"name":"a","size":0,"sha256":"#{String.duplicate("0", 64)}"},"sbom_b64":"!!"})
+
+      assert {:error, :invalid_sbom} = SBOM.extract(bad_b64)
+
+      extra =
+        ~s({"schema":"minisign-sbom/v1","subject":{"name":"a","size":0,"sha256":"#{String.duplicate("0", 64)}"},"sbom_b64":"e30=","x":1})
+
+      assert {:error, :invalid_sbom} = SBOM.extract(extra)
+
+      assert {2, "", _} =
+               cli([
+                 "sbom",
+                 "extract",
+                 "-sbom",
+                 Path.join(dir, "tidak-ada.json"),
+                 "-out",
+                 Path.join(dir, "o.json")
+               ])
     end
 
-    test "sbom generate tidak menimpa berkas yang sudah ada", %{artifact: artifact, sbom: sbom} do
+    test "bind dan extract tidak menimpa berkas yang sudah ada", %{
+      dir: dir,
+      artifact: artifact,
+      sbom: sbom
+    } do
       assert {2, "", err} =
-               cli(["sbom", "generate", "-file", artifact, "-lock", "mix.lock", "-out", sbom])
+               cli(["sbom", "bind", "-file", artifact, "-sbom", @cyclonedx, "-out", sbom])
 
       assert err =~ "sudah ada"
+      assert {2, "", err2} = cli(["sbom", "extract", "-sbom", sbom, "-out", artifact])
+      assert err2 =~ "sudah ada"
     end
   end
 
-  describe "verifikasi SBOM dan rilis" do
+  describe "verifikasi pembungkus dan rilis" do
     test "valid: kedua bundle sah dan subject merujuk artefak", r do
       assert {0, %{"valid" => true, "status" => "OK"}} = verify(r)
     end
 
-    test "isi SBOM diubah: ditolak pada bundle SBOM", r do
-      File.write!(r.sbom, String.replace(File.read!(r.sbom), "\"version\":\"", "\"version\":\"9"))
+    test "pembungkus diubah: ditolak pada bundle pembungkus", r do
+      File.write!(r.sbom, String.replace(File.read!(r.sbom), "\"size\":", "\"size\":0,\"size\":"))
       assert {1, %{"status" => "ARTIFACT_MISMATCH", "valid" => false}} = verify(r)
     end
 
-    test "artefak rilis diganti dengan isi lain: ditolak pada bundle rilis", r do
+    test "artefak rilis diganti isinya: ditolak pada bundle rilis", r do
       File.write!(r.artifact, "artefak lain")
       assert {1, %{"status" => "ARTIFACT_MISMATCH"}} = verify(r)
     end
 
-    test "SBOM milik artefak lain dengan bundle sah: ditolak pada langkah keterikatan", r do
+    test "pembungkus milik artefak lain dengan bundle sah: ditolak pada keterikatan", r do
       other = Path.join(r.dir, "lain.zip")
       File.write!(other, "artefak lain sama sekali")
       other_sbom = Path.join(r.dir, "sbom-lain.json")
-
-      {0, _, ""} =
-        cli(["sbom", "generate", "-file", other, "-lock", "mix.lock", "-out", other_sbom])
-
+      {0, _, ""} = cli(["sbom", "bind", "-file", other, "-sbom", @spdx, "-out", other_sbom])
       other_bundle = Path.join(r.dir, "sbom-lain-bundle.json")
 
       {0, _, ""} =
@@ -195,7 +235,7 @@ defmodule Nadina.SBOMTest do
       assert message =~ "tidak merujuk"
     end
 
-    test "bundle SBOM ditandatangani kunci yang tidak tepercaya: KEY_NOT_TRUSTED", r do
+    test "bundle pembungkus dari kunci tak tepercaya: KEY_NOT_TRUSTED", r do
       lain = Path.join(r.dir, "lain")
       {0, _, _} = cli(["keygen", "-algorithm", "ed25519", "-out", lain])
       lain_bundle = Path.join(r.dir, "lain-bundle.json")
@@ -219,7 +259,7 @@ defmodule Nadina.SBOMTest do
       assert {1, %{"status" => "KEY_NOT_TRUSTED"}} = verify(r, sbom_bundle: lain_bundle)
     end
 
-    test "SBOM yang formatnya rusak namun ditandatangani: FORMAT_ERROR", r do
+    test "pembungkus rusak namun ditandatangani: FORMAT_ERROR", r do
       bad = Path.join(r.dir, "bad-sbom.json")
       File.write!(bad, "{}\n")
       bad_bundle = Path.join(r.dir, "bad-bundle.json")
@@ -243,7 +283,38 @@ defmodule Nadina.SBOMTest do
       assert {1, %{"status" => "FORMAT_ERROR"}} = verify(r, sbom: bad, sbom_bundle: bad_bundle)
     end
 
-    test "berkas SBOM tidak ada: INPUT_ERROR dengan exit 2", r do
+    test "isi SBOM bukan objek JSON tetapi pembungkus sah: FORMAT_ERROR", r do
+      # Pembungkus dibuat langsung, melewati bind, sehingga isi yang bukan JSON lolos ke verifikasi.
+      {:ok, size, sha} = Artifact.digest(r.artifact)
+      inner = "bukan json"
+
+      wrapper =
+        ~s({"schema":"minisign-sbom/v1","subject":{"name":"contoh-app.zip","size":#{size},"sha256":"#{sha}"},"sbom_b64":"#{Base.encode64(inner)}"}\n)
+
+      path = Path.join(r.dir, "inner-bad.json")
+      File.write!(path, wrapper)
+      bundle = Path.join(r.dir, "inner-bad-bundle.json")
+
+      {0, _, ""} =
+        cli([
+          "sbom",
+          "sign",
+          "-sbom",
+          path,
+          "-package",
+          "contoh-app",
+          "-version",
+          "1.0.0",
+          "-key",
+          r.prefix <> ".key.pem",
+          "-out",
+          bundle
+        ])
+
+      assert {1, %{"status" => "FORMAT_ERROR"}} = verify(r, sbom: path, sbom_bundle: bundle)
+    end
+
+    test "berkas pembungkus tidak ada: INPUT_ERROR dengan exit 2", r do
       assert {2, %{"status" => "INPUT_ERROR"}} =
                verify(r, sbom: Path.join(r.dir, "tidak-ada.json"))
     end
@@ -252,6 +323,14 @@ defmodule Nadina.SBOMTest do
       assert {2, "", _} = cli(["sbom", "verify", "-file", "x"])
       assert {2, "", _} = cli(["sbom", "bukan-subperintah"])
       assert {2, "", _} = cli(["sbom"])
+
+      assert {2, "", _} =
+               cli(["sbom", "generate", "-file", "x", "-lock", "mix.lock", "-out", "y"])
     end
+  end
+
+  test "bundle pembungkus memakai format bundle yang sama dengan rilis", r do
+    {:ok, b} = Bundle.parse(File.read!(r.sbom_bundle))
+    assert byte_size(b.manifest) > 0
   end
 end
