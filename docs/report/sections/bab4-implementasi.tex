@@ -189,16 +189,6 @@ WORKDIR /work
 ENTRYPOINT ["/usr/local/bin/nadina"]
 \end{lstlisting}
 
-Image dipublikasikan untuk \texttt{linux/amd64} dan \texttt{linux/arm64} sebagai satu index.
-Listing~\ref{lst:digest} mencatat digest index beserta digest tiap platform untuk tag \texttt{edge}
-pada saat laporan ini ditulis. Tag versi seperti \texttt{1.0.0} akan dicatat pada README setelah
-rilis pertama diterbitkan.
-
-\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Digest image \texttt{reletz/nadina:edge} saat laporan ditulis},label={lst:digest},numbers=none]
-index    sha256:efc62f9783ef27e2f4a99bbdc3229bdce3f25af0f6618e873509e4cc76cfb526
-linux/amd64 sha256:28444945f4426dbf337af4b6a951d1e7891217830bcafe2060629fde7fc916c4
-linux/arm64 sha256:5b606ba2f15867149d46c6c7cec6ada40b7052f38f54b3610a76c1239082bdcc
-\end{lstlisting}
 
 \subsection{Integrasi CI/CD}
 Workflow \texttt{ci.yml} berjalan pada \texttt{pull\_request}, pada \textit{push} ke cabang selain
@@ -228,7 +218,7 @@ Beberapa aturan keamanan diterapkan pada kedua workflow. Izin \texttt{GITHUB\_TO
 \texttt{contents: read}. \textit{Checkout} memakai \texttt{persist-credentials: false}. Setiap
 \textit{action} dikunci ke SHA commit. Token Docker Hub disimpan sebagai secret pada
 \textit{environment} \texttt{nadina}, sedangkan nama pengguna disimpan sebagai variable pada
-\textit{environment} yang sama, sehingga tidak ada kredensial di dalam repositori. Workflow pemakai di repositori anmategra berada di luar cakupan bab ini dan hasilnya akan dicatat pada bab pengujian.
+\textit{environment} yang sama, sehingga tidak ada kredensial di dalam repositori.
 
 \subsection{Subcommand SBOM}
 Pembuatan \textit{wrapper} dilakukan oleh \texttt{sbom bind}, yang membaca \textit{artifact} dan \textit{file} SBOM, memastikan
