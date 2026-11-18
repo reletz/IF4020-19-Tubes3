@@ -1,4 +1,16 @@
 \section{Perancangan}
+\tikzset{
+  proses/.style={rectangle, rounded corners=2pt, draw, fill=blue!6, text width=7.4cm,
+    align=center, minimum height=0.7cm, font=\small},
+  keputusan/.style={diamond, aspect=2.4, draw, fill=yellow!14, text width=3.4cm,
+    align=center, inner sep=1pt, font=\small},
+  akhir/.style={rectangle, rounded corners=6pt, draw, fill=green!10, text width=7.4cm, align=center,
+    minimum height=0.7cm, font=\small},
+  galat/.style={rectangle, draw, fill=red!9, text width=4.2cm, align=center,
+    minimum height=0.7cm, font=\small},
+  panah/.style={-{Stealth[length=2.2mm]}, thick},
+}
+
 
 \subsection{Arsitektur Program}
 Program disusun dari modul-modul dengan tanggung jawab terpisah. Pembagian ini membuat aturan
@@ -115,6 +127,47 @@ pengguna memberi opsi \texttt{-force}. Isi \textit{private key} tidak pernah dic
 
 Kegagalan \textit{input} atau I/O menghasilkan exit code 2.
 
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=0.42cm and 0.6cm]
+\node[akhir] (mulai) {Masukan: artefak, kunci privat, nama paket, versi, berkas keluaran};
+\node[proses, below=of mulai] (hash) {Hitung ukuran dan SHA-256 artefak per 1 MiB};
+\node[proses, below=of hash] (muat) {Muat kunci privat dari PEM dan tentukan profil};
+\node[keputusan, below=of muat] (kunci) {Kunci sesuai profil?};
+\node[galat, right=of kunci] (g1) {Exit code 2};
+\node[proses, below=of kunci] (keyid) {Turunkan \textit{keyid} dari DER SPKI};
+\node[proses, below=of keyid] (manifest) {Bentuk manifest dan validasi setiap field};
+\node[keputusan, below=of manifest] (valid) {Manifest valid?};
+\node[galat, right=of valid] (g2) {Exit code 2};
+\node[proses, below=of valid] (serial) {Serialisasi \textit{canonical} menjadi byte $M$};
+\node[proses, below=of serial] (sign) {Tanda tangani $M$ dengan profil};
+\node[proses, below=of sign] (bundle) {Bungkus manifest dan \textit{signature} ke bundle};
+\node[keputusan, below=of bundle] (ada) {Berkas keluaran sudah ada?};
+\node[galat, right=of ada] (g3) {Exit code 2 jika tanpa \texttt{-force}};
+\node[proses, below=of ada] (tulis) {Tulis bundle secara atomik};
+\node[akhir, below=of tulis] (selesai) {Exit code 0, cetak \textit{keyid} dan profil};
+
+\draw[panah] (mulai) -- (hash);
+\draw[panah] (hash) -- (muat);
+\draw[panah] (muat) -- (kunci);
+\draw[panah] (kunci) -- node[right, font=\small] {ya} (keyid);
+\draw[panah] (kunci) -- node[above, font=\small] {tidak} (g1);
+\draw[panah] (keyid) -- (manifest);
+\draw[panah] (manifest) -- (valid);
+\draw[panah] (valid) -- node[right, font=\small] {ya} (serial);
+\draw[panah] (valid) -- node[above, font=\small] {tidak} (g2);
+\draw[panah] (serial) -- (sign);
+\draw[panah] (sign) -- (bundle);
+\draw[panah] (bundle) -- (ada);
+\draw[panah] (ada) -- node[right, font=\small] {tidak} (tulis);
+\draw[panah] (ada) -- node[above, font=\small] {ya} (g3);
+\draw[panah] (tulis) -- (selesai);
+\end{tikzpicture}
+\caption{Diagram alir penandatanganan. Kegagalan masukan atau I/O di setiap langkah juga menghasilkan exit code 2.}
+\label{fig:alur-sign}
+\end{figure}
+
 \subsection{Alur Verifikasi}
 \textit{Verification} dijalankan oleh \texttt{Nadina.Verify.run/1}. Pemeriksaan dilakukan berurutan dan
 berhenti pada kegagalan pertama, sesuai ketentuan spesifikasi. Setiap langkah menghasilkan status yang
@@ -218,11 +271,46 @@ Kedua, \textit{wrapper} tidak dapat dibaca langsung oleh manusia dan perlu didek
 jauh daripada bentuk objek JSON, sehingga kelengkapan komponen menjadi tanggung jawab \textit{tool}
 pembuat SBOM.
 
-\textit{Wrapper} \textit{signed} sebagai \textit{artifact} dengan alur \textit{signing} yang sama, sehingga
+\textit{Wrapper} di-\textit{signed} sebagai \textit{artifact} dengan alur \textit{signing} yang sama, sehingga
 bundle SBOM memakai format bundle yang sama dengan bundle \textit{release}. \textit{Verification} dilakukan berlapis dan
 berhenti pada kegagalan pertama: bundle \textit{wrapper} diperiksa lebih dulu, lalu bundle \textit{release},
 lalu subject dicocokkan dengan \textit{artifact} \textit{release}, dan terakhir \texttt{sbom\_b64} harus berupa
 objek JSON. Dengan begitu, SBOM yang sah tetapi milik \textit{artifact} lain tetap ditolak.
 
-Batasannya: program tidak memeriksa kelengkapan komponen. Kelengkapan bergantung pada \textit{tool}
-yang membuat SBOM.
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=0.42cm and 0.6cm]
+\node[akhir] (mulai) {Masukan: artefak, bundle rilis, \textit{wrapper} SBOM, bundle \textit{wrapper}, trust store, paket, versi};
+\node[keputusan, below=of mulai] (b1) {Bundle \textit{wrapper} valid (langkah 1 sampai 7)?};
+\node[galat, right=of b1] (g1) {Status sesuai langkah yang gagal};
+\node[keputusan, below=of b1] (b2) {Bundle rilis valid terhadap artefak?};
+\node[galat, right=of b2] (g2) {Status sesuai langkah yang gagal};
+\node[proses, below=of b2] (parse) {Parse \textit{wrapper}: \texttt{schema}, \texttt{subject}, \texttt{sbom\_b64}};
+\node[keputusan, below=of parse] (p1) {Format \textit{wrapper} sesuai?};
+\node[galat, right=of p1] (g3) {\texttt{FORMAT\_ERROR}};
+\node[proses, below=of p1] (decode) {Decode \texttt{sbom\_b64} dan pastikan objek JSON};
+\node[keputusan, below=of decode] (p2) {Isi SBOM berupa objek JSON?};
+\node[galat, right=of p2] (g4) {\texttt{FORMAT\_ERROR}};
+\node[proses, below=of p2] (hitung) {Hitung nama, ukuran, dan SHA-256 artefak};
+\node[keputusan, below=of hitung] (p3) {\textit{Subject} sama dengan artefak?};
+\node[galat, right=of p3] (g5) {\texttt{ARTIFACT\_MISMATCH}};
+\node[akhir, below=of p3] (ok) {\texttt{OK}, exit code 0};
+
+\draw[panah] (mulai) -- (b1);
+\draw[panah] (b1) -- node[above, font=\small] {tidak} (g1);
+\draw[panah] (b1) -- node[right, font=\small] {ya} (b2);
+\draw[panah] (b2) -- node[above, font=\small] {tidak} (g2);
+\draw[panah] (b2) -- node[right, font=\small] {ya} (parse);
+\draw[panah] (parse) -- (p1);
+\draw[panah] (p1) -- node[above, font=\small] {tidak} (g3);
+\draw[panah] (p1) -- node[right, font=\small] {ya} (decode);
+\draw[panah] (decode) -- (p2);
+\draw[panah] (p2) -- node[above, font=\small] {tidak} (g4);
+\draw[panah] (p2) -- node[right, font=\small] {ya} (hitung);
+\draw[panah] (hitung) -- (p3);
+\draw[panah] (p3) -- node[above, font=\small] {tidak} (g5);
+\draw[panah] (p3) -- node[right, font=\small] {ya} (ok);
+\end{tikzpicture}
+\caption{Diagram alir verifikasi SBOM. Pembuatan SBOM oleh kakas eksternal dan pembuatan \textit{wrapper} dengan \texttt{sbom bind} berada di luar diagram ini.}
+\label{fig:alur-sbom}
+\end{figure}
