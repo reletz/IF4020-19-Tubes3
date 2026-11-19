@@ -1,0 +1,1 @@
+{"valid":false,"status":"ARTIFACT_MISMATCH","message":"Ukuran atau SHA-256 artefak tidak sesuai.","algorithm":"ecdsa-p256-sha256","keyid":"80c341a7a66145069025de3a42afc6c677c8dccecac24b05d9e70d9415fc5474","package":"anmategra","version":"0.1.0"}
