@@ -201,7 +201,7 @@ defmodule Bench do
 
         sign_args =
           ["sign", "--file", path, "--package", @package, "--version", @version] ++
-            ["--key", keys[alg].key_path, "--out", bundle]
+            ["--key", keys[alg].key_path, "--out", bundle, "--force"]
 
         verify_args =
           ["verify", "--file", path, "--bundle", bundle, "--trust-store", trust] ++

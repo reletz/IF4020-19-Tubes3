@@ -1,4 +1,4 @@
 algorithm,median_us,p95_us
-rsa-pss-sha256,2616.7,2865.2
-ecdsa-p256-sha256,42.6,54.0
-ed25519,103.9,123.1
+rsa-pss-sha256,1843.9,1915.9
+ecdsa-p256-sha256,27.3,41.8
+ed25519,62.0,64.6
