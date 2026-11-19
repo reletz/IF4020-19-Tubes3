@@ -186,8 +186,47 @@ mix test --only interop
 \end{lstlisting}
 
 \subsection{Pengujian Integrasi CI/CD (C01 sampai C05)}
-% TODO (Nayaka): tautan workflow run per skenario, referensi image dan digest, log, keluaran
-% JSON verify, bukti ada atau tidak adanya berkas penanda. Bukti disimpan di docs/ci-evidence/.
+Pengujian dijalankan di repositori pemakai \texttt{AnmategraKMITB/Anmategra-APP} memakai image
+\texttt{reletz/nadina} pada tag \texttt{0.1.0}, dengan digest index
+\texttt{sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72}. Digest ini
+dipin pada workflow pemakai, sehingga image yang diuji sama dengan image yang diterbitkan. Setiap
+skenario dijalankan pada direktori keluaran yang bersih dan exit code diambil langsung dari
+proses \texttt{verify}. Ringkasan hasilnya dapat dilihat pada Tabel~\ref{tab:ci-evidence}.
+
+\begin{table}[H]
+\centering
+{\small
+\begin{tabular}{@{}p{1.1cm}p{3.0cm}p{2.7cm}p{1.0cm}p{4.2cm}p{2.9cm}@{}}
+\toprule
+Skenario & Profil & Run & Exit & Status & Marker deploy \\
+\midrule
+C01 & \texttt{rsa-pss-sha256} & \href{https://github.com/AnmategraKMITB/Anmategra-APP/actions/runs/44480652005}{44480652005} & 0 & \texttt{OK} & Ada \\
+C01 & \texttt{ecdsa-p256-sha256} & \href{https://github.com/AnmategraKMITB/Anmategra-APP/actions/runs/44480962135}{44480962135} & 0 & \texttt{OK} & Ada \\
+C01 & \texttt{ed25519} & \href{https://github.com/AnmategraKMITB/Anmategra-APP/actions/runs/44480632370}{44480632370} & 0 & \texttt{OK} & Ada \\
+C02 & \texttt{ecdsa-p256-sha256} & \href{https://github.com/AnmategraKMITB/Anmategra-APP/actions/runs/44481623084}{44481623084} & 1 & \texttt{ARTIFACT\_MISMATCH} & Tidak ada \\
+C03 & \texttt{ecdsa-p256-sha256} & \href{https://github.com/AnmategraKMITB/Anmategra-APP/actions/runs/44481623084}{44481623084} & 1 & \texttt{KEY\_NOT\_TRUSTED} & Tidak ada \\
+C04 & \texttt{ecdsa-p256-sha256} & \href{https://github.com/AnmategraKMITB/Anmategra-APP/actions/runs/44481623084}{44481623084} & 2 & \texttt{INPUT\_ERROR} & Tidak ada \\
+C05 & \texttt{ed25519} & \href{https://github.com/AnmategraKMITB/Anmategra-APP/actions/runs/44481623084}{44481623084} & 0 & \texttt{OK} & Tidak ada \\
+\bottomrule
+\end{tabular}}
+\caption{Ringkasan hasil pengujian integrasi CI/CD.}
+\label{tab:ci-evidence}
+\end{table}
+
+C01 menjalankan \texttt{sign} dan \texttt{verify} terhadap artefak sah, lalu menjalankan
+\texttt{sbom verify} untuk profil Ed25519, dan membuat berkas penanda deploy hanya setelah
+verifikasi berhasil. C02 mengubah satu byte artefak setelah penandatanganan dengan ukuran dan nama
+berkas dipertahankan, dan verifikasi ditolak dengan \texttt{ARTIFACT\_MISMATCH}. C03 menjalankan
+verifikasi dengan trust store yang tidak mengizinkan kunci tersebut untuk paket, dan verifikasi
+ditolak dengan \texttt{KEY\_NOT\_TRUSTED}. C04 menjalankan verifikasi dengan path artefak yang
+tidak ada, dan program mengembalikan \texttt{INPUT\_ERROR} dengan exit code 2. C05 menjalankan CLI
+dengan UID dan GID runner, yaitu 1001, tanpa TTY dan dengan \texttt{--network none}, dan
+hasilnya \texttt{OK}.
+
+Pada C02 sampai C04, tahap deploy tidak dijalankan, dan tidak ada berkas penanda yang dibuat. Ketiga
+skenario tersebut berada pada run yang sama dengan C05. Bukti lengkap, termasuk log yang sudah
+dibersihkan dari informasi rahasia, keluaran JSON, dan \textit{commit} yang dijalankan, disimpan
+pada direktori \texttt{docs/ci-evidence/}.
 
 \subsection{Pengujian Performa}
 
@@ -309,10 +348,8 @@ untuk ketiga profil. Komponen yang diukur sebagai berikut:
   xtick=data, enlarge x limits=0.25,
   legend style={at={(0.5,-0.18)}, anchor=north, legend columns=-1},
 ]
-\addplot table[x=algorithm, y=median_us, col sep=comma, only op=sign]
-  {data/benchmark/sign_verify.csv};
-\addplot table[x=algorithm, y=median_us, col sep=comma, only op=verify]
-  {data/benchmark/sign_verify.csv};
+\addplot table[x=algorithm, y=median_us, col sep=comma] {data/benchmark/sign.csv};
+\addplot table[x=algorithm, y=median_us, col sep=comma] {data/benchmark/verify.csv};
 \legend{sign, verify}
 \end{axis}
 \end{tikzpicture}
