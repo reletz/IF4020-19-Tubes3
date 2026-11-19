@@ -1,0 +1,36 @@
+# 09-test-interop
+# tanggal: 2026-11-19T12:17:56Z
+# perintah: mix test test/interop --trace
+Running ExUnit with seed: 115856, max_cases: 1
+
+
+Nadina.Interop.Ed25519Test [test/interop/ed25519_interop_test.exs]
+  * test tanda tangan Nadina diverifikasi OpenSSL diterima, dan pesan berubah ditolak [L#86]  * test tanda tangan Nadina diverifikasi OpenSSL diterima, dan pesan berubah ditolak (34.1ms) [L#86]
+  * test tanda tangan OpenSSL diverifikasi Nadina tanda tangan atas hash pesan (pola Ed25519ph) ditolak [L#138]  * test tanda tangan OpenSSL diverifikasi Nadina tanda tangan atas hash pesan (pola Ed25519ph) ditolak (8.2ms) [L#138]
+  * test kunci Nadina dibaca OpenSSL kurva dikenali sebagai Ed25519 [L#53]  * test kunci Nadina dibaca OpenSSL kurva dikenali sebagai Ed25519 (3.8ms) [L#53]
+  * test kunci Nadina dibaca OpenSSL kunci publik turunan OpenSSL sama dengan berkas Nadina [L#47]  * test kunci Nadina dibaca OpenSSL kunci publik turunan OpenSSL sama dengan berkas Nadina (4.5ms) [L#47]
+  * test kunci Nadina dibaca OpenSSL SPKI dari OpenSSL tanpa field parameter, dan fingerprint cocok [L#59]  * test kunci Nadina dibaca OpenSSL SPKI dari OpenSSL tanpa field parameter, dan fingerprint cocok (4.8ms) [L#59]
+  * test tanda tangan OpenSSL diverifikasi Nadina kunci buatan OpenSSL dimuat sebagai Ed25519 dan tanda tangannya sah [L#106]  * test tanda tangan OpenSSL diverifikasi Nadina kunci buatan OpenSSL dimuat sebagai Ed25519 dan tanda tangannya sah (13.5ms) [L#106]
+
+Nadina.Interop.RsaPssTest [test/interop/rsa_pss_interop_test.exs]
+  * test tanda tangan Nadina diverifikasi OpenSSL diterima, dan pesan berubah ditolak [L#98]  * test tanda tangan Nadina diverifikasi OpenSSL diterima, dan pesan berubah ditolak (15.6ms) [L#98]
+  * test tanda tangan OpenSSL diverifikasi Nadina PSS dengan salt lain atau PKCS1 v1.5 dari OpenSSL ditolak [L#163]  * test tanda tangan OpenSSL diverifikasi Nadina PSS dengan salt lain atau PKCS1 v1.5 dari OpenSSL ditolak (181.3ms) [L#163]
+  * test kunci Nadina dibaca OpenSSL modulus 3072 bit dan eksponen 65537 [L#68]  * test kunci Nadina dibaca OpenSSL modulus 3072 bit dan eksponen 65537 (4.8ms) [L#68]
+  * test kunci Nadina dibaca OpenSSL kunci publik turunan OpenSSL sama dengan berkas Nadina [L#61]  * test kunci Nadina dibaca OpenSSL kunci publik turunan OpenSSL sama dengan berkas Nadina (4.0ms) [L#61]
+  * test kunci Nadina dibaca OpenSSL fingerprint sama dengan SHA-256 atas DER SPKI versi OpenSSL [L#75]  * test kunci Nadina dibaca OpenSSL fingerprint sama dengan SHA-256 atas DER SPKI versi OpenSSL (6.0ms) [L#75]
+  * test tanda tangan OpenSSL diverifikasi Nadina kunci buatan OpenSSL dimuat sebagai RSA-PSS dan tanda tangannya sah [L#116]  * test tanda tangan OpenSSL diverifikasi Nadina kunci buatan OpenSSL dimuat sebagai RSA-PSS dan tanda tangannya sah (100.9ms) [L#116]
+
+Nadina.Interop.EcdsaP256Test [test/interop/ecdsa_p256_interop_test.exs]
+  * test tanda tangan Nadina diverifikasi OpenSSL r|s diubah ke DER diterima openssl dgst -verify [L#67]  * test tanda tangan Nadina diverifikasi OpenSSL r|s diubah ke DER diterima openssl dgst -verify (8.1ms) [L#67]
+  * test tanda tangan OpenSSL diverifikasi Nadina banyak tanda tangan OpenSSL (panjang DER bervariasi) semuanya diterima [L#138]  * test tanda tangan OpenSSL diverifikasi Nadina banyak tanda tangan OpenSSL (panjang DER bervariasi) semuanya diterima (180.9ms) [L#138]
+  * test tanda tangan OpenSSL diverifikasi Nadina kunci OpenSSL dimuat Keys sebagai profil ECDSA P-256 [L#119]  * test tanda tangan OpenSSL diverifikasi Nadina kunci OpenSSL dimuat Keys sebagai profil ECDSA P-256 (7.3ms) [L#119]
+  * test kunci Nadina dibaca OpenSSL kurva dikenali sebagai prime256v1 [L#38]  * test kunci Nadina dibaca OpenSSL kurva dikenali sebagai prime256v1 (6.4ms) [L#38]
+  * test kunci Nadina dibaca OpenSSL kunci publik turunan OpenSSL sama dengan berkas Nadina [L#31]  * test kunci Nadina dibaca OpenSSL kunci publik turunan OpenSSL sama dengan berkas Nadina (5.6ms) [L#31]
+  * test tanda tangan OpenSSL diverifikasi Nadina DER OpenSSL diubah ke r|s lalu diverifikasi [L#124]  * test tanda tangan OpenSSL diverifikasi Nadina DER OpenSSL diubah ke r|s lalu diverifikasi (15.5ms) [L#124]
+  * test kunci Nadina dibaca OpenSSL fingerprint sama dengan SHA-256 atas DER SPKI versi OpenSSL [L#45]  * test kunci Nadina dibaca OpenSSL fingerprint sama dengan SHA-256 atas DER SPKI versi OpenSSL (4.6ms) [L#45]
+  * test tanda tangan Nadina diverifikasi OpenSSL pesan diubah ditolak openssl [L#81]  * test tanda tangan Nadina diverifikasi OpenSSL pesan diubah ditolak openssl (4.5ms) [L#81]
+
+Finished in 0.7 seconds (0.7s async, 0.00s sync)
+
+Result: 20 passed
+exit: 0

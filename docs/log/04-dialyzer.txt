@@ -1,0 +1,25 @@
+# 04-dialyzer
+# tanggal: 2026-11-19T12:17:46Z
+# perintah: mix dialyzer
+Finding suitable PLTs
+Checking PLT...
+[:asn1, :compiler, :crypto, :elixir, :kernel, :logger, :mix, :nadina, :public_key, :stdlib, :stream_data]
+PLT is up to date!
+No :ignore_warnings opt specified in mix.exs and default does not exist.
+
+Starting Dialyzer
+[
+  check_plt: false,
+  init_plt: ~c"priv/plts/dialyxir_erlang-29.1.1_elixir-1.20.4_deps-dev.plt",
+  files: [~c"./_build/dev/lib/nadina/ebin/Elixir.Nadina.Artifact.beam",
+   ~c"./_build/dev/lib/nadina/ebin/Elixir.Nadina.Bundle.beam",
+   ~c"./_build/dev/lib/nadina/ebin/Elixir.Nadina.CLI.beam",
+   ~c"./_build/dev/lib/nadina/ebin/Elixir.Nadina.JSONOut.beam",
+   ~c"./_build/dev/lib/nadina/ebin/Elixir.Nadina.Keys.beam",
+   ...],
+  ...
+]
+Total errors: 0, Skipped: 0, Unnecessary Skips: 0
+done in 0m1.95s
+done (passed successfully)
+exit: 0

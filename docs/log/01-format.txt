@@ -1,0 +1,4 @@
+# 01-format
+# tanggal: 2026-11-19T12:17:44Z
+# perintah: mix format --check-formatted
+exit: 0
