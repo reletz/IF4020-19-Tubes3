@@ -1,0 +1,338 @@
+c02	Set up job	﻿2026-11-19T07:42:13.8153206Z Current runner version: '2.338.2'
+c02	Set up job	2026-11-19T07:42:13.8181443Z ##[group]Runner Image Provisioner
+c02	Set up job	2026-11-19T07:42:13.8182546Z Hosted Compute Agent
+c02	Set up job	2026-11-19T07:42:13.8183569Z Version: 20261111.635
+c02	Set up job	2026-11-19T07:42:13.8184405Z Commit: b8a594ea514ff44cadb5342986c68b1eac6e22ed
+c02	Set up job	2026-11-19T07:42:13.8185279Z Build Date: 2026-11-11T01:49:01Z
+c02	Set up job	2026-11-19T07:42:13.8186068Z Worker ID: {2d8c1cc9-8cd8-46dd-a212-14d506998bb5}
+c02	Set up job	2026-11-19T07:42:13.8186947Z Region: eastus
+c02	Set up job	2026-11-19T07:42:13.8188058Z Cloud: Azure
+c02	Set up job	2026-11-19T07:42:13.8188787Z ##[endgroup]
+c02	Set up job	2026-11-19T07:42:13.8190918Z ##[group]Operating System
+c02	Set up job	2026-11-19T07:42:13.8191824Z Ubuntu
+c02	Set up job	2026-11-19T07:42:13.8192460Z 26.04.1
+c02	Set up job	2026-11-19T07:42:13.8193264Z LTS
+c02	Set up job	2026-11-19T07:42:13.8193899Z ##[endgroup]
+c02	Set up job	2026-11-19T07:42:13.8194591Z ##[group]Runner Image
+c02	Set up job	2026-11-19T07:42:13.8195310Z Image: ubuntu-26.04
+c02	Set up job	2026-11-19T07:42:13.8196016Z Version: 20261116.202.1
+c02	Set up job	2026-11-19T07:42:13.8197168Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261116.202/images/ubuntu/Ubuntu2604-Readme.md
+c02	Set up job	2026-11-19T07:42:13.8199092Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261116.202
+c02	Set up job	2026-11-19T07:42:13.8200201Z ##[endgroup]
+c02	Set up job	2026-11-19T07:42:13.8201423Z ##[group]GITHUB_TOKEN Permissions
+c02	Set up job	2026-11-19T07:42:13.8203999Z Contents: read
+c02	Set up job	2026-11-19T07:42:13.8204735Z Metadata: read
+c02	Set up job	2026-11-19T07:42:13.8205477Z ##[endgroup]
+c02	Set up job	2026-11-19T07:42:13.8207721Z Secret source: Actions
+c02	Set up job	2026-11-19T07:42:13.8208967Z Cache mode: write
+c02	Set up job	2026-11-19T07:42:13.8209966Z Prepare workflow directory
+c02	Set up job	2026-11-19T07:42:13.8747762Z Prepare all required actions
+c02	Set up job	2026-11-19T07:42:13.8797810Z Getting action download info
+c02	Set up job	2026-11-19T07:42:14.0346604Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+c02	Set up job	2026-11-19T07:42:14.1345248Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+c02	Set up job	2026-11-19T07:42:14.3067379Z Complete job name: c02
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-19T07:42:14.3940219Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3941400Z with:
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3941917Z   persist-credentials: false
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3942548Z   repository: AnmategraKMITB/Anmategra-APP
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3947042Z   token: ***
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3947542Z   ssh-strict: true
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3948039Z   ssh-user: git
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3948518Z   clean: true
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3949025Z   sparse-checkout-cone-mode: true
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3949613Z   fetch-depth: 1
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3950090Z   fetch-tags: false
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3950589Z   show-progress: true
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3951097Z   lfs: false
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3951574Z   submodules: false
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3952077Z   set-safe-directory: true
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3952659Z   allow-unsafe-pr-checkout: false
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3953661Z env:
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3954582Z   NADINA_IMAGE: docker.io/reletz/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3955656Z   VERSION: 0.1.0
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.3956143Z ##[endgroup]
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.6702180Z Syncing repository: AnmategraKMITB/Anmategra-APP
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.6704866Z ##[group]Getting Git version info
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.6706161Z Working directory is '/home/runner/work/Anmategra-APP/Anmategra-APP'
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.6831677Z [command]/usr/bin/git version
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.6882460Z git version 2.56.1
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.6908534Z ##[endgroup]
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.6919495Z Temporarily overriding HOME='/home/runner/work/_temp/cb9754a5-b127-4cae-96ec-72cd6238fa33' before making global git config changes
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.6922442Z Adding repository directory to the temporary git global config as a safe directory
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.6925695Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Anmategra-APP/Anmategra-APP
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7018442Z Deleting the contents of '/home/runner/work/Anmategra-APP/Anmategra-APP'
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7021451Z ##[group]Determining repository object format
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7023434Z ##[endgroup]
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7024880Z ##[group]Initializing the repository
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7028040Z [command]/usr/bin/git init /home/runner/work/Anmategra-APP/Anmategra-APP
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7141276Z hint: Using 'master' as the name for the initial branch. This default branch name
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7144256Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7146678Z hint: to use in all of your new repositories, which will suppress this warning,
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7148415Z hint: call:
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7149519Z hint:
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7150945Z hint: 	git config --global init.defaultBranch <name>
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7152426Z hint:
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7154281Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7156165Z hint: 'development'. The just-created branch can be renamed via this command:
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7157611Z hint:
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7158660Z hint: 	git branch -m <name>
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7159752Z hint:
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7160850Z hint: Disable this message with "git config set advice.defaultBranchName false"
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7162467Z Initialized empty Git repository in /home/runner/work/Anmategra-APP/Anmategra-APP/.git/
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7167409Z [command]/usr/bin/git remote add origin https://github.com/AnmategraKMITB/Anmategra-APP
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7224500Z ##[endgroup]
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7225528Z ##[group]Disabling automatic garbage collection
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7228346Z [command]/usr/bin/git config --local gc.auto 0
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7269221Z ##[endgroup]
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7271156Z ##[group]Setting up auth
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7271936Z Removing SSH command configuration
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7278797Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7313948Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7779306Z Removing HTTP extra header
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7787831Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.7834066Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.8116801Z Removing includeIf entries pointing to credentials config files
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.8123356Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.8177015Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.8479885Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-0876a3f7-189a-48c6-bae8-a04b9d8a9951.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.8521716Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Anmategra-APP/Anmategra-APP/.git.path /home/runner/work/_temp/git-credentials-0876a3f7-189a-48c6-bae8-a04b9d8a9951.config
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.8557197Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Anmategra-APP/Anmategra-APP/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-0876a3f7-189a-48c6-bae8-a04b9d8a9951.config
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.8594675Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-0876a3f7-189a-48c6-bae8-a04b9d8a9951.config
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.8629267Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-0876a3f7-189a-48c6-bae8-a04b9d8a9951.config
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.8660328Z ##[endgroup]
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.8662139Z ##[group]Fetching the repository
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:14.8669281Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +refs/tags/pipeline-test-v0.1.1:refs/tags/pipeline-test-v0.1.1
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:15.9504697Z From https://github.com/AnmategraKMITB/Anmategra-APP
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:15.9507332Z  * [new tag]         pipeline-test-v0.1.1 -> pipeline-test-v0.1.1
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:15.9514014Z [command]/usr/bin/git tag --list pipeline-test-v0.1.1
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:15.9544572Z pipeline-test-v0.1.1
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:15.9554407Z [command]/usr/bin/git rev-parse refs/tags/pipeline-test-v0.1.1^{commit}
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:15.9579561Z 38e9caae88920fd67088db9b6915baa7d3479c8e
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:15.9586431Z ##[endgroup]
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:15.9589067Z ##[group]Determining the checkout info
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:15.9592359Z ##[endgroup]
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:15.9594551Z [command]/usr/bin/git sparse-checkout disable
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:15.9647290Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:15.9683432Z ##[group]Checking out the ref
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:15.9686068Z [command]/usr/bin/git checkout --progress --force refs/tags/pipeline-test-v0.1.1
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1058150Z Note: switching to 'refs/tags/pipeline-test-v0.1.1'.
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1060589Z 
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1062242Z You are in 'detached HEAD' state. You can look around, make experimental
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1066014Z changes and commit them, and you can discard any commits you make in this
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1068938Z state without impacting any branches by switching back to a branch.
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1070677Z 
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1072058Z If you want to create a new branch to retain commits you create, you may
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1076236Z do so (now or later) by using -c with the switch command. Example:
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1078417Z 
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1079626Z   git switch -c <new-branch-name>
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1081280Z 
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1082407Z Or undo this operation with:
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1084343Z 
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1085452Z   git switch -
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1087226Z 
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1089089Z Turn off this advice by setting config variable advice.detachedHead to false
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1091632Z 
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1093535Z HEAD is now at 38e9caa ci: hapus kunci privat sementara dari bukti C05
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1100388Z ##[endgroup]
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1136871Z [command]/usr/bin/git log -1 --format=%H
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1164399Z 38e9caae88920fd67088db9b6915baa7d3479c8e
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1176807Z ##[group]Removing auth
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1179849Z Removing SSH command configuration
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1183970Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1219636Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1496966Z Removing HTTP extra header
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1501427Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1538136Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1808866Z Removing includeIf entries pointing to credentials config files
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1812998Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1836995Z includeif.gitdir:/home/runner/work/Anmategra-APP/Anmategra-APP/.git.path
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1841256Z includeif.gitdir:/home/runner/work/Anmategra-APP/Anmategra-APP/.git/worktrees/*.path
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1844845Z includeif.gitdir:/github/workspace/.git.path
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1847332Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1854498Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Anmategra-APP/Anmategra-APP/.git.path
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1871614Z /home/runner/work/_temp/git-credentials-0876a3f7-189a-48c6-bae8-a04b9d8a9951.config
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1885262Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Anmategra-APP/Anmategra-APP/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-0876a3f7\-189a\-48c6\-bae8\-a04b9d8a9951\.config
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1925964Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Anmategra-APP/Anmategra-APP/.git/worktrees/*.path
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1950234Z /home/runner/work/_temp/git-credentials-0876a3f7-189a-48c6-bae8-a04b9d8a9951.config
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.1961086Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Anmategra-APP/Anmategra-APP/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-0876a3f7\-189a\-48c6\-bae8\-a04b9d8a9951\.config
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.2003417Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.2028874Z /github/runner_temp/git-credentials-0876a3f7-189a-48c6-bae8-a04b9d8a9951.config
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.2039221Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-0876a3f7\-189a\-48c6\-bae8\-a04b9d8a9951\.config
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.2073342Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.2096429Z /github/runner_temp/git-credentials-0876a3f7-189a-48c6-bae8-a04b9d8a9951.config
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.2105882Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-0876a3f7\-189a\-48c6\-bae8\-a04b9d8a9951\.config
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.2140013Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.2409595Z Removing credentials config '/home/runner/work/_temp/git-credentials-0876a3f7-189a-48c6-bae8-a04b9d8a9951.config'
+c02	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:16.2419090Z ##[endgroup]
+c02	Validasi image	﻿2026-11-19T07:42:16.2675956Z ##[group]Run case "$NADINA_IMAGE" in
+c02	Validasi image	2026-11-19T07:42:16.2677512Z case "$NADINA_IMAGE" in
+c02	Validasi image	2026-11-19T07:42:16.2678836Z   *@sha256:*) ;;
+c02	Validasi image	2026-11-19T07:42:16.2680455Z   *) echo "NADINA_IMAGE harus memakai digest @sha256:"; exit 1 ;;
+c02	Validasi image	2026-11-19T07:42:16.2682238Z esac
+c02	Validasi image	2026-11-19T07:42:16.2721557Z shell: /usr/bin/bash -e {0}
+c02	Validasi image	2026-11-19T07:42:16.2722979Z env:
+c02	Validasi image	2026-11-19T07:42:16.2725083Z   NADINA_IMAGE: docker.io/reletz/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+c02	Validasi image	2026-11-19T07:42:16.2727590Z   VERSION: 0.1.0
+c02	Validasi image	2026-11-19T07:42:16.2728657Z ##[endgroup]
+c02	Tarik image	﻿2026-11-19T07:42:16.2902217Z ##[group]Run docker pull "$NADINA_IMAGE"
+c02	Tarik image	2026-11-19T07:42:16.2903970Z docker pull "$NADINA_IMAGE"
+c02	Tarik image	2026-11-19T07:42:16.2936941Z shell: /usr/bin/bash -e {0}
+c02	Tarik image	2026-11-19T07:42:16.2938160Z env:
+c02	Tarik image	2026-11-19T07:42:16.2940236Z   NADINA_IMAGE: docker.io/reletz/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+c02	Tarik image	2026-11-19T07:42:16.2942851Z   VERSION: 0.1.0
+c02	Tarik image	2026-11-19T07:42:16.2943932Z ##[endgroup]
+c02	Tarik image	2026-11-19T07:42:16.6286613Z docker.io/reletz/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72: Pulling from reletz/nadina
+c02	Tarik image	2026-11-19T07:42:16.7559153Z e863f23f2061: Pulling fs layer
+c02	Tarik image	2026-11-19T07:42:16.7560484Z 881fc932939e: Pulling fs layer
+c02	Tarik image	2026-11-19T07:42:16.7567094Z c318ca6046ac: Pulling fs layer
+c02	Tarik image	2026-11-19T07:42:16.7567480Z 3ca2e748d6f5: Pulling fs layer
+c02	Tarik image	2026-11-19T07:42:16.8999043Z e863f23f2061: Download complete
+c02	Tarik image	2026-11-19T07:42:16.9019321Z 881fc932939e: Download complete
+c02	Tarik image	2026-11-19T07:42:16.9964591Z c318ca6046ac: Download complete
+c02	Tarik image	2026-11-19T07:42:16.9991621Z 881fc932939e: Pull complete
+c02	Tarik image	2026-11-19T07:42:17.0985561Z c318ca6046ac: Pull complete
+c02	Tarik image	2026-11-19T07:42:17.1962470Z 3ca2e748d6f5: Download complete
+c02	Tarik image	2026-11-19T07:42:17.2825924Z e863f23f2061: Pull complete
+c02	Tarik image	2026-11-19T07:42:17.2836628Z 3ca2e748d6f5: Pull complete
+c02	Tarik image	2026-11-19T07:42:17.2837541Z Digest: sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+c02	Tarik image	2026-11-19T07:42:17.2838700Z Status: Downloaded newer image for reletz/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+c02	Tarik image	2026-11-19T07:42:17.2848228Z docker.io/reletz/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+c02	Bangun artefak	﻿2026-11-19T07:42:17.2934422Z ##[group]Run set -eu
+c02	Bangun artefak	2026-11-19T07:42:17.2934916Z set -eu
+c02	Bangun artefak	2026-11-19T07:42:17.2935164Z mkdir -p dist out
+c02	Bangun artefak	2026-11-19T07:42:17.2935872Z git archive --format=zip --prefix=anmategra/ -o "dist/anmategra-$VERSION.zip" HEAD
+c02	Bangun artefak	2026-11-19T07:42:17.2937084Z sha256sum "dist/anmategra-$VERSION.zip" > "out/anmategra-$VERSION.zip.sha256"
+c02	Bangun artefak	2026-11-19T07:42:17.2983350Z shell: /usr/bin/bash -e {0}
+c02	Bangun artefak	2026-11-19T07:42:17.2983633Z env:
+c02	Bangun artefak	2026-11-19T07:42:17.2984242Z   NADINA_IMAGE: docker.io/reletz/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+c02	Bangun artefak	2026-11-19T07:42:17.2984810Z   VERSION: 0.1.0
+c02	Bangun artefak	2026-11-19T07:42:17.2985039Z ##[endgroup]
+c02	Tandatangani	﻿2026-11-19T07:42:17.9856778Z ##[group]Run set -eu
+c02	Tandatangani	2026-11-19T07:42:17.9857116Z set -eu
+c02	Tandatangani	2026-11-19T07:42:17.9857354Z test -n "$KEY_ECDSA"
+c02	Tandatangani	2026-11-19T07:42:17.9857607Z umask 077
+c02	Tandatangani	2026-11-19T07:42:17.9857886Z key_file="$RUNNER_TEMP/signing.key.pem"
+c02	Tandatangani	2026-11-19T07:42:17.9858235Z trap 'rm -f "$key_file"' EXIT
+c02	Tandatangani	2026-11-19T07:42:17.9858547Z printf '%s\n' "$KEY_ECDSA" > "$key_file"
+c02	Tandatangani	2026-11-19T07:42:17.9858951Z docker run --rm --network none --user "$(id -u):$(id -g)" \
+c02	Tandatangani	2026-11-19T07:42:17.9859359Z   -v "$PWD/dist:/input:ro" \
+c02	Tandatangani	2026-11-19T07:42:17.9859668Z   -v "$PWD/out:/output" \
+c02	Tandatangani	2026-11-19T07:42:17.9859989Z   -v "$key_file:/run/signing.key.pem:ro" \
+c02	Tandatangani	2026-11-19T07:42:17.9860319Z   "$NADINA_IMAGE" sign \
+c02	Tandatangani	2026-11-19T07:42:17.9860634Z   --file "/input/anmategra-$VERSION.zip" \
+c02	Tandatangani	2026-11-19T07:42:17.9860996Z   --package anmategra \
+c02	Tandatangani	2026-11-19T07:42:17.9861273Z   --version "$VERSION" \
+c02	Tandatangani	2026-11-19T07:42:17.9861587Z   --key /run/signing.key.pem \
+c02	Tandatangani	2026-11-19T07:42:17.9861953Z   --out "/output/anmategra-$VERSION.zip.bundle.json"
+c02	Tandatangani	2026-11-19T07:42:17.9895440Z shell: /usr/bin/bash -e {0}
+c02	Tandatangani	2026-11-19T07:42:17.9895720Z env:
+c02	Tandatangani	2026-11-19T07:42:17.9896197Z   NADINA_IMAGE: docker.io/reletz/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+c02	Tandatangani	2026-11-19T07:42:17.9896743Z   VERSION: 0.1.0
+c02	Tandatangani	2026-11-19T07:42:17.9898353Z   KEY_ECDSA: ***
+c02	Tandatangani	2026-11-19T07:42:17.9898603Z ##[endgroup]
+c02	Tandatangani	2026-11-19T07:42:23.5961279Z Bundle ditulis ke /output/anmategra-0.1.0.zip.bundle.json
+c02	Tandatangani	2026-11-19T07:42:23.5971949Z keyid: 80c341a7a66145069025de3a42afc6c677c8dccecac24b05d9e70d9415fc5474
+c02	Tandatangani	2026-11-19T07:42:23.5973034Z algorithm: ecdsa-p256-sha256
+c02	C02 ubah satu byte artefak	﻿2026-11-19T07:42:23.6529779Z ##[group]Run set -eu
+c02	C02 ubah satu byte artefak	2026-11-19T07:42:23.6530162Z set -eu
+c02	C02 ubah satu byte artefak	2026-11-19T07:42:23.6530423Z python3 - "$VERSION" <<'PY'
+c02	C02 ubah satu byte artefak	2026-11-19T07:42:23.6530706Z import sys
+c02	C02 ubah satu byte artefak	2026-11-19T07:42:23.6530952Z from pathlib import Path
+c02	C02 ubah satu byte artefak	2026-11-19T07:42:23.6531218Z 
+c02	C02 ubah satu byte artefak	2026-11-19T07:42:23.6531493Z path = Path("dist") / f"anmategra-{sys.argv[1]}.zip"
+c02	C02 ubah satu byte artefak	2026-11-19T07:42:23.6531887Z data = bytearray(path.read_bytes())
+c02	C02 ubah satu byte artefak	2026-11-19T07:42:23.6532203Z data[len(data) // 2] ^= 1
+c02	C02 ubah satu byte artefak	2026-11-19T07:42:23.6532490Z path.write_bytes(data)
+c02	C02 ubah satu byte artefak	2026-11-19T07:42:23.6532958Z PY
+c02	C02 ubah satu byte artefak	2026-11-19T07:42:23.6533393Z sha256sum "dist/anmategra-$VERSION.zip" > "out/anmategra-$VERSION.zip.tampered.sha256"
+c02	C02 ubah satu byte artefak	2026-11-19T07:42:23.6565155Z shell: /usr/bin/bash -e {0}
+c02	C02 ubah satu byte artefak	2026-11-19T07:42:23.6565431Z env:
+c02	C02 ubah satu byte artefak	2026-11-19T07:42:23.6565908Z   NADINA_IMAGE: docker.io/reletz/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+c02	C02 ubah satu byte artefak	2026-11-19T07:42:23.6566447Z   VERSION: 0.1.0
+c02	C02 ubah satu byte artefak	2026-11-19T07:42:23.6566726Z ##[endgroup]
+c02	C02 verifikasi harus ditolak	﻿2026-11-19T07:42:23.7230112Z ##[group]Run set +e
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7230427Z set +e
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7230756Z docker run --rm --network none --user "$(id -u):$(id -g)" \
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7231167Z   -v "$PWD/dist:/input:ro" \
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7231460Z   -v "$PWD/out:/output:ro" \
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7231777Z   -v "$PWD/ci/trust.json:/trust.json:ro" \
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7232106Z   "$NADINA_IMAGE" verify \
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7232427Z   --file "/input/anmategra-$VERSION.zip" \
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7233000Z   --bundle "/output/anmategra-$VERSION.zip.bundle.json" \
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7233393Z   --trust-store /trust.json \
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7233697Z   --package anmategra \
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7233970Z   --version "$VERSION" \
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7234320Z   --json > "out/anmategra-$VERSION.zip.verification.json"
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7234676Z code=$?
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7234906Z set -e
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7235154Z test "$code" -eq 1
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7254704Z grep -q '"status":"ARTIFACT_MISMATCH"' "out/anmategra-$VERSION.zip.verification.json"
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7255292Z test ! -f out/deployed.txt
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7255656Z printf 'tidak ada\n' > out/marker-status.txt
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7287459Z shell: /usr/bin/bash -e {0}
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7287740Z env:
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7288217Z   NADINA_IMAGE: docker.io/reletz/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7288770Z   VERSION: 0.1.0
+c02	C02 verifikasi harus ditolak	2026-11-19T07:42:23.7288992Z ##[endgroup]
+c02	Catat identitas	﻿2026-11-19T07:42:29.3174559Z ##[group]Run mkdir -p out
+c02	Catat identitas	2026-11-19T07:42:29.3174924Z mkdir -p out
+c02	Catat identitas	2026-11-19T07:42:29.3175188Z rm -f out/c05/key.key.pem
+c02	Catat identitas	2026-11-19T07:42:29.3175542Z printf '%s\n' "$NADINA_IMAGE" > out/image.txt
+c02	Catat identitas	2026-11-19T07:42:29.3176104Z printf '%s\n' "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > out/run-url.txt
+c02	Catat identitas	2026-11-19T07:42:29.3176636Z {
+c02	Catat identitas	2026-11-19T07:42:29.3176859Z   echo "### c02"
+c02	Catat identitas	2026-11-19T07:42:29.3177124Z   echo "- image: $NADINA_IMAGE"
+c02	Catat identitas	2026-11-19T07:42:29.3177452Z   for f in out/*.verification.json; do
+c02	Catat identitas	2026-11-19T07:42:29.3177865Z     if [ -f "$f" ]; then echo "- $(basename "$f"): $(cat "$f")"; fi
+c02	Catat identitas	2026-11-19T07:42:29.3178234Z   done
+c02	Catat identitas	2026-11-19T07:42:29.3178658Z   if [ -f out/verification.json ]; then echo "- verification: $(cat out/verification.json)"; fi
+c02	Catat identitas	2026-11-19T07:42:29.3179303Z   if [ -f out/marker-status.txt ]; then echo "- marker: $(cat out/marker-status.txt)"; fi
+c02	Catat identitas	2026-11-19T07:42:29.3179812Z } >> "$GITHUB_STEP_SUMMARY"
+c02	Catat identitas	2026-11-19T07:42:29.3211327Z shell: /usr/bin/bash -e {0}
+c02	Catat identitas	2026-11-19T07:42:29.3211616Z env:
+c02	Catat identitas	2026-11-19T07:42:29.3212085Z   NADINA_IMAGE: docker.io/reletz/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+c02	Catat identitas	2026-11-19T07:42:29.3212652Z   VERSION: 0.1.0
+c02	Catat identitas	2026-11-19T07:42:29.3212992Z ##[endgroup]
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	﻿2026-11-19T07:42:29.3459537Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.3460003Z with:
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.3460235Z   name: pipeline-test-c02
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.3460499Z   path: out/
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.3460716Z   if-no-files-found: warn
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.3460965Z   compression-level: 6
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.3461193Z   overwrite: false
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.3461423Z   include-hidden-files: false
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.3461665Z env:
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.3462132Z   NADINA_IMAGE: docker.io/reletz/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.3462937Z   VERSION: 0.1.0
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.3463178Z ##[endgroup]
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.5114118Z (node:2818) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.5115059Z (Use `node --trace-deprecation ...` to show where the warning was created)
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.5188882Z With the provided path, there will be 7 files uploaded
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.5196369Z Artifact name is valid!
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.5196992Z Root directory input is valid!
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.7378314Z Beginning upload of artifact content to blob storage
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.7703831Z (node:2818) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.7954444Z Uploaded bytes 1971
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.8136553Z Finished uploading artifact content to blob storage!
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.8137807Z SHA256 digest of uploaded artifact zip is 815587e092d4df5189827c29244454188ae149d31eb6c5fe3085cc3159d9853c
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:29.8140028Z Finalizing artifact upload
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:30.1543806Z Artifact pipeline-test-c02.zip successfully finalized. Artifact ID 14509060963
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:30.1545097Z Artifact pipeline-test-c02 has been successfully uploaded! Final size is 1971 bytes. Artifact ID is 14509060963
+c02	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:42:30.1546187Z Artifact download URL: https://github.com/AnmategraKMITB/Anmategra-APP/actions/runs/44481623084/artifacts/14509060963
+c02	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-19T07:42:30.1798200Z Post job cleanup.
+c02	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:30.2669832Z [command]/usr/bin/git version
+c02	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:30.2718987Z git version 2.56.1
+c02	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:30.2761009Z Temporarily overriding HOME='/home/runner/work/_temp/1fa531a6-d84f-4e90-8f76-d18c9da8e145' before making global git config changes
+c02	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:30.2762417Z Adding repository directory to the temporary git global config as a safe directory
+c02	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:30.2767624Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Anmategra-APP/Anmategra-APP
+c02	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:30.2805624Z Removing SSH command configuration
+c02	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:30.2812008Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+c02	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:30.2850739Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+c02	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:30.3173682Z Removing HTTP extra header
+c02	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:30.3179633Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+c02	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:30.3227635Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+c02	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:30.3543670Z Removing includeIf entries pointing to credentials config files
+c02	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:30.3544719Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+c02	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:42:30.3611859Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+c02	Complete job	﻿2026-11-19T07:42:30.4072089Z Cleaning up orphan processes
+c02	Complete job	2026-11-19T07:42:30.4495259Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -1,0 +1,499 @@
+Sign artifact	Set up job	﻿2026-11-19T07:35:15.9786446Z Current runner version: '2.338.2'
+Sign artifact	Set up job	2026-11-19T07:35:15.9815037Z ##[group]Runner Image Provisioner
+Sign artifact	Set up job	2026-11-19T07:35:15.9816495Z Hosted Compute Agent
+Sign artifact	Set up job	2026-11-19T07:35:15.9817628Z Version: 20261103.629
+Sign artifact	Set up job	2026-11-19T07:35:15.9818854Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+Sign artifact	Set up job	2026-11-19T07:35:15.9820160Z Build Date: 2026-11-03T17:26:59Z
+Sign artifact	Set up job	2026-11-19T07:35:15.9821454Z Worker ID: {b4dcd3f6-59eb-42dd-8fb6-a11b7a57fac1}
+Sign artifact	Set up job	2026-11-19T07:35:15.9823018Z Region: westus2
+Sign artifact	Set up job	2026-11-19T07:35:15.9824228Z Cloud: Azure
+Sign artifact	Set up job	2026-11-19T07:35:15.9825274Z ##[endgroup]
+Sign artifact	Set up job	2026-11-19T07:35:15.9827360Z ##[group]Operating System
+Sign artifact	Set up job	2026-11-19T07:35:15.9828636Z Ubuntu
+Sign artifact	Set up job	2026-11-19T07:35:15.9829828Z 26.04.1
+Sign artifact	Set up job	2026-11-19T07:35:15.9830989Z LTS
+Sign artifact	Set up job	2026-11-19T07:35:15.9832170Z ##[endgroup]
+Sign artifact	Set up job	2026-11-19T07:35:15.9833785Z ##[group]Runner Image
+Sign artifact	Set up job	2026-11-19T07:35:15.9834915Z Image: ubuntu-26.04
+Sign artifact	Set up job	2026-11-19T07:35:15.9836069Z Version: 20261111.196.1
+Sign artifact	Set up job	2026-11-19T07:35:15.9837726Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261111.196/images/ubuntu/Ubuntu2604-Readme.md
+Sign artifact	Set up job	2026-11-19T07:35:15.9840120Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261111.196
+Sign artifact	Set up job	2026-11-19T07:35:15.9841682Z ##[endgroup]
+Sign artifact	Set up job	2026-11-19T07:35:15.9843862Z ##[group]GITHUB_TOKEN Permissions
+Sign artifact	Set up job	2026-11-19T07:35:15.9846549Z Contents: read
+Sign artifact	Set up job	2026-11-19T07:35:15.9847689Z Metadata: read
+Sign artifact	Set up job	2026-11-19T07:35:15.9848764Z ##[endgroup]
+Sign artifact	Set up job	2026-11-19T07:35:15.9851496Z Secret source: Actions
+Sign artifact	Set up job	2026-11-19T07:35:15.9853419Z Cache mode: write
+Sign artifact	Set up job	2026-11-19T07:35:15.9855049Z Prepare workflow directory
+Sign artifact	Set up job	2026-11-19T07:35:16.0415014Z Prepare all required actions
+Sign artifact	Set up job	2026-11-19T07:35:16.0465604Z Getting action download info
+Sign artifact	Set up job	2026-11-19T07:35:16.3789606Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+Sign artifact	Set up job	2026-11-19T07:35:16.5044369Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+Sign artifact	Set up job	2026-11-19T07:35:16.6747307Z Complete job name: Sign artifact
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-19T07:35:16.7763429Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7764960Z with:
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7765779Z   repository: AnmategraKMITB/Anmategra-APP
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7770343Z   token: ***
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7771131Z   ssh-strict: true
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7771907Z   ssh-user: git
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7772705Z   persist-credentials: true
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7773704Z   clean: true
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7774498Z   sparse-checkout-cone-mode: true
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7775380Z   fetch-depth: 1
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7776143Z   fetch-tags: false
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7776925Z   show-progress: true
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7777696Z   lfs: false
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7778457Z   submodules: false
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7779249Z   set-safe-directory: true
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7780099Z   allow-unsafe-pr-checkout: false
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7781215Z env:
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7781976Z   SKIP_ENV_VALIDATION: 1
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7783475Z   NADINA_IMAGE: docker.io/***/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7784883Z   RELEASE_ALGORITHM: rsa-pss-sha256
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7785829Z   RELEASE_VERSION: 0.1.0
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:16.7786640Z ##[endgroup]
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1129994Z Syncing repository: AnmategraKMITB/Anmategra-APP
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1133314Z ##[group]Getting Git version info
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1135783Z Working directory is '/home/runner/work/Anmategra-APP/Anmategra-APP'
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1139535Z [command]/usr/bin/git version
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1150611Z git version 2.56.1
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1176824Z ##[endgroup]
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1186765Z Temporarily overriding HOME='/home/runner/work/_temp/273d187d-560a-4593-8393-1c56d8145c9d' before making global git config changes
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1191249Z Adding repository directory to the temporary git global config as a safe directory
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1195644Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Anmategra-APP/Anmategra-APP
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1270079Z Deleting the contents of '/home/runner/work/Anmategra-APP/Anmategra-APP'
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1274310Z ##[group]Determining repository object format
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1278207Z ##[endgroup]
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1281761Z ##[group]Initializing the repository
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1284934Z [command]/usr/bin/git init /home/runner/work/Anmategra-APP/Anmategra-APP
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1431658Z hint: Using 'master' as the name for the initial branch. This default branch name
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1433839Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1435437Z hint: to use in all of your new repositories, which will suppress this warning,
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1436677Z hint: call:
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1437520Z hint:
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1438486Z hint: 	git config --global init.defaultBranch <name>
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1439573Z hint:
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1440625Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1442130Z hint: 'development'. The just-created branch can be renamed via this command:
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1443690Z hint:
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1444576Z hint: 	git branch -m <name>
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1445520Z hint:
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1446623Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1465792Z Initialized empty Git repository in /home/runner/work/Anmategra-APP/Anmategra-APP/.git/
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1478063Z [command]/usr/bin/git remote add origin https://github.com/AnmategraKMITB/Anmategra-APP
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1544358Z ##[endgroup]
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1547483Z ##[group]Disabling automatic garbage collection
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1549642Z [command]/usr/bin/git config --local gc.auto 0
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1585088Z ##[endgroup]
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1588128Z ##[group]Setting up auth
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1590275Z Removing SSH command configuration
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1592683Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.1653545Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.2122225Z Removing HTTP extra header
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.2128122Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.2162724Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.2430068Z Removing includeIf entries pointing to credentials config files
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.2435130Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.2476142Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.2753617Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-254349f7-3da4-4c2f-9786-3d61337a82d3.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.2793542Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Anmategra-APP/Anmategra-APP/.git.path /home/runner/work/_temp/git-credentials-254349f7-3da4-4c2f-9786-3d61337a82d3.config
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.2828267Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Anmategra-APP/Anmategra-APP/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-254349f7-3da4-4c2f-9786-3d61337a82d3.config
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.2866440Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-254349f7-3da4-4c2f-9786-3d61337a82d3.config
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.2912440Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-254349f7-3da4-4c2f-9786-3d61337a82d3.config
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.2946709Z ##[endgroup]
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.2949507Z ##[group]Fetching the repository
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:17.2953844Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +e02e087b8910fa08cb09f5fae40f0c83b4406a96:refs/remotes/origin/develop
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.3670572Z From https://github.com/AnmategraKMITB/Anmategra-APP
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.3673906Z  * [new ref]         e02e087b8910fa08cb09f5fae40f0c83b4406a96 -> origin/develop
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.3678991Z [command]/usr/bin/git branch --list --remote origin/develop
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.3707522Z   origin/develop
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.3715730Z [command]/usr/bin/git rev-parse refs/remotes/origin/develop
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.3740339Z e02e087b8910fa08cb09f5fae40f0c83b4406a96
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.3748692Z ##[endgroup]
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.3753432Z ##[group]Determining the checkout info
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.3757660Z ##[endgroup]
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.3760301Z [command]/usr/bin/git sparse-checkout disable
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.3813800Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.3850337Z ##[group]Checking out the ref
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.3853972Z [command]/usr/bin/git checkout --progress --force -B develop refs/remotes/origin/develop
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.5282566Z Switched to a new branch 'develop'
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.5287230Z branch 'develop' set up to track 'origin/develop'.
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.5302672Z ##[endgroup]
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.5356438Z [command]/usr/bin/git log -1 --format=%H
+Sign artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:18.5386453Z e02e087b8910fa08cb09f5fae40f0c83b4406a96
+Sign artifact	Normalisasi versi	﻿2026-11-19T07:35:18.5729027Z ##[group]Run set -eu
+Sign artifact	Normalisasi versi	2026-11-19T07:35:18.5731046Z set -eu
+Sign artifact	Normalisasi versi	2026-11-19T07:35:18.5733621Z version="$(printf '%s' "$RELEASE_VERSION" | sed 's/^v//')"
+Sign artifact	Normalisasi versi	2026-11-19T07:35:18.5736314Z test -n "$version"
+Sign artifact	Normalisasi versi	2026-11-19T07:35:18.5738482Z echo "value=$version" >> "$GITHUB_OUTPUT"
+Sign artifact	Normalisasi versi	2026-11-19T07:35:18.5798048Z shell: /usr/bin/bash -e {0}
+Sign artifact	Normalisasi versi	2026-11-19T07:35:18.5800026Z env:
+Sign artifact	Normalisasi versi	2026-11-19T07:35:18.5801751Z   SKIP_ENV_VALIDATION: 1
+Sign artifact	Normalisasi versi	2026-11-19T07:35:18.5805628Z   NADINA_IMAGE: docker.io/***/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+Sign artifact	Normalisasi versi	2026-11-19T07:35:18.5809095Z   RELEASE_ALGORITHM: rsa-pss-sha256
+Sign artifact	Normalisasi versi	2026-11-19T07:35:18.5811203Z   RELEASE_VERSION: 0.1.0
+Sign artifact	Normalisasi versi	2026-11-19T07:35:18.5813255Z ##[endgroup]
+Sign artifact	Login ke Docker Hub	﻿2026-11-19T07:35:18.6084200Z ##[group]Run set -eu
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:18.6086039Z set -eu
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:18.6087941Z if [ -n "${DOCKER_PULL_TOKEN:-}" ]; then
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:18.6091136Z   printf '%s' "$DOCKER_PULL_TOKEN" | docker login --username "$DOCKER_USERNAME" --password-stdin
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:18.6094453Z fi
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:18.6147156Z shell: /usr/bin/bash -e {0}
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:18.6148991Z env:
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:18.6150615Z   SKIP_ENV_VALIDATION: 1
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:18.6153946Z   NADINA_IMAGE: docker.io/***/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:18.6157200Z   RELEASE_ALGORITHM: rsa-pss-sha256
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:18.6159188Z   RELEASE_VERSION: 0.1.0
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:18.6161026Z   DOCKER_USERNAME: ***
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:18.6163198Z   DOCKER_PULL_TOKEN: ***
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:18.6164987Z ##[endgroup]
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:19.2870987Z 
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:19.2871803Z Login Succeeded
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:19.2873380Z WARNING! Your credentials are stored unencrypted in '/home/runner/.docker/config.json'.
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:19.2874734Z Configure a credential helper to remove this warning. See
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:19.2875803Z https://docs.docker.com/go/credential-store/
+Sign artifact	Login ke Docker Hub	2026-11-19T07:35:19.2876331Z 
+Sign artifact	Tarik image nadina	﻿2026-11-19T07:35:19.2932350Z ##[group]Run docker pull "$NADINA_IMAGE"
+Sign artifact	Tarik image nadina	2026-11-19T07:35:19.2933116Z docker pull "$NADINA_IMAGE"
+Sign artifact	Tarik image nadina	2026-11-19T07:35:19.2985284Z shell: /usr/bin/bash -e {0}
+Sign artifact	Tarik image nadina	2026-11-19T07:35:19.2985686Z env:
+Sign artifact	Tarik image nadina	2026-11-19T07:35:19.2986032Z   SKIP_ENV_VALIDATION: 1
+Sign artifact	Tarik image nadina	2026-11-19T07:35:19.2986803Z   NADINA_IMAGE: docker.io/***/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+Sign artifact	Tarik image nadina	2026-11-19T07:35:19.2987757Z   RELEASE_ALGORITHM: rsa-pss-sha256
+Sign artifact	Tarik image nadina	2026-11-19T07:35:19.2988186Z   RELEASE_VERSION: 0.1.0
+Sign artifact	Tarik image nadina	2026-11-19T07:35:19.2988558Z ##[endgroup]
+Sign artifact	Tarik image nadina	2026-11-19T07:35:20.0656819Z docker.io/***/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72: Pulling from ***/nadina
+Sign artifact	Tarik image nadina	2026-11-19T07:35:20.5589494Z c318ca6046ac: Pulling fs layer
+Sign artifact	Tarik image nadina	2026-11-19T07:35:20.5591487Z 881fc932939e: Pulling fs layer
+Sign artifact	Tarik image nadina	2026-11-19T07:35:20.5592296Z e863f23f2061: Pulling fs layer
+Sign artifact	Tarik image nadina	2026-11-19T07:35:20.5593143Z 3ca2e748d6f5: Pulling fs layer
+Sign artifact	Tarik image nadina	2026-11-19T07:35:20.8240906Z 881fc932939e: Download complete
+Sign artifact	Tarik image nadina	2026-11-19T07:35:20.9255651Z 881fc932939e: Pull complete
+Sign artifact	Tarik image nadina	2026-11-19T07:35:21.1243235Z e863f23f2061: Download complete
+Sign artifact	Tarik image nadina	2026-11-19T07:35:21.3237798Z c318ca6046ac: Download complete
+Sign artifact	Tarik image nadina	2026-11-19T07:35:21.3257277Z c318ca6046ac: Pull complete
+Sign artifact	Tarik image nadina	2026-11-19T07:35:21.6241964Z 3ca2e748d6f5: Download complete
+Sign artifact	Tarik image nadina	2026-11-19T07:35:21.7731084Z e863f23f2061: Pull complete
+Sign artifact	Tarik image nadina	2026-11-19T07:35:21.7741799Z 3ca2e748d6f5: Pull complete
+Sign artifact	Tarik image nadina	2026-11-19T07:35:21.7743310Z Digest: sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+Sign artifact	Tarik image nadina	2026-11-19T07:35:21.7745492Z Status: Downloaded newer image for ***/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+Sign artifact	Tarik image nadina	2026-11-19T07:35:21.7750413Z docker.io/***/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+Sign artifact	Bangun artefak rilis	﻿2026-11-19T07:35:21.7857696Z ##[group]Run set -eu
+Sign artifact	Bangun artefak rilis	2026-11-19T07:35:21.7858453Z set -eu
+Sign artifact	Bangun artefak rilis	2026-11-19T07:35:21.7858968Z mkdir -p dist out
+Sign artifact	Bangun artefak rilis	2026-11-19T07:35:21.7859592Z artifact="anmategra-0.1.0.zip"
+Sign artifact	Bangun artefak rilis	2026-11-19T07:35:21.7860665Z git archive --format=zip --prefix="anmategra/" -o "dist/$artifact" HEAD
+Sign artifact	Bangun artefak rilis	2026-11-19T07:35:21.7861593Z sha256sum "dist/$artifact" | tee "out/$artifact.sha256"
+Sign artifact	Bangun artefak rilis	2026-11-19T07:35:21.7926868Z shell: /usr/bin/bash -e {0}
+Sign artifact	Bangun artefak rilis	2026-11-19T07:35:21.7927292Z env:
+Sign artifact	Bangun artefak rilis	2026-11-19T07:35:21.7927645Z   SKIP_ENV_VALIDATION: 1
+Sign artifact	Bangun artefak rilis	2026-11-19T07:35:21.7928480Z   NADINA_IMAGE: docker.io/***/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+Sign artifact	Bangun artefak rilis	2026-11-19T07:35:21.7929196Z   RELEASE_ALGORITHM: rsa-pss-sha256
+Sign artifact	Bangun artefak rilis	2026-11-19T07:35:21.7929624Z   RELEASE_VERSION: 0.1.0
+Sign artifact	Bangun artefak rilis	2026-11-19T07:35:21.7930018Z ##[endgroup]
+Sign artifact	Bangun artefak rilis	2026-11-19T07:35:22.4765011Z 37cae13a7964ec88f9a0002aa76018910a5054c2f014f19b39f8509b0e92e758  dist/anmategra-0.1.0.zip
+Sign artifact	Buat SBOM	﻿2026-11-19T07:35:22.4827750Z ##[group]Run set -eu
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4828188Z set -eu
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4828577Z artifact="anmategra-0.1.0.zip"
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4829025Z docker run --rm \
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4829424Z   -v "$PWD:/src:ro" \
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4829850Z   -v "$PWD/out:/out" \
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4830511Z   aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb fs \
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4831191Z   --format cyclonedx \
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4831644Z   --output "/out/$artifact.cdx.json" \
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4832127Z   --scanners license \
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4832540Z   --include-dev-deps \
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4833212Z   /src
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4882260Z shell: /usr/bin/bash -e {0}
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4882652Z env:
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4883266Z   SKIP_ENV_VALIDATION: 1
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4884145Z   NADINA_IMAGE: docker.io/***/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4884890Z   RELEASE_ALGORITHM: rsa-pss-sha256
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4885311Z   RELEASE_VERSION: 0.1.0
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.4885685Z ##[endgroup]
+Sign artifact	Buat SBOM	2026-11-19T07:35:22.5101716Z Unable to find image 'aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb' locally
+Sign artifact	Buat SBOM	2026-11-19T07:35:23.2188471Z docker.io/aquasec/trivy@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb: Pulling from aquasec/trivy
+Sign artifact	Buat SBOM	2026-11-19T07:35:23.4599303Z 9f087194f4fe: Pulling fs layer
+Sign artifact	Buat SBOM	2026-11-19T07:35:23.4600464Z ac09fd37397a: Pulling fs layer
+Sign artifact	Buat SBOM	2026-11-19T07:35:23.4601204Z d7953b8bb0ca: Pulling fs layer
+Sign artifact	Buat SBOM	2026-11-19T07:35:23.4601836Z 7b229517ed22: Pulling fs layer
+Sign artifact	Buat SBOM	2026-11-19T07:35:23.7140196Z ac09fd37397a: Download complete
+Sign artifact	Buat SBOM	2026-11-19T07:35:23.7147942Z 9f087194f4fe: Download complete
+Sign artifact	Buat SBOM	2026-11-19T07:35:23.8142530Z 7b229517ed22: Download complete
+Sign artifact	Buat SBOM	2026-11-19T07:35:23.8144284Z 44136fa355b3: Already exists
+Sign artifact	Buat SBOM	2026-11-19T07:35:23.9128387Z dea6bfcf7d25: Download complete
+Sign artifact	Buat SBOM	2026-11-19T07:35:23.9130147Z 6c05e03aa58d: Download complete
+Sign artifact	Buat SBOM	2026-11-19T07:35:23.9132970Z d7953b8bb0ca: Download complete
+Sign artifact	Buat SBOM	2026-11-19T07:35:23.9166361Z 7b229517ed22: Pull complete
+Sign artifact	Buat SBOM	2026-11-19T07:35:24.1156905Z 9f087194f4fe: Pull complete
+Sign artifact	Buat SBOM	2026-11-19T07:35:24.7067730Z ac09fd37397a: Pull complete
+Sign artifact	Buat SBOM	2026-11-19T07:35:24.7078896Z d7953b8bb0ca: Pull complete
+Sign artifact	Buat SBOM	2026-11-19T07:35:24.7080197Z Digest: sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb
+Sign artifact	Buat SBOM	2026-11-19T07:35:24.7081896Z Status: Downloaded newer image for aquasec/trivy@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb
+Sign artifact	Buat SBOM	2026-11-19T07:35:25.4297572Z 2026-11-19T07:35:25Z	INFO	[license] License scanning is enabled
+Sign artifact	Buat SBOM	2026-11-19T07:35:25.5393423Z 2026-11-19T07:35:25Z	INFO	[npm] Run "npm install" to collect the license information of packages	dir="node_modules"
+Sign artifact	Buat SBOM	2026-11-19T07:35:25.5445669Z 2026-11-19T07:35:25Z	WARN	[npm] `package-lock.json` contains broken link with empty `resolved` field. This package will be skipped to avoid receiving an empty package	pkg="node_modules/anmategra"
+Sign artifact	Buat SBOM	2026-11-19T07:35:25.5675135Z 2026-11-19T07:35:25Z	INFO	Number of language-specific files	num=1
+Sign artifact	Tandatangani artefak dan SBOM	﻿2026-11-19T07:35:25.6955729Z ##[group]Run set -eu
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6956542Z set -eu
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6957016Z version="0.1.0"
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6957459Z artifact="anmategra-$version.zip"
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6957921Z 
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6958288Z case "$RELEASE_ALGORITHM" in
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6958759Z   rsa-pss-sha256) key="$KEY_RSA" ;;
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6959264Z   ecdsa-p256-sha256) key="$KEY_ECDSA" ;;
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6959734Z   ed25519) key="$KEY_ED25519" ;;
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6960158Z esac
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6960510Z test -n "$key"
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6960879Z 
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6961207Z umask 077
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6961608Z key_file="$RUNNER_TEMP/signing.key.pem"
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6962095Z trap 'rm -f "$key_file"' EXIT
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6962544Z printf '%s\n' "$key" > "$key_file"
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6963277Z 
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6963775Z docker run --rm --network none --user "$(id -u):$(id -g)" \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6964332Z   -v "$PWD/dist:/input:ro" \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6964774Z   -v "$PWD/out:/output" \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6965232Z   -v "$key_file:/run/signing.key.pem:ro" \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6965717Z   "$NADINA_IMAGE" sign \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6966154Z   --file "/input/$artifact" \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6966596Z   --package anmategra \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6967015Z   --version "$version" \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6967438Z   --key /run/signing.key.pem \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6967910Z   --out "/output/$artifact.bundle.json"
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6968352Z 
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6968794Z docker run --rm --network none --user "$(id -u):$(id -g)" \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6969335Z   -v "$PWD/dist:/input:ro" \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6969777Z   -v "$PWD/out:/output" \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6970215Z   "$NADINA_IMAGE" sbom bind \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6970669Z   --file "/input/$artifact" \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6971137Z   --sbom "/output/$artifact.cdx.json" \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6971628Z   --out "/output/$artifact.sbom.json"
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6972075Z 
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6972515Z docker run --rm --network none --user "$(id -u):$(id -g)" \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6973575Z   -v "$PWD/out:/output" \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6974055Z   -v "$key_file:/run/signing.key.pem:ro" \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6974537Z   "$NADINA_IMAGE" sbom sign \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6975007Z   --sbom "/output/$artifact.sbom.json" \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6975478Z   --package anmategra \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6975898Z   --version "$version" \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6976325Z   --key /run/signing.key.pem \
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.6976808Z   --out "/output/$artifact.sbom.bundle.json"
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.7025623Z shell: /usr/bin/bash -e {0}
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.7026034Z env:
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.7026378Z   SKIP_ENV_VALIDATION: 1
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.7027334Z   NADINA_IMAGE: docker.io/***/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.7028040Z   RELEASE_ALGORITHM: rsa-pss-sha256
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.7028483Z   RELEASE_VERSION: 0.1.0
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.7039644Z   KEY_RSA: ***
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.7040918Z   KEY_ECDSA: ***
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.7041657Z   KEY_ED25519: ***
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:25.7042005Z ##[endgroup]
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:31.2325427Z Bundle ditulis ke /output/anmategra-0.1.0.zip.bundle.json
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:31.2328076Z keyid: 6ff16bb96606b0d9724e2c9be3b592fd6715bb3fabde49b8b0cc81c2b946ef5f
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:31.2330050Z algorithm: rsa-pss-sha256
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:36.8620150Z Wrapper SBOM ditulis ke /output/anmategra-0.1.0.zip.sbom.json
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:42.3948111Z Bundle SBOM ditulis ke /output/anmategra-0.1.0.zip.sbom.bundle.json
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:42.3959397Z keyid: 6ff16bb96606b0d9724e2c9be3b592fd6715bb3fabde49b8b0cc81c2b946ef5f
+Sign artifact	Tandatangani artefak dan SBOM	2026-11-19T07:35:42.3960531Z algorithm: rsa-pss-sha256
+Sign artifact	Verifikasi	﻿2026-11-19T07:35:42.4488245Z ##[group]Run set -eu
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4488700Z set -eu
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4489054Z version="0.1.0"
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4489476Z artifact="anmategra-$version.zip"
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4489924Z 
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4490547Z docker run --rm --network none --user "$(id -u):$(id -g)" \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4491097Z   -v "$PWD/dist:/input:ro" \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4491551Z   -v "$PWD/out:/output:ro" \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4492019Z   -v "$PWD/ci/trust.json:/trust.json:ro" \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4492516Z   "$NADINA_IMAGE" verify \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4493326Z   --file "/input/$artifact" \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4493917Z   --bundle "/output/$artifact.bundle.json" \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4494416Z   --trust-store /trust.json \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4494865Z   --package anmategra \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4495288Z   --version "$version" \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4495913Z   --json | tee "out/$artifact.verification.json"
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4496788Z 
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4511146Z docker run --rm --network none --user "$(id -u):$(id -g)" \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4511740Z   -v "$PWD/dist:/input:ro" \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4512235Z   -v "$PWD/out:/output:ro" \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4512718Z   -v "$PWD/ci/trust.json:/trust.json:ro" \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4513555Z   "$NADINA_IMAGE" sbom verify \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4514012Z   --file "/input/$artifact" \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4514492Z   --bundle "/output/$artifact.bundle.json" \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4515024Z   --sbom "/output/$artifact.sbom.json" \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4515576Z   --sbom-bundle "/output/$artifact.sbom.bundle.json" \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4516113Z   --trust-store /trust.json \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4516562Z   --package anmategra \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4516984Z   --version "$version" \
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4517482Z   --json | tee "out/$artifact.sbom.verification.json"
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4517980Z 
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4518429Z grep -q '"valid":true' "out/$artifact.verification.json"
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4519287Z grep -q '"valid":true' "out/$artifact.sbom.verification.json"
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4519996Z printf 'anmategra %s %s\n' "$version" "$RELEASE_ALGORITHM" > out/deployed.txt
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4568511Z shell: /usr/bin/bash -e {0}
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4568919Z env:
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4569261Z   SKIP_ENV_VALIDATION: 1
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4570044Z   NADINA_IMAGE: docker.io/***/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4570755Z   RELEASE_ALGORITHM: rsa-pss-sha256
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4571183Z   RELEASE_VERSION: 0.1.0
+Sign artifact	Verifikasi	2026-11-19T07:35:42.4571552Z ##[endgroup]
+Sign artifact	Verifikasi	2026-11-19T07:35:47.9780242Z {"valid":true,"status":"OK","message":"Tanda tangan dan artefak valid.","algorithm":"rsa-pss-sha256","keyid":"6ff16bb96606b0d9724e2c9be3b592fd6715bb3fabde49b8b0cc81c2b946ef5f","package":"anmategra","version":"0.1.0"}
+Sign artifact	Verifikasi	2026-11-19T07:35:53.9434413Z {"valid":true,"status":"OK","message":"SBOM dan artefak rilis valid dan saling merujuk.","algorithm":"rsa-pss-sha256","keyid":"6ff16bb96606b0d9724e2c9be3b592fd6715bb3fabde49b8b0cc81c2b946ef5f","package":"anmategra","version":"0.1.0"}
+Sign artifact	Catat identitas	﻿2026-11-19T07:35:53.9989084Z ##[group]Run mkdir -p out
+Sign artifact	Catat identitas	2026-11-19T07:35:53.9989561Z mkdir -p out
+Sign artifact	Catat identitas	2026-11-19T07:35:53.9989987Z printf '%s\n' "$NADINA_IMAGE" > out/image.txt
+Sign artifact	Catat identitas	2026-11-19T07:35:53.9990716Z printf '%s\n' "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > out/run-url.txt
+Sign artifact	Catat identitas	2026-11-19T07:35:53.9991394Z {
+Sign artifact	Catat identitas	2026-11-19T07:35:53.9991759Z   echo "### Nadina Release"
+Sign artifact	Catat identitas	2026-11-19T07:35:53.9992236Z   echo "- artifact: anmategra-0.1.0.zip"
+Sign artifact	Catat identitas	2026-11-19T07:35:53.9992729Z   echo "- image: $NADINA_IMAGE"
+Sign artifact	Catat identitas	2026-11-19T07:35:53.9993425Z   echo "- algorithm: $RELEASE_ALGORITHM"
+Sign artifact	Catat identitas	2026-11-19T07:35:53.9993923Z   for f in out/*.verification.json; do
+Sign artifact	Catat identitas	2026-11-19T07:35:53.9994474Z     if [ -f "$f" ]; then echo "- $(basename "$f"): $(cat "$f")"; fi
+Sign artifact	Catat identitas	2026-11-19T07:35:53.9994994Z   done
+Sign artifact	Catat identitas	2026-11-19T07:35:53.9995356Z } >> "$GITHUB_STEP_SUMMARY"
+Sign artifact	Catat identitas	2026-11-19T07:35:54.0043338Z shell: /usr/bin/bash -e {0}
+Sign artifact	Catat identitas	2026-11-19T07:35:54.0043785Z env:
+Sign artifact	Catat identitas	2026-11-19T07:35:54.0044128Z   SKIP_ENV_VALIDATION: 1
+Sign artifact	Catat identitas	2026-11-19T07:35:54.0044882Z   NADINA_IMAGE: docker.io/***/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+Sign artifact	Catat identitas	2026-11-19T07:35:54.0045582Z   RELEASE_ALGORITHM: rsa-pss-sha256
+Sign artifact	Catat identitas	2026-11-19T07:35:54.0046005Z   RELEASE_VERSION: 0.1.0
+Sign artifact	Catat identitas	2026-11-19T07:35:54.0046384Z ##[endgroup]
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	﻿2026-11-19T07:35:54.0325874Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.0326497Z with:
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.0326869Z   name: nadina-release-0.1.0
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.0327284Z   path: out/
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.0327637Z   if-no-files-found: warn
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.0328014Z   compression-level: 6
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.0328383Z   overwrite: false
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.0328740Z   include-hidden-files: false
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.0329114Z env:
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.0329450Z   SKIP_ENV_VALIDATION: 1
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.0330149Z   NADINA_IMAGE: docker.io/***/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.0330846Z   RELEASE_ALGORITHM: rsa-pss-sha256
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.0331273Z   RELEASE_VERSION: 0.1.0
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.0331647Z ##[endgroup]
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.2037175Z (node:3744) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.2038911Z (Use `node --trace-deprecation ...` to show where the warning was created)
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.2120009Z With the provided path, there will be 10 files uploaded
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.2134628Z Artifact name is valid!
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.2135919Z Root directory input is valid!
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.6181592Z Beginning upload of artifact content to blob storage
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:54.6818532Z (node:3744) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:55.1298394Z Uploaded bytes 127772
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:55.2051657Z Finished uploading artifact content to blob storage!
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:55.2053632Z SHA256 digest of uploaded artifact zip is 7a1050825edfaa27ae527ac1a5ee48f01e7cc06c5cc5145aa12ac8bc2765c8a2
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:55.2055160Z Finalizing artifact upload
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:56.3246751Z Artifact nadina-release-0.1.0.zip successfully finalized. Artifact ID 14508576566
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:56.3248544Z Artifact nadina-release-0.1.0 has been successfully uploaded! Final size is 127772 bytes. Artifact ID is 14508576566
+Sign artifact	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-11-19T07:35:56.3254313Z Artifact download URL: https://github.com/AnmategraKMITB/Anmategra-APP/actions/runs/44480652005/artifacts/14508576566
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-19T07:35:56.3514388Z Post job cleanup.
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.4368781Z [command]/usr/bin/git version
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.4416251Z git version 2.56.1
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.4455350Z Temporarily overriding HOME='/home/runner/work/_temp/3b171dd3-4dc6-422e-ae7f-2e1d9ba7b0da' before making global git config changes
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.4457009Z Adding repository directory to the temporary git global config as a safe directory
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.4461284Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Anmategra-APP/Anmategra-APP
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.4498071Z Removing SSH command configuration
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.4504993Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.4568801Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.4897732Z Removing HTTP extra header
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.4905003Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.4947526Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5273051Z Removing includeIf entries pointing to credentials config files
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5279114Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5305529Z includeif.gitdir:/home/runner/work/Anmategra-APP/Anmategra-APP/.git.path
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5306785Z includeif.gitdir:/home/runner/work/Anmategra-APP/Anmategra-APP/.git/worktrees/*.path
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5307934Z includeif.gitdir:/github/workspace/.git.path
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5308626Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5315287Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Anmategra-APP/Anmategra-APP/.git.path
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5341007Z /home/runner/work/_temp/git-credentials-254349f7-3da4-4c2f-9786-3d61337a82d3.config
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5351514Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Anmategra-APP/Anmategra-APP/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-254349f7\-3da4\-4c2f\-9786\-3d61337a82d3\.config
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5401903Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Anmategra-APP/Anmategra-APP/.git/worktrees/*.path
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5435754Z /home/runner/work/_temp/git-credentials-254349f7-3da4-4c2f-9786-3d61337a82d3.config
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5445461Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Anmategra-APP/Anmategra-APP/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-254349f7\-3da4\-4c2f\-9786\-3d61337a82d3\.config
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5483316Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5509205Z /github/runner_temp/git-credentials-254349f7-3da4-4c2f-9786-3d61337a82d3.config
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5518743Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-254349f7\-3da4\-4c2f\-9786\-3d61337a82d3\.config
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5556839Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5584087Z /github/runner_temp/git-credentials-254349f7-3da4-4c2f-9786-3d61337a82d3.config
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5606122Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-254349f7\-3da4\-4c2f\-9786\-3d61337a82d3\.config
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5630010Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Sign artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-19T07:35:56.5918556Z Removing credentials config '/home/runner/work/_temp/git-credentials-254349f7-3da4-4c2f-9786-3d61337a82d3.config'
+Sign artifact	Complete job	﻿2026-11-19T07:35:56.6089597Z Evaluate and set job outputs
+Sign artifact	Complete job	2026-11-19T07:35:56.6094998Z Set output 'version'
+Sign artifact	Complete job	2026-11-19T07:35:56.6097858Z Cleaning up orphan processes
+Sign artifact	Complete job	2026-11-19T07:35:56.6551634Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+Deploy (simulasi)	Set up job	﻿2026-11-19T07:36:01.7238875Z Current runner version: '2.338.2'
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7267612Z ##[group]Runner Image Provisioner
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7268721Z Hosted Compute Agent
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7269303Z Version: 20261103.629
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7270303Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7271242Z Build Date: 2026-11-03T17:26:59Z
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7271922Z Worker ID: {42c2aef7-6a5f-4fb3-8491-2fa66518999c}
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7272721Z Region: eastus
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7273260Z Cloud: Azure
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7273818Z ##[endgroup]
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7276006Z ##[group]Operating System
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7276666Z Ubuntu
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7277278Z 26.04.1
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7277794Z LTS
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7278298Z ##[endgroup]
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7278924Z ##[group]Runner Image
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7279502Z Image: ubuntu-26.04
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7280594Z Version: 20261111.196.1
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7281694Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261111.196/images/ubuntu/Ubuntu2604-Readme.md
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7283676Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261111.196
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7284677Z ##[endgroup]
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7285800Z ##[group]GITHUB_TOKEN Permissions
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7288032Z Contents: read
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7288732Z Metadata: read
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7289285Z ##[endgroup]
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7292314Z Secret source: Actions
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7293426Z Cache mode: write
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7294413Z Prepare workflow directory
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7839084Z Prepare all required actions
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.7890906Z Getting action download info
+Deploy (simulasi)	Set up job	2026-11-19T07:36:01.9843521Z Download action repository 'actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+Deploy (simulasi)	Set up job	2026-11-19T07:36:02.2999044Z Complete job name: Deploy (simulasi)
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	﻿2026-11-19T07:36:02.3932208Z ##[group]Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:02.3933421Z with:
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:02.3933870Z   name: nadina-release-0.1.0
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:02.3934376Z   path: out
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:02.3934800Z   merge-multiple: false
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:02.3935319Z   repository: AnmategraKMITB/Anmategra-APP
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:02.3935892Z   run-id: 44480652005
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:02.3936535Z env:
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:02.3936954Z   SKIP_ENV_VALIDATION: 1
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:02.3937862Z   NADINA_IMAGE: docker.io/reletz/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:02.3938860Z   RELEASE_ALGORITHM: rsa-pss-sha256
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:02.3939406Z   RELEASE_VERSION: 0.1.0
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:02.3940019Z ##[endgroup]
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:02.7811913Z Downloading single artifact
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:02.8006535Z (node:2259) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:02.8008918Z (Use `node --trace-deprecation ...` to show where the warning was created)
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:02.9075264Z Preparing to download the following artifacts:
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:02.9077817Z - nadina-release-0.1.0 (ID: 14508576566, Size: 127772, Expected Digest: sha256:7a1050825edfaa27ae527ac1a5ee48f01e7cc06c5cc5145aa12ac8bc2765c8a2)
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:03.0392767Z Redirecting to blob download url: https://productionresultssa2.blob.core.windows.net/actions-results/95caf2b4-480f-4a03-94c5-a1a4a6631a9a/workflow-job-run-5070fd0c-a51d-539a-bd8d-ca4ac39fa528/artifacts/b6942e05876dfe5c5ae693fee180471f5aa79dae25f1882834f470e5b5b4b057.zip
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:03.0395983Z Starting download of artifact to: /home/runner/work/Anmategra-APP/Anmategra-APP/out
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:03.0821471Z (node:2259) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:03.1047890Z SHA256 digest of downloaded artifact is 7a1050825edfaa27ae527ac1a5ee48f01e7cc06c5cc5145aa12ac8bc2765c8a2
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:03.1049299Z Artifact download completed successfully.
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:03.1050589Z Total of 1 artifact(s) downloaded
+Deploy (simulasi)	Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093	2026-11-19T07:36:03.1054119Z Download artifact has finished successfully
+Deploy (simulasi)	Tandai deploy	﻿2026-11-19T07:36:03.1288148Z ##[group]Run set -eu
+Deploy (simulasi)	Tandai deploy	2026-11-19T07:36:03.1288872Z set -eu
+Deploy (simulasi)	Tandai deploy	2026-11-19T07:36:03.1289412Z test -s out/deployed.txt
+Deploy (simulasi)	Tandai deploy	2026-11-19T07:36:03.1290236Z artifact="anmategra-0.1.0.zip"
+Deploy (simulasi)	Tandai deploy	2026-11-19T07:36:03.1290944Z test -s "out/$artifact.verification.json"
+Deploy (simulasi)	Tandai deploy	2026-11-19T07:36:03.1291751Z test -s "out/$artifact.sbom.verification.json"
+Deploy (simulasi)	Tandai deploy	2026-11-19T07:36:03.1292703Z printf 'deploy anmategra %s terverifikasi\n' "0.1.0" > deployed.txt
+Deploy (simulasi)	Tandai deploy	2026-11-19T07:36:03.1349102Z shell: /usr/bin/bash -e {0}
+Deploy (simulasi)	Tandai deploy	2026-11-19T07:36:03.1350054Z env:
+Deploy (simulasi)	Tandai deploy	2026-11-19T07:36:03.1350567Z   SKIP_ENV_VALIDATION: 1
+Deploy (simulasi)	Tandai deploy	2026-11-19T07:36:03.1351577Z   NADINA_IMAGE: docker.io/reletz/nadina@sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72
+Deploy (simulasi)	Tandai deploy	2026-11-19T07:36:03.1352658Z   RELEASE_ALGORITHM: rsa-pss-sha256
+Deploy (simulasi)	Tandai deploy	2026-11-19T07:36:03.1353286Z   RELEASE_VERSION: 0.1.0
+Deploy (simulasi)	Tandai deploy	2026-11-19T07:36:03.1353802Z ##[endgroup]
+Deploy (simulasi)	Complete job	﻿2026-11-19T07:36:03.1557089Z Cleaning up orphan processes
+Deploy (simulasi)	Complete job	2026-11-19T07:36:03.2034437Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
