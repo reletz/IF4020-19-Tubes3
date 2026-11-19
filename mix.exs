@@ -51,6 +51,7 @@ defmodule Nadina.MixProject do
   defp docs do
     [
       main: "Nadina",
+      output: "docs/reference",
       groups_for_modules: [
         Profil: [~r/^Nadina\.Profile/]
       ]
