@@ -7,6 +7,7 @@
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
+\usepackage{enumitem}
 \usepackage{amsmath,amssymb}
 \usepackage{listings}
 \usepackage{xcolor}
@@ -52,11 +53,6 @@
 \fancyhead[L]{IF4020 Kriptografi}
 \fancyhead[R]{Tugas 3: \progname}
 \fancyfoot[C]{\thepage}
-
-% Foto anggota; jika file belum ada, tampil kotak placeholder
-\newcommand{\foto}[1]{%
-  \IfFileExists{figures/#1}{\includegraphics[width=3cm,height=4cm,keepaspectratio]{#1}}%
-  {\fbox{\parbox[c][4cm][c]{3cm}{\centering\small Foto\\(#1)}}}}
 
 % Blok tanda tangan: nama, NIM, file gambar tanda tangan (kosong jika belum ada)
 \newcommand{\ttd}[3]{%

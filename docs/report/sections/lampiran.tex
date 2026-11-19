@@ -11,5 +11,48 @@
 \url{\apiurl}
 
 \subsection{Pembagian Tugas}
-% TODO: tabel pembagian tugas. Isi harus sesuai pekerjaan yang benar-benar dilakukan,
-% karena beberapa modul (Ed25519, trust, sign, verify, cli, sbom) ditulis oleh Naufarrel.
+Pembagian tugas pada Tabel~\ref{tab:pembagian-tugas} disusun berdasarkan pekerjaan yang benar-benar
+dikerjakan tiap anggota, sehingga sebagian berbeda dari rencana awal.
+
+\begin{longtable}{@{}p{4.2cm}p{1.9cm}p{8.6cm}@{}}
+\caption{Pembagian tugas anggota kelompok}\label{tab:pembagian-tugas}\\
+\toprule
+Nama & NIM & Tugas \\
+\midrule
+\endfirsthead
+\toprule
+Nama & NIM & Tugas \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\anggotaA & \nimA &
+\begin{itemize}[leftmargin=*,nosep]
+  \item Penguatan alur \textit{sign} dan \textit{trust} pada CLI (validasi argumen dan pesan galat).
+  \item \textit{Workflow} pipeline demo pemakai (\texttt{pipeline-demo.yml}), \textit{fixture} Anmategra,
+    \textit{public key} demo, serta \textit{trust store} \texttt{ci/trust.json} dan \texttt{ci/trust-empty.json}.
+  \item Pengujian \textit{trust store} dan skenario U06, U07, U12.
+  \item Pelaksanaan skenario C01--C05 beserta buktinya (\texttt{docs/ci-evidence/}).
+\end{itemize} \\
+\midrule
+\anggotaB & \nimB &
+\begin{itemize}[leftmargin=*,nosep]
+  \item Modul \texttt{strict\_json}, \texttt{manifest} (serialisasi \textit{canonical}, batas ukuran),
+    dan \texttt{bundle} (base64 \textit{strict}).
+  \item Profil RSA-PSS beserta uji vektor Wycheproof.
+  \item \textit{Property test} (serialisasi \textit{canonical}, \textit{strict} JSON, \textit{sign}--\textit{verify}).
+  \item Skrip dan pengukuran \textit{benchmark} beserta datanya.
+  \item Laporan bagian pengujian dan \textit{benchmark}, serta perakitan laporan akhir.
+\end{itemize} \\
+\midrule
+\anggotaC & \nimC &
+\begin{itemize}[leftmargin=*,nosep]
+  \item \textit{Behaviour} \texttt{Profile}, profil ECDSA P-256 dan Ed25519, serta analisis \textit{nonce} (U14).
+  \item Modul \texttt{keys}, \texttt{verify}, \texttt{sign}, \texttt{trust}, \texttt{cli}, dan keluaran JSON.
+  \item Fitur bonus SBOM bertanda tangan (modul \texttt{sbom}, subcommand, dan pengujiannya).
+  \item Uji interop OpenSSL untuk ketiga profil.
+  \item Dockerfile \textit{multi-arch}, \texttt{ci.yml}, \texttt{release.yml}, Trivy, dan publikasi
+    \textit{image} ke Docker Hub.
+  \item Dokumentasi API dan sebagian besar bab laporan.
+\end{itemize} \\
+\end{longtable}

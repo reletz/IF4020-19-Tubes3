@@ -5,20 +5,18 @@
 \newcommand{\progname}{Nadina}
 \newcommand{\repourl}{https://github.com/reletz/IF4020-19-Tubes3}
 \newcommand{\imageref}{reletz/nadina}
-\newcommand{\videourl}{TODO}
+\newcommand{\videourl}{https://youtu.be/EISYEvjv1dU}
 \newcommand{\apiurl}{https://nadina.naufarrel.dev}
 \newcommand{\tahun}{2026}
 
 % TODO: lengkapi nama lengkap dan NIM seluruh anggota, serta file foto/tanda tangan
 \newcommand{\anggotaA}{Zulfaqqar Nayaka Athadiansyah}
 \newcommand{\nimA}{13523094}
-\newcommand{\fotoA}{foto2.png}
 \newcommand{\anggotaB}{Dita Maheswari}
 \newcommand{\nimB}{13523125}
-\newcommand{\fotoB}{foto1.png}
 \newcommand{\anggotaC}{Naufarrel Zhafif Abhista}
 \newcommand{\nimC}{13523149}
-\newcommand{\fotoC}{foto3.png}
+\newcommand{\fotokelompok}{IMG_20261119_211407.jpg}
 
 \begin{document}
 
@@ -36,9 +34,13 @@
   {\large dengan RSA-PSS, ECDSA, dan EdDSA\par}
   \vspace{1.5cm}
 
-  \begin{minipage}[t]{0.3\textwidth}\centering\foto{\fotoA}\\[2pt]{\bfseries\anggotaA}\\\nimA\end{minipage}\hfill
-  \begin{minipage}[t]{0.3\textwidth}\centering\foto{\fotoB}\\[2pt]{\bfseries\anggotaB}\\\nimB\end{minipage}\hfill
-  \begin{minipage}[t]{0.3\textwidth}\centering\foto{\fotoC}\\[2pt]{\bfseries\anggotaC}\\\nimC\end{minipage}
+  \includegraphics[width=\textwidth,height=8cm,keepaspectratio]{\fotokelompok}\par
+  \vspace{0.8cm}
+  \begin{tabular}{l@{\quad}l}
+    \anggotaA & \nimA \\
+    \anggotaB & \nimB \\
+    \anggotaC & \nimC \\
+  \end{tabular}\par
 
   \vfill
   {\large\bfseries Program Studi Teknik Informatika\\
@@ -54,18 +56,21 @@
 \section*{Pernyataan}
 \addcontentsline{toc}{section}{Pernyataan}
 
-% TODO: tentukan teks pernyataan sesuai ketentuan tugas dan kondisi sebenarnya
-% (termasuk penggunaan alat bantu, bila ada). Jangan menyalin pernyataan Tugas 2.
-\noindent TODO.
+\noindent\fbox{\begin{minipage}{\dimexpr\textwidth-2\fboxsep-2\fboxrule}
+\vspace{6pt}
+\noindent Tugas dan laporan ini disusun sepenuhnya tanpa bantuan kecerdasan buatan
+(\textit{Generative AI}), melainkan hasil pemikiran dan analisis mandiri.
 
 \vspace{1cm}
 \noindent
-\ttd{\anggotaA}{\nimA}{ttd1.png}\hfill
-\ttd{\anggotaB}{\nimB}{ttd2.png}
+\ttd{\anggotaA}{\nimA}{tanda-tangan-nayaka.png}\hfill
+\ttd{\anggotaB}{\nimB}{tanda-tangan.png}
 
 \vspace{1.5cm}
 \noindent
-\ttd{\anggotaC}{\nimC}{ttd3.png}
+\ttd{\anggotaC}{\nimC}{ttdnau-crop.png}
+\vspace{6pt}
+\end{minipage}}
 
 \newpage
 \tableofcontents
