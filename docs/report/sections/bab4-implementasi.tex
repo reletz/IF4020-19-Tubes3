@@ -191,17 +191,34 @@ ENTRYPOINT ["/usr/local/bin/nadina"]
 
 
 \subsection{Integrasi CI/CD}
-Workflow \texttt{ci.yml} berjalan pada \texttt{pull\_request}, pada \textit{push} ke cabang selain
-\texttt{main}, dan dapat dipanggil oleh workflow lain. Job \texttt{test} memeriksa format,
-dependensi, kompilasi tanpa warning, credo, tes, dan dialyzer. Job \texttt{test-alpine}
-menjalankan tes di dalam image Elixir Alpine yang sama dengan image rilis, sehingga musl dan
-OpenSSL yang dipakai sama dengan image yang dikirim. Job \texttt{image-scan} membangun image uji
-dan memindainya dengan Trivy, dengan gagal bila ada temuan HIGH atau CRITICAL.
+Pipeline terdiri dari dua workflow dan lima job. Ringkasannya dapat dilihat pada
+Tabel~\ref{tab:ci}.
 
-Workflow \texttt{release.yml} berjalan pada \textit{push} ke \texttt{main} dan pada tag \texttt{v*}.
-Job \texttt{publish} hanya berjalan setelah \texttt{ci} lulus dan memakai \textit{environment}
-\texttt{nadina}. Pemindaian Trivy dilakukan sebelum login dan \textit{push}, sehingga image yang
-gagal pindai tidak pernah dikirim ke registry (Listing~\ref{lst:trivy}).
+\begin{table}[H]
+\centering
+{\small
+\begin{tabular}{@{}p{2.6cm}p{2.6cm}p{4.4cm}p{5.4cm}@{}}
+\toprule
+Workflow & Job & Pemicu dan syarat & Isi \\
+\midrule
+\texttt{ci.yml} & \texttt{test} & \texttt{pull\_request}, \textit{push} selain \texttt{main}, \texttt{workflow\_call} &
+Format, \texttt{deps.get --check-locked}, \texttt{hex.audit}, kompilasi dengan \texttt{warnings-as-errors}, credo, tes, dialyzer \\
+\texttt{ci.yml} & \texttt{test-alpine} & Sama dengan \texttt{test} &
+Tes di dalam image Elixir Alpine yang sama dengan image rilis \\
+\texttt{ci.yml} & \texttt{image-scan} & Sama dengan \texttt{test} &
+Build image uji, lalu Trivy dengan gagal bila ada HIGH atau CRITICAL \\
+\texttt{release.yml} & \texttt{ci} & \textit{Push} ke \texttt{main} dan tag \texttt{v*} &
+Memanggil \texttt{ci.yml} \\
+\texttt{release.yml} & \texttt{publish} & Hanya setelah \texttt{ci} lulus, \textit{environment} \texttt{nadina} &
+Trivy pada build amd64, login, build dan \textit{push} multi-arch (amd64 dan arm64), tag \texttt{edge}, \texttt{sha-<commit>}, dan \texttt{semver} \\
+\bottomrule
+\end{tabular}}
+\caption{Job pada workflow CI dan rilis.}
+\label{tab:ci}
+\end{table}
+
+Pemindaian Trivy dilakukan sebelum login dan \textit{push}, sehingga image yang gagal pindai tidak
+pernah dikirim ke registry (Listing~\ref{lst:trivy}).
 
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Gerbang Trivy pada job \texttt{publish}},label={lst:trivy},numbers=none]
 - name: Trivy (gagal jika ada HIGH atau CRITICAL)
