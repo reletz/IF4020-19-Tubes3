@@ -2,8 +2,6 @@
 
 Kakas penandatanganan dan verifikasi software release (RSA-PSS, ECDSA P-256, Ed25519) untuk pipeline CI/CD. Tugas 3 IF4020 Kriptografi.
 
-Spesifikasi tugas: [docs/spek.md](docs/spek.md). Laporan: [docs/report](docs/report).
-
 ## Dependensi
 
 Program hanya bergantung pada pustaka bawaan OTP dan Elixir: `crypto`, `public_key`, dan modul `JSON`.
