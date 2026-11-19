@@ -2,17 +2,42 @@
 % Nama berkas dan perintah panjang di \texttt tidak bisa dipenggal.
 \sloppy
 
-Seluruh \textit{testing} pada bab ini berjalan otomatis dengan \texttt{mix test}, kecuali skenario
-C01 sampai C05 yang berjalan pada pipeline anmategra. \textit{Workflow} \texttt{ci.yml}
-menjalankan tes dua kali: pada runner Ubuntu, dan di dalam image
-\texttt{elixir:1.20-otp-29-alpine} yang memakai musl dan OpenSSL yang sama dengan image
-\textit{release}. Image Alpine tersebut tidak memuat CLI \texttt{openssl}, sehingga tes
-interoperabilitas hanya berjalan pada runner Ubuntu.
+Seluruh \textit{testing} pada bab ini dijalankan dengan \texttt{scripts/test-logs.sh}, yang
+menyimpan keluaran setiap kelompok ke \texttt{docs/log/}. Angka di bab ini diambil dari berkas
+log tersebut. Pada mesin pengujian (Arch Linux, commit \texttt{e872cae}) seluruh tes lulus: 250
+tes, terdiri atas 33 doctest, 20 \textit{property}, dan 197 tes unit serta skenario. Workflow
+\texttt{ci.yml} menjalankan tes yang sama pada runner Ubuntu dan di dalam image
+\texttt{elixir:1.20-otp-29-alpine}. Image Alpine tersebut memakai musl dan OpenSSL yang sama
+dengan image \textit{release}, tetapi tidak memuat CLI \texttt{openssl}. Akibatnya 20 tes
+interoperabilitas dilewati di dalam image, dan dijalankan pada mesin host.
 
-Untuk laporan ini, seluruh tes dijalankan ulang di dalam image Alpine yang sama dengan
-CLI OpenSSL 3.5.9 ditambahkan, sehingga tes interoperabilitas ikut berjalan. Hasilnya 213
-tes lulus (180 tes dan 33 doctest) tanpa kegagalan dan tanpa tes yang dilewati. Property
-test pada \texttt{test/property/} dijalankan dengan cara yang sama dan 20 property lulus.
+Tabel~\ref{tab:log} memetakan setiap kelompok pengujian ke berkas log dan hasilnya.
+
+\begin{table}[H]
+\centering
+{\small
+\begin{tabular}{@{}p{3.6cm}p{5.2cm}p{5.6cm}@{}}
+\toprule
+Kelompok & Berkas log & Hasil \\
+\midrule
+Lingkungan & \texttt{00-env.txt} & Commit, OS, Elixir, OTP, OpenSSL, Docker \\
+Format & \texttt{01-format.txt} & \texttt{exit: 0} \\
+Kompilasi & \texttt{02-compile.txt} & \texttt{exit: 0}, tanpa warning \\
+Credo & \texttt{03-credo.txt} & \texttt{exit: 0} \\
+Dialyzer & \texttt{04-dialyzer.txt} & \texttt{exit: 0} \\
+Seluruh suite & \texttt{05-test-all.txt} & 250 lulus \\
+U01 sampai U14 & \texttt{06-test-u-scenarios.txt} & 35 lulus \\
+Test vector & \texttt{07-test-vector.txt} & 86 lulus \\
+\textit{Property} & \texttt{08-test-property.txt} & 20 lulus \\
+Interoperabilitas & \texttt{09-test-interop.txt} & 20 lulus \\
+SBOM & \texttt{10-test-sbom.txt} & 16 lulus \\
+Image Alpine & \texttt{11-test-alpine.txt} & 230 lulus, 20 dilewati \\
+Benchmark & \texttt{12-benchmark.txt} & 30 pengukuran, pemanasan 5 \\
+\bottomrule
+\end{tabular}}
+\caption{Berkas log pengujian pada \texttt{docs/log/}.}
+\label{tab:log}
+\end{table}
 
 \subsection{Skenario U01 sampai U14}
 
@@ -85,7 +110,7 @@ U14 & Manifest identik \textit{signed} dua kali dengan \textit{key} yang sama, u
 
 Hasil U14 sesuai dengan sumber randomness tiap algoritma. RSA-PSS memakai salt 32 byte
 acak dan ECDSA memakai nonce $k$ acak, sehingga dua \textit{signature} atas \textit{message} yang sama
-berbeda. Ed25519 menurunkan nonce dari \textit{key} dan \textit{message} (RFC 8032), sehingga \textit{signature}-nya identik. Analisis lengkapnya, termasuk 200 \textit{signature} ECDSA tanpa nilai $r$
+berbeda. Ed25519 menurunkan nonce dari \textit{key} dan \textit{message} (RFC 8032~\cite{rfc8032}), sehingga \textit{signature}-nya identik. Analisis lengkapnya, termasuk 200 \textit{signature} ECDSA tanpa nilai $r$
 berulang, ada pada subbab Nonce dan Randomness di bab Analisis Keamanan.
 
 Selain tabel di atas, \texttt{cli\_test.exs} menguji kasus tambahan pada urutan status
@@ -100,15 +125,17 @@ mix test test/cli_test.exs
 mix test test/cli_test.exs --only describe:"U14: dua tanda tangan atas manifest identik"
 \end{lstlisting}
 
+Keluaran tercatat pada \texttt{docs/log/06-test-u-scenarios.txt}.
+
 \subsection{Test Vector dan Property Test}
 
 Setiap profil diuji terhadap vektor dari sumber publik, terpisah dari CLI:
 
 \begin{itemize}
-  \item RSA-PSS: 108 kasus Wycheproof \texttt{rsa\_pss\_3072\_sha256\_mgf1\_32}, yang
+  \item RSA-PSS: 108 kasus Wycheproof~\cite{wycheproof} \texttt{rsa\_pss\_3072\_sha256\_mgf1\_32}, yang
     parameternya sama persis dengan profil (RSA 3072, SHA-256, MGF1-SHA-256, salt 32 byte).
     Semua kasus \textit{valid} diterima dan semua kasus \textit{invalid} ditolak.
-  \item ECDSA P-256: vektor RFC 6979 lampiran A.2.5 untuk \textit{message} \texttt{sample}. \textit{Signature} diterima, \textit{message} \texttt{Sample} ditolak, dan \textit{private key} vektor menurunkan
+  \item ECDSA P-256: vektor RFC 6979~\cite{rfc6979} lampiran A.2.5 untuk \textit{message} \texttt{sample}. \textit{Signature} diterima, \textit{message} \texttt{Sample} ditolak, dan \textit{private key} vektor menurunkan
     \textit{public point} yang sama.
   \item Ed25519: RFC 8032 bagian 7.1 TEST 1 (\textit{message} kosong) dan TEST 2 (\textit{message} 1 byte).
     \textit{Public key}, \textit{signature}, dan hasil \textit{verification} sama dengan vektor.
@@ -139,6 +166,8 @@ acak:
 \begin{lstlisting}[language=bash,numbers=none]
 mix test test/profile test/property test/nonce_analysis_test.exs
 \end{lstlisting}
+
+Keluaran tercatat pada \texttt{docs/log/07-test-vector.txt} dan \texttt{docs/log/08-test-property.txt}.
 
 \subsection{Interoperabilitas}
 
@@ -185,25 +214,64 @@ $\mathrm{SHA256}(\text{DER SPKI})$ dari kedua sisi sama.
 mix test --only interop
 \end{lstlisting}
 
+Keluaran tercatat pada \texttt{docs/log/09-test-interop.txt}.
+
 \subsection{Pengujian Integrasi CI/CD (C01 sampai C05)}
-% TODO (Nayaka): tautan workflow run per skenario, referensi image dan digest, log, keluaran
-% JSON verify, bukti ada atau tidak adanya berkas penanda. Bukti disimpan di docs/ci-evidence/.
+Pengujian dijalankan di repositori pemakai \texttt{AnmategraKMITB/Anmategra-APP} memakai image
+\texttt{reletz/nadina} pada tag \texttt{0.1.0}, dengan digest index
+\texttt{sha256:590e50e5e5e23f6f8ca58c4dd3d6b90218dfcc5a5c89eef53bf893e27aaaba72}. Digest ini
+dipin pada workflow pemakai, sehingga image yang diuji sama dengan image yang diterbitkan. Setiap
+skenario dijalankan pada direktori keluaran yang bersih dan exit code diambil langsung dari
+proses \texttt{verify}. Ringkasan hasilnya dapat dilihat pada Tabel~\ref{tab:ci-evidence}.
+
+\begin{table}[H]
+\centering
+{\footnotesize
+\begin{tabular}{@{}p{1.6cm}p{3.3cm}p{2.5cm}p{0.9cm}p{4.1cm}p{2.5cm}@{}}
+\toprule
+Skenario & Profil & Run & Exit & Status & Marker deploy \\
+\midrule
+C01 & \texttt{rsa-pss-sha256} & \href{https://github.com/AnmategraKMITB/Anmategra-APP/actions/runs/44480652005}{44480652005} & 0 & \texttt{OK} & Ada \\
+C01 & \texttt{ecdsa-p256-sha256} & \href{https://github.com/AnmategraKMITB/Anmategra-APP/actions/runs/44480962135}{44480962135} & 0 & \texttt{OK} & Ada \\
+C01 & \texttt{ed25519} & \href{https://github.com/AnmategraKMITB/Anmategra-APP/actions/runs/44480632370}{44480632370} & 0 & \texttt{OK} & Ada \\
+C02 & \texttt{ecdsa-p256-sha256} & \href{https://github.com/AnmategraKMITB/Anmategra-APP/actions/runs/44481623084}{44481623084} & 1 & \texttt{ARTIFACT\_MISMATCH} & Tidak ada \\
+C03 & \texttt{ecdsa-p256-sha256} & \href{https://github.com/AnmategraKMITB/Anmategra-APP/actions/runs/44481623084}{44481623084} & 1 & \texttt{KEY\_NOT\_TRUSTED} & Tidak ada \\
+C04 & \texttt{ecdsa-p256-sha256} & \href{https://github.com/AnmategraKMITB/Anmategra-APP/actions/runs/44481623084}{44481623084} & 2 & \texttt{INPUT\_ERROR} & Tidak ada \\
+C05 & \texttt{ed25519} & \href{https://github.com/AnmategraKMITB/Anmategra-APP/actions/runs/44481623084}{44481623084} & 0 & \texttt{OK} & Tidak ada \\
+\bottomrule
+\end{tabular}}
+\caption{Ringkasan hasil pengujian integrasi CI/CD.}
+\label{tab:ci-evidence}
+\end{table}
+
+C01 menjalankan \texttt{sign} dan \texttt{verify} terhadap artefak sah, lalu menjalankan
+\texttt{sbom verify} untuk profil Ed25519, dan membuat berkas penanda deploy hanya setelah
+verifikasi berhasil. C02 mengubah satu byte artefak setelah penandatanganan dengan ukuran dan nama
+berkas dipertahankan, dan verifikasi ditolak dengan \texttt{ARTIFACT\_MISMATCH}. C03 menjalankan
+verifikasi dengan trust store yang tidak mengizinkan kunci tersebut untuk paket, dan verifikasi
+ditolak dengan \texttt{KEY\_NOT\_TRUSTED}. C04 menjalankan verifikasi dengan path artefak yang
+tidak ada, dan program mengembalikan \texttt{INPUT\_ERROR} dengan exit code 2. C05 menjalankan CLI
+dengan UID dan GID runner, yaitu 1001, tanpa TTY dan dengan \texttt{--network none}, dan
+hasilnya \texttt{OK}.
+
+Pada C02 sampai C04, tahap deploy tidak dijalankan, dan tidak ada berkas penanda yang dibuat. Ketiga
+skenario tersebut berada pada run yang sama dengan C05. Bukti lengkap, termasuk log yang sudah
+dibersihkan dari informasi rahasia, keluaran JSON, dan \textit{commit} yang dijalankan, disimpan
+pada direktori \texttt{docs/ci-evidence/}.
 
 \subsection{Pengujian Performa}
 
 \subsubsection*{Lingkungan}
-Benchmark dijalankan sekali pada satu mesin, di dalam image \textit{release} Nadina (Docker Desktop
-dengan backend WSL2) dan dengan \texttt{--network none}. Data mentah dan ringkasan ada di
-\texttt{data/benchmark/}, dan tabel pada subbab ini dibaca langsung dari \textit{file} CSV
-tersebut.
+Benchmark dijalankan sekali pada satu mesin, di dalam image \textit{release} Nadina dengan
+\texttt{--network none}. Data mentah dan ringkasan ada di \texttt{data/benchmark/}, dan tabel
+pada subbab ini dibaca langsung dari berkas CSV tersebut.
 
 Container diberi hostname \texttt{nadina} yang dipetakan ke \texttt{127.0.0.1} lewat
-\texttt{--add-host}. Pada percobaan awal tanpa pemetaan ini, Docker Desktop tidak menuliskan
-hostname container ke \texttt{/etc/hosts}, sehingga setiap proses BEAM menunggu timeout
-DNS ke resolver yang tidak terjangkau. Akibatnya \texttt{nadina -version} memerlukan
-5,55 detik, dibandingkan 0,47 detik setelah hostname dipetakan. Selisih ini berasal dari
-lingkungan, bukan dari Nadina, tetapi dapat muncul pada pemakaian \texttt{--network none}
-di lingkungan lain.
+\texttt{--add-host}. Pada percobaan sebelumnya di Docker Desktop dengan backend WSL2, pemetaan
+ini belum ada, dan setiap proses BEAM menunggu timeout DNS ke resolver yang tidak terjangkau.
+Akibatnya \texttt{nadina -version} memerlukan 5,45 detik. Setelah pemetaan dan pengukuran
+diulang di Linux, boot yang sama memerlukan 0,19 detik. Selisih ini berasal dari lingkungan
+\textit{container}, bukan dari Nadina.
 
 \begin{table}[H]
 \centering
@@ -212,13 +280,14 @@ di lingkungan lain.
 \toprule
 Komponen & Nilai \\
 \midrule
-CPU & 13th Gen Intel Core i7-13700HX, 24 CPU logis \\
-Memori untuk VM WSL2 & 7,6 GiB \\
-OS host & Windows 11 Home Single Language 10.0.26200 \\
-Kernel & 6.18.58.1-microsoft-standard-WSL2 (x86\_64) \\
+CPU & 12th Gen Intel Core i5-12500H, 16 CPU logis \\
+Memori & 15,3 GiB \\
+OS host & Arch Linux, kernel 6.18.63-2-lts (x86\_64) \\
+Docker & 29.9.3 \\
 OS container & Alpine Linux 3.24 (musl) \\
 Runtime & Elixir 1.20.5, Erlang/OTP 29 (ERTS 17.1.1) \\
 Pustaka kripto & \texttt{:crypto} dan \texttt{:public\_key} OTP di atas OpenSSL 3.5.9 \\
+Commit & \texttt{e872cae} \\
 \bottomrule
 \end{tabular}
 \caption{Lingkungan benchmark (\texttt{data/benchmark/env.csv}).}
@@ -245,6 +314,11 @@ untuk ketiga profil. Komponen yang diukur sebagai berikut:
     baru, termasuk boot BEAM, I/O, hash \textit{artifact}, parsing, dan penulisan \textit{output}.
     \texttt{nadina -version} diukur dengan cara yang sama sebagai pembanding biaya boot.
 \end{itemize}
+
+Setiap iterasi \texttt{nadina sign} menulis bundle ke path yang sama, sehingga benchmark end-to-end
+memakai \texttt{--force} agar penulisan berulang tidak gagal. Sign dan verify di dalam proses tidak
+memakai opsi ini. Keluaran lengkap benchmark ada pada
+\texttt{docs/log/12-benchmark.txt}.
 
 \pgfplotstableset{
   col sep=comma,
@@ -309,10 +383,8 @@ untuk ketiga profil. Komponen yang diukur sebagai berikut:
   xtick=data, enlarge x limits=0.25,
   legend style={at={(0.5,-0.18)}, anchor=north, legend columns=-1},
 ]
-\addplot table[x=algorithm, y=median_us, col sep=comma, only op=sign]
-  {data/benchmark/sign_verify.csv};
-\addplot table[x=algorithm, y=median_us, col sep=comma, only op=verify]
-  {data/benchmark/sign_verify.csv};
+\addplot table[x=algorithm, y=median_us, col sep=comma] {data/benchmark/sign.csv};
+\addplot table[x=algorithm, y=median_us, col sep=comma] {data/benchmark/verify.csv};
 \legend{sign, verify}
 \end{axis}
 \end{tikzpicture}
@@ -351,21 +423,58 @@ untuk ketiga profil. Komponen yang diukur sebagai berikut:
 ]{data/benchmark/sizes.csv}
 \caption{Ukuran dalam byte. \textit{Private key} dalam PKCS\#8 dan \textit{public key} dalam SPKI, keduanya
 DER tanpa enkripsi. \textit{Signature} diukur sebelum Base64.}
+\label{tab:ukuran}
 \end{table}
 
 \subsubsection*{Analisis}
-% TODO: isi setelah benchmark penuh (runs=30) selesai.
+Angka pada bagian ini diambil dari berkas CSV dan rasionya dihitung dari nilai median.
+
+\textit{Key generation} hanya dijalankan sekali per kunci, sehingga tidak masuk ke jalur setiap
+rilis. RSA-PSS 3072 bit memerlukan median 75,3 ms, tetapi rentangnya lebar, dari 34,9 ms sampai
+138,8 ms, karena pembangkitan bilangan prima acak. ECDSA P-256 (20,8 $\mu$s) dan Ed25519 (31,3
+$\mu$s) jauh lebih cepat, karena kunci privatnya berupa skalar kecil.
+
+Pada operasi kriptografi di dalam proses, \textit{sign} RSA-PSS memerlukan median 1,84 ms, sekitar
+68 kali lebih lambat daripada ECDSA (27,3 $\mu$s) dan sekitar 30 kali lebih lambat daripada Ed25519
+(62,0 $\mu$s). Penyebabnya adalah eksponensiasi dengan eksponen privat 3072 bit. Sebaliknya,
+\textit{verify} RSA-PSS hanya 62,9 $\mu$s, karena eksponen publik $e = 65537$ sangat kecil. Itu
+hampir sama dengan ECDSA verify (65,2 $\mu$s) dan lebih cepat daripada Ed25519 verify (76,7 $\mu$s),
+yang sekitar 18 persen lebih lambat. Untuk ECDSA, \textit{sign} lebih cepat daripada Ed25519 sign
+pada pustaka ini (0,44 kali), meskipun Ed25519 tidak memerlukan sumber acak saat menandatangani.
+
+Waktu hash \textit{artifact} bergantung pada ukuran dan stabil di sekitar 1,6 GiB/s untuk 4 MiB
+dan 64 MiB (1637,7 dan 1578,1 MiB/s). Sign dan verify tidak bergantung pada ukuran \textit{artifact},
+karena yang ditandatangani hanya manifest berukuran sekitar 300 byte.
+
+Pada pengukuran end-to-end, boot BEAM mendominasi waktu proses. Median \texttt{nadina -version}
+adalah 187 ms. Untuk \textit{artifact} 64 KiB, sign dan verify memerlukan 218 sampai 231 ms, dan
+selisih antarprofil hanya sekitar 12 ms. Setelah boot dikurangkan, biaya kriptografi dan I/O
+sekitar 31 sampai 44 ms. Untuk \textit{artifact} 64 MiB, waktu total naik menjadi 265 sampai 316 ms.
+Kenaikan ini sejalan dengan hash \textit{artifact} pada tabel sebelumnya (sekitar 41 ms untuk 64 MiB).
+
+Ukuran pada Tabel~\ref{tab:ukuran} menunjukkan biaya RSA pada penyimpanan. \textit{Private key}
+RSA dalam DER berukuran 1793 byte, sekitar 13 kali lebih besar daripada ECDSA dan 37 kali lebih
+besar daripada Ed25519. \textit{Signature} RSA 384 byte, sedangkan ECDSA dan Ed25519 masing-masing
+64 byte. Karena bundle memuat signature dalam Base64 (ukuran naik sekitar sepertiga), bundle RSA
+berukuran 997 byte, dibandingkan 577 byte untuk ECDSA dan 561 byte untuk Ed25519.
+
+Batasan pengukuran: satu mesin dan satu commit, dengan $n = 30$ untuk operasi dan $n = 5$ untuk
+\textit{key generation}. Persentil ke-95 dengan metode nearest-rank pada $n = 30$ adalah elemen
+ke-29, sehingga satu sampel ekstrem sudah memengaruhi P95. Angka ini mencerminkan mesin ini dan
+tidak dapat langsung dibandingkan dengan mesin lain, termasuk pengukuran sebelumnya pada Windows
+dengan WSL2.
 
 \subsection{Pengujian SBOM}
-\textit{Testing} SBOM berada di \texttt{test/sbom\_test.exs} dengan 16 tes, dan lolos seluruhnya.
-Fixture berupa \textit{output} asli Trivy dalam format CycloneDX dan SPDX, yang disimpan di
+\textit{Testing} SBOM berada di \texttt{test/sbom\_test.exs} dengan 16 tes, dan lolos seluruhnya. Keluaran tercatat pada \texttt{docs/log/10-test-sbom.txt}.
+Fixture berupa \textit{output} asli Trivy~\cite{trivy} dalam format CycloneDX~\cite{cyclonedx} dan SPDX~\cite{spdx}, yang disimpan di
 \texttt{test/testdata/sbom/}. Alur ujung ke ujung juga dijalankan di dalam image dengan UID acak
 dan \texttt{--network none}: \textit{verification} valid menghasilkan exit 0, \textit{artifact} yang diubah
 menghasilkan exit 1, dan hasil \texttt{extract} identik byte demi byte dengan \textit{output} Trivy.
 
 \begin{table}[H]
 \centering
-\begin{tabular}{@{}lll@{}}
+{\small
+\begin{tabular}{@{}p{5.0cm}p{5.0cm}p{4.9cm}@{}}
 \toprule
 Kasus uji & Hasil yang diharapkan & Hasil \\
 \midrule
@@ -380,7 +489,7 @@ Bundle \textit{wrapper} dari \textit{key} tak tepercaya & KEY\_NOT\_TRUSTED, exi
 Isi SBOM bukan JSON namun \textit{wrapper} sah & FORMAT\_ERROR, exit 1 & FORMAT\_ERROR, exit 1 \\
 \textit{File} \textit{wrapper} tidak ada & INPUT\_ERROR, exit 2 & INPUT\_ERROR, exit 2 \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{Hasil \textit{testing} SBOM.}
 \end{table}
 

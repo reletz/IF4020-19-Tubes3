@@ -1,0 +1,6 @@
+# 02-compile
+# tanggal: 2026-11-19T12:17:45Z
+# perintah: mix compile --force --warnings-as-errors
+Compiling 16 files (.ex)
+Generated nadina app
+exit: 0

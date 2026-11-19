@@ -206,7 +206,7 @@ Format, \texttt{deps.get --check-locked}, \texttt{hex.audit}, kompilasi dengan \
 \texttt{ci.yml} & \texttt{test-alpine} & Sama dengan \texttt{test} &
 Tes di dalam image Elixir Alpine yang sama dengan image rilis \\
 \texttt{ci.yml} & \texttt{image-scan} & Sama dengan \texttt{test} &
-Build image uji, lalu Trivy dengan gagal bila ada HIGH atau CRITICAL \\
+Build image uji, lalu Trivy~\cite{trivy} dengan gagal bila ada HIGH atau CRITICAL \\
 \texttt{release.yml} & \texttt{ci} & \textit{Push} ke \texttt{main} dan tag \texttt{v*} &
 Memanggil \texttt{ci.yml} \\
 \texttt{release.yml} & \texttt{publish} & Hanya setelah \texttt{ci} lulus, \textit{environment} \texttt{nadina} &

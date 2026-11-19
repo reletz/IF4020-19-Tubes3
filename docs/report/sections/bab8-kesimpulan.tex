@@ -1,2 +1,27 @@
 \section{Kesimpulan}
-% TODO
+
+Nadina menyediakan alur penandatanganan dan verifikasi \textit{release} untuk tiga profil
+algoritma, yaitu RSASSA-PSS dengan RSA 3072 bit, ECDSA P-256, dan Ed25519. Program dibangun
+hanya dari pustaka OTP, dan didistribusikan sebagai image \textit{container} multi-arch yang dikunci
+per \textit{digest}. Di atasnya terdapat \textit{trust store} yang dikelola pengguna, verifikasi
+tujuh langkah dengan hasil JSON dan exit code yang tegas, serta pengikatan SBOM ke artefak rilis.
+
+Ada 250 tes pada mesin pengujian, termasuk skenario U01 sampai U14 untuk 
+ketiga profil, \textit{property test}, dan interoperabilitas dengan
+OpenSSL untuk ketiga profil. Pada pipeline pemakai, skenario C01 sampai C05 lulus pada image
+rilis \texttt{0.1.0}. Skenario negatif C02 sampai C04 menghasilkan exit code yang sesuai dan tidak
+membuat penanda deploy, sehingga penolakan benar-benar menghentikan alur. Benchmark pada satu
+mesin menunjukkan bahwa \textit{sign} RSA-PSS sekitar 68 kali lebih lambat daripada ECDSA,
+sedangkan biaya proses pada alur ujung ke ujung didominasi oleh boot BEAM.
+
+Wrapper SBOM menyimpan byte asli dalam Base64 agar
+\textit{signature} mencakup byte yang tepat dan keluaran \textit{extract} identik dengan keluaran
+kakas asalnya. Serialisasi \textit{canonical} manifest dibandingkan byte demi byte saat verifikasi,
+sehingga byte yang ditandatangani pasti sama dengan byte yang diperiksa. Exit code dijaga agar
+tidak pernah berubah menjadi 0 di antara proses dan pipeline.
+
+Rancangan  yang kami buat tidak mencegah \textit{rollback attack} tanpa \textit{trusted state}
+tambahan. Tidak ada \textit{transparency log}, dan tanda tangan hanya memeriksa asal dan keutuhan,
+bukan keamanan perangkat lunak. Isi SBOM tidak diperiksa kelengkapannya. Pengujian interoperabilitas
+di dalam image Alpine dilewati karena image tidak memuat CLI \texttt{openssl}, sehingga tes tersebut
+dijalankan di mesin host. Benchmark hanya dilakukan pada satu mesin.

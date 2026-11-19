@@ -1,0 +1,36 @@
+# 08-test-property
+# tanggal: 2026-11-19T12:17:55Z
+# perintah: mix test test/property --trace
+Running ExUnit with seed: 723360, max_cases: 1
+
+
+Nadina.Property.StrictJSONTest [test/property/strict_json_property_test.exs]
+  * property data setelah nilai pertama ditolak dengan offset tepat [L#87]  * property data setelah nilai pertama ditolak dengan offset tepat (28.4ms) [L#87]
+  * property duplicate key ditolak [L#56]  * property duplicate key ditolak (6.4ms) [L#56]
+  * property boolean di posisi integer ditolak oleh skema [L#100]  * property boolean di posisi integer ditolak oleh skema (2.1ms) [L#100]
+  * property dokumen sah diterima dan hasilnya sama dengan nilai asal [L#50]  * property dokumen sah diterima dan hasilnya sama dengan nilai asal (2.1ms) [L#50]
+  * property null di posisi mana pun ditolak [L#71]  * property null di posisi mana pun ditolak (2.8ms) [L#71]
+
+Nadina.Property.ManifestBundleTest [test/property/manifest_bundle_property_test.exs]
+  * property manifest boolean atau pecahan di posisi size ditolak [L#109]  * property manifest boolean atau pecahan di posisi size ditolak (14.1ms) [L#109]
+  * property manifest white space di antara token ditolak sebagai not_canonical [L#87]  * property manifest white space di antara token ditolak sebagai not_canonical (12.8ms) [L#87]
+  * property manifest field tambahan ditolak sebagai unknown_field [L#127]  * property manifest field tambahan ditolak sebagai unknown_field (8.5ms) [L#127]
+  * property bundle round trip: parse(encode(b)) mengembalikan byte manifest dan tanda tangan [L#142]  * property bundle round trip: parse(encode(b)) mengembalikan byte manifest dan tanda tangan (2.0ms) [L#142]
+  * property bundle white space dan urutan field tidak mengubah isi bundle [L#151]  * property bundle white space dan urutan field tidak mengubah isi bundle (2.7ms) [L#151]
+  * property manifest round trip: parse(serialize(m)) mengembalikan m dan byte yang sama [L#78]  * property manifest round trip: parse(serialize(m)) mengembalikan m dan byte yang sama (6.9ms) [L#78]
+  * property bundle Base64 dengan bit padding tidak nol ditolak [L#175]  * property bundle Base64 dengan bit padding tidak nol ditolak (1.6ms) [L#175]
+  * property bundle Base64 tanpa padding ditolak [L#200]  * property bundle Base64 tanpa padding ditolak (1.9ms) [L#200]
+  * property manifest urutan field selain urutan canonical ditolak [L#99]  * property manifest urutan field selain urutan canonical ditolak (7.7ms) [L#99]
+
+Nadina.Property.SignVerifyTest [test/property/sign_verify_property_test.exs]
+  * property ecdsa-p256-sha256: tanda tangan atas pesan sembarang sah, pesan lain ditolak [L#88]  * property ecdsa-p256-sha256: tanda tangan atas pesan sembarang sah, pesan lain ditolak (12.8ms) [L#88]
+  * property rsa-pss-sha256: tanda tangan atas pesan sembarang sah, pesan lain ditolak [L#88]  * property rsa-pss-sha256: tanda tangan atas pesan sembarang sah, pesan lain ditolak (98.2ms) [L#88]
+  * property ed25519: sign lalu verify selalu OK [L#47]  * property ed25519: sign lalu verify selalu OK (82.5ms) [L#47]
+  * property ed25519: tanda tangan atas pesan sembarang sah, pesan lain ditolak [L#88]  * property ed25519: tanda tangan atas pesan sembarang sah, pesan lain ditolak (10.9ms) [L#88]
+  * property rsa-pss-sha256: sign lalu verify selalu OK [L#47]  * property rsa-pss-sha256: sign lalu verify selalu OK (157.2ms) [L#47]
+  * property ecdsa-p256-sha256: sign lalu verify selalu OK [L#47]  * property ecdsa-p256-sha256: sign lalu verify selalu OK (69.1ms) [L#47]
+
+Finished in 0.8 seconds (0.8s async, 0.00s sync)
+
+Result: 20 passed
+exit: 0

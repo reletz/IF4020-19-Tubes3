@@ -25,7 +25,15 @@ docker build -t "$image" .
 # Direktori data harus bisa ditulis oleh user image (10001).
 # Tanpa hostname di /etc/hosts, boot BEAM menunggu timeout DNS sekitar 5 detik.
 mkdir -p docs/report/data/benchmark
+# Linux asli: jalankan sebagai UID/GID host supaya bind mount bisa ditulis.
+# Windows (Git Bash) dan WSL tetap memakai UID image seperti sebelumnya.
+user_args=()
+if [ "$(uname -s)" = "Linux" ] && ! pwd -W >/dev/null 2>&1 && ! grep -qi microsoft /proc/version 2>/dev/null; then
+  user_args=(--user "$(id -u):$(id -g)")
+fi
+
 docker run --rm --network none --hostname nadina --add-host nadina:127.0.0.1 \
+  "${user_args[@]}" \
   -v "$mount_src:/work" -w /work \
   -e BENCH_RUNS -e BENCH_WARMUP -e BENCH_KEYGEN \
   -e "BENCH_HOST_OS=$BENCH_HOST_OS" \

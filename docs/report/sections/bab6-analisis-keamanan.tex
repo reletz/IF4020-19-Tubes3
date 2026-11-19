@@ -14,7 +14,7 @@ ke layer, dan \textit{key} diberikan saat eksekusi lewat \textit{file} sementara
 \paragraph{Kesalahan parameter.}
 Setiap \textit{key} divalidasi terhadap profilnya sebelum dipakai: RSA harus bermodulus tepat
 3072 bit dengan $e = 65537$, ECDSA harus pada P-256 dengan titik SEC1 \textit{uncompressed},
-dan Ed25519 mengikuti RFC 8410. Pada RSA-PSS, salt 32 byte dan MGF1-SHA-256 dipaksakan
+dan Ed25519 mengikuti RFC 8410~\cite{rfc8410}. Pada RSA-PSS, salt 32 byte dan MGF1-SHA-256 dipaksakan
 saat \textit{verification}, sehingga \textit{signature} PKCS\#1 v1.5 atau PSS dengan salt lain ditolak
 (diuji pada \textit{interop} dengan OpenSSL). SHA-256 diterapkan satu kali oleh pustaka,
 sehingga tidak terjadi \textit{double hashing}. Fungsi \texttt{verify} setiap profil tidak
@@ -39,7 +39,7 @@ Profil & Randomness & Dua \textit{signature} atas \textit{message} sama \\
 \midrule
 ECDSA P-256 & nonce $k$ dari CSPRNG & berbeda \\
 RSA-PSS & salt 32 byte dari CSPRNG & berbeda \\
-Ed25519 & nonce dari hash \textit{key} dan \textit{message} (RFC 8032) & identik \\
+Ed25519 & nonce dari hash \textit{key} dan \textit{message} (RFC 8032~\cite{rfc8032}) & identik \\
 \bottomrule
 \end{tabular}
 \caption{Perilaku \textit{signature} untuk manifest yang identik.}
@@ -63,7 +63,7 @@ d &= (s_1 k - z_1)\, r^{-1} \bmod n .
 uji dalam \textit{file} yang sama dan memulihkan $k$ serta $d$ dengan tepat. Mitigasi pada
 program ini adalah nonce dari CSPRNG OTP untuk setiap \textit{signature}, tanpa seed tetap
 (seed tetap hanya untuk \textit{test vector}). Alternatifnya adalah nonce deterministik
-RFC 6979, yang diperbolehkan spesifikasi tetapi tidak dipakai karena pustaka OTP tidak
+RFC 6979~\cite{rfc6979}, yang diperbolehkan spesifikasi tetapi tidak dipakai karena pustaka OTP tidak
 menyediakannya.
 
 \subsection{\textit{Supply Chain}}
@@ -81,7 +81,7 @@ menyediakannya.
         menerima \textit{secret}. Run lama pada PR dibatalkan lewat \texttt{concurrency}.
   \item Token Docker Hub hanya ada pada \textit{environment} \texttt{nadina}, dipakai satu
         langkah \texttt{docker/login-action} pada job \textit{release} setelah CI lulus.
-  \item Image dipindai Trivy dan \textit{release} gagal bila ada temuan HIGH atau CRITICAL.
+  \item Image dipindai Trivy~\cite{trivy} dan \textit{release} gagal bila ada temuan HIGH atau CRITICAL.
         Pengecualian hanya lewat \texttt{.trivyignore} dengan alasan dan tanggal kedaluwarsa.
   \item Image berjalan sebagai pengguna non-root tanpa distribusi Erlang, dan tetap
         berfungsi dengan UID acak serta \texttt{--network none}.
@@ -92,8 +92,30 @@ Rancangan saat ini tidak mencegah \textit{rollback attack}. Bundle lama yang sah
 pengguna menyebut versi lama itu, karena tidak ada informasi tentang versi terbaru yang
 pernah diterima. Pendeteksian membutuhkan \textit{trusted state} tambahan, misalnya
 versi terendah yang diterima per \textit{package} yang disimpan di trust store, atau metadata
-bertimestamp dan berkedaluwarsa seperti pada TUF.
+bertimestamp dan berkedaluwarsa seperti pada TUF~\cite{tuf}.
 
 \subsection{Keterbatasan}
-% TODO: dilengkapi setelah seluruh fitur selesai (kompromi kunci dicabut lewat trust remove,
-% kunci demo, tidak ada transparency log).
+Analisis di atas hanya berlaku untuk kondisi yang diuji. Ada beberapa batasan yang perlu dicatat.
+
+\begin{itemize}
+  \item \textbf{Pencabutan kunci.} Kunci yang bocor hanya dicabut dengan \texttt{trust remove}
+    pada \textit{trust store} yang dikelola pengguna. Tidak ada daftar pencabutan (\textit{revocation
+    list}) yang dapat diperiksa otomatis, dan \textit{signature} yang sudah dibuat sebelum pencabutan
+    tetap tampak sah bila \textit{trust store} lama masih dipakai.
+  \item \textbf{Rollback.} Sebagaimana dibahas di atas, rancangan tidak mencegah
+    \textit{rollback attack}. Pencegahannya memerlukan \textit{trusted state} yang belum ada.
+  \item \textbf{Transparency log dan identitas berbasis sertifikat.} Tidak ada \textit{transparency log}
+    dan identitas penerbit tidak diikat pada sertifikat. Kepercayaan sepenuhnya bergantung pada isi
+    \textit{trust store} lokal.
+  \item \textbf{Malware dan kerentanan.} Tanda tangan hanya membuktikan asal dan keutuhan \textit{file}.
+    Program tidak memeriksa apakah artefak aman dijalankan.
+  \item \textbf{Isi SBOM.} SBOM diperlakukan sebagai data buram yang terikat ke artefak. Kelengkapan
+    komponen dan keakuratan versi bergantung pada kakas pembuat SBOM.
+  \item \textbf{Kunci demo.} Kunci di \texttt{ci/keys/} hanya untuk pengujian dan dipublikasikan.
+    Kunci privat pipeline demo disimpan sebagai secret pada \textit{environment} khusus dan tidak
+    pernah masuk ke repositori.
+  \item \textbf{Dependensi.} Keamanan program bergantung pada OpenSSL dan image dasar. Image dikunci
+    per \textit{digest}, tetapi pembaruan dilakukan secara manual dan belum diotomatisasi.
+  \item \textbf{Cakupan pengukuran.} Pengujian interoperabilitas di dalam image Alpine dilewati karena
+    image tidak memuat CLI \texttt{openssl}. Benchmark hanya dilakukan pada satu mesin.
+\end{itemize}
