@@ -226,8 +226,8 @@ proses \texttt{verify}. Ringkasan hasilnya dapat dilihat pada Tabel~\ref{tab:ci-
 
 \begin{table}[H]
 \centering
-{\small
-\begin{tabular}{@{}p{1.1cm}p{3.0cm}p{2.7cm}p{1.0cm}p{4.2cm}p{2.9cm}@{}}
+{\footnotesize
+\begin{tabular}{@{}p{1.6cm}p{3.3cm}p{2.5cm}p{0.9cm}p{4.1cm}p{2.5cm}@{}}
 \toprule
 Skenario & Profil & Run & Exit & Status & Marker deploy \\
 \midrule
@@ -473,7 +473,8 @@ menghasilkan exit 1, dan hasil \texttt{extract} identik byte demi byte dengan \t
 
 \begin{table}[H]
 \centering
-\begin{tabular}{@{}lll@{}}
+{\small
+\begin{tabular}{@{}p{5.0cm}p{5.0cm}p{4.9cm}@{}}
 \toprule
 Kasus uji & Hasil yang diharapkan & Hasil \\
 \midrule
@@ -488,7 +489,7 @@ Bundle \textit{wrapper} dari \textit{key} tak tepercaya & KEY\_NOT\_TRUSTED, exi
 Isi SBOM bukan JSON namun \textit{wrapper} sah & FORMAT\_ERROR, exit 1 & FORMAT\_ERROR, exit 1 \\
 \textit{File} \textit{wrapper} tidak ada & INPUT\_ERROR, exit 2 & INPUT\_ERROR, exit 2 \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{Hasil \textit{testing} SBOM.}
 \end{table}
 
