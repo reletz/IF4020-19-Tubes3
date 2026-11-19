@@ -20,7 +20,8 @@ erl_crash.dump
 .env
 
 # laporan latex
-/docs/report/build/
+/docs/report/build/*
+!/docs/report/build/main.pdf
 /docs/report/*.aux
 /docs/report/*.fdb_latexmk
 /docs/report/*.fls
