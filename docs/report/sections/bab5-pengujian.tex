@@ -110,7 +110,7 @@ U14 & Manifest identik \textit{signed} dua kali dengan \textit{key} yang sama, u
 
 Hasil U14 sesuai dengan sumber randomness tiap algoritma. RSA-PSS memakai salt 32 byte
 acak dan ECDSA memakai nonce $k$ acak, sehingga dua \textit{signature} atas \textit{message} yang sama
-berbeda. Ed25519 menurunkan nonce dari \textit{key} dan \textit{message} (RFC 8032), sehingga \textit{signature}-nya identik. Analisis lengkapnya, termasuk 200 \textit{signature} ECDSA tanpa nilai $r$
+berbeda. Ed25519 menurunkan nonce dari \textit{key} dan \textit{message} (RFC 8032~\cite{rfc8032}), sehingga \textit{signature}-nya identik. Analisis lengkapnya, termasuk 200 \textit{signature} ECDSA tanpa nilai $r$
 berulang, ada pada subbab Nonce dan Randomness di bab Analisis Keamanan.
 
 Selain tabel di atas, \texttt{cli\_test.exs} menguji kasus tambahan pada urutan status
@@ -132,10 +132,10 @@ Keluaran tercatat pada \texttt{docs/log/06-test-u-scenarios.txt}.
 Setiap profil diuji terhadap vektor dari sumber publik, terpisah dari CLI:
 
 \begin{itemize}
-  \item RSA-PSS: 108 kasus Wycheproof \texttt{rsa\_pss\_3072\_sha256\_mgf1\_32}, yang
+  \item RSA-PSS: 108 kasus Wycheproof~\cite{wycheproof} \texttt{rsa\_pss\_3072\_sha256\_mgf1\_32}, yang
     parameternya sama persis dengan profil (RSA 3072, SHA-256, MGF1-SHA-256, salt 32 byte).
     Semua kasus \textit{valid} diterima dan semua kasus \textit{invalid} ditolak.
-  \item ECDSA P-256: vektor RFC 6979 lampiran A.2.5 untuk \textit{message} \texttt{sample}. \textit{Signature} diterima, \textit{message} \texttt{Sample} ditolak, dan \textit{private key} vektor menurunkan
+  \item ECDSA P-256: vektor RFC 6979~\cite{rfc6979} lampiran A.2.5 untuk \textit{message} \texttt{sample}. \textit{Signature} diterima, \textit{message} \texttt{Sample} ditolak, dan \textit{private key} vektor menurunkan
     \textit{public point} yang sama.
   \item Ed25519: RFC 8032 bagian 7.1 TEST 1 (\textit{message} kosong) dan TEST 2 (\textit{message} 1 byte).
     \textit{Public key}, \textit{signature}, dan hasil \textit{verification} sama dengan vektor.
@@ -466,7 +466,7 @@ dengan WSL2.
 
 \subsection{Pengujian SBOM}
 \textit{Testing} SBOM berada di \texttt{test/sbom\_test.exs} dengan 16 tes, dan lolos seluruhnya. Keluaran tercatat pada \texttt{docs/log/10-test-sbom.txt}.
-Fixture berupa \textit{output} asli Trivy dalam format CycloneDX dan SPDX, yang disimpan di
+Fixture berupa \textit{output} asli Trivy~\cite{trivy} dalam format CycloneDX~\cite{cyclonedx} dan SPDX~\cite{spdx}, yang disimpan di
 \texttt{test/testdata/sbom/}. Alur ujung ke ujung juga dijalankan di dalam image dengan UID acak
 dan \texttt{--network none}: \textit{verification} valid menghasilkan exit 0, \textit{artifact} yang diubah
 menghasilkan exit 1, dan hasil \texttt{extract} identik byte demi byte dengan \textit{output} Trivy.

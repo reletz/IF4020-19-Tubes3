@@ -42,7 +42,7 @@ Program hanya bergantung pada pustaka bawaan OTP, yaitu \texttt{crypto} dan \tex
 sehingga tidak ada dependensi kriptografi pihak ketiga yang masuk ke \textit{release}.
 
 \subsection{Format Release Manifest dan Bundle}
-Setiap format data dalam program memiliki schema dengan awalan \texttt{minisign-}, yaitu
+Setiap format data dalam program memiliki schema dengan awalan \texttt{minisign-}~\cite{minisign}, yaitu
 \texttt{manifest/v1}, \texttt{bundle/v1}, \texttt{trust/v1}, dan \texttt{sbom/v1}.
 Awalan ini hanya mengikuti nama contoh pada spesifikasi tugas dan
 berfungsi sebagai penanda versi format. Program tidak memakai, tidak kompatibel dengan, dan tidak memanggil
@@ -97,7 +97,7 @@ Profil ditentukan dari tipe \textit{key} dan OID kurva. \textit{Key} RSA diident
 \texttt{RSAPrivateKey} atau \texttt{RSAPublicKey}, kurva P-256 dari OID \texttt{1.2.840.10045.3.1.7},
 dan Ed25519 dari OID \texttt{1.3.101.112}. Setelah profil ditentukan, modul profil memeriksa
 parameter. RSA harus bermodulus tepat 3072 bit dengan $e = 65537$, kurva harus P-256 dengan titik
-SEC1 \textit{uncompressed}, dan Ed25519 mengikuti RFC 8410. Pada PKCS\#8 Ed25519, \textit{public point}
+SEC1 \textit{uncompressed}, dan Ed25519 mengikuti RFC 8410~\cite{rfc8410}. Pada PKCS\#8 Ed25519, \textit{public point}
 tidak disertakan, sehingga titik tersebut diturunkan ulang dari \textit{seed}.
 
 \textit{Fingerprint} atau \texttt{keyid} dihitung sebagai hex huruf kecil dari SHA-256 atas DER
@@ -217,7 +217,7 @@ merusak \textit{trust store} sebelumnya. \textit{Trust store} tidak pernah diper
 dari bundle, dan \textit{trust} hanya ditentukan oleh isi \textit{trust store} pada saat \textit{verification}.
 
 \subsection{SBOM dan Keterikatannya dengan Rilis}
-SBOM dibuat oleh \textit{tool} eksternal, misalnya Trivy, Syft, atau cdxgen, dalam format apa pun yang
+SBOM dibuat oleh \textit{tool} eksternal, misalnya Trivy~\cite{trivy}, Syft, atau cdxgen, dalam format apa pun yang
 berupa objek JSON. Program tidak menafsirkan isinya. Yang diperiksa hanya bahwa byte SBOM
 tersimpan utuh dan terikat ke \textit{artifact} \textit{release}.
 
@@ -231,7 +231,7 @@ mencantumkan SHA-256 \textit{artifact} \textit{release}.
 Contoh \textit{wrapper} hasil \texttt{sbom bind} untuk \textit{artifact} \texttt{contoh-app.zip} yang berisi
 \texttt{isi rilis} dapat dilihat pada Kode~\ref{lst:wrapper}. Nilai SHA-256 pada subject dihitung
 oleh program dari byte \textit{artifact}. Nilai \texttt{sbom\_b64} adalah Base64 dari SBOM input
-berupa objek JSON CycloneDX 1.7 yang minimal.
+berupa objek JSON CycloneDX~\cite{cyclonedx} 1.7 yang minimal.
 
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,caption={Contoh \textit{wrapper} minisign-sbom/v1},label={lst:wrapper},numbers=none]
 {
