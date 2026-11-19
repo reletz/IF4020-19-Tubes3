@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.40.4">
+    <meta name="project" content="Nadina v0.1.0">
+
+
+    <title>Nadina.Manifest — Nadina v0.1.0</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-RXHHCTJW.css" />
+
+    <script defer src="dist/sidebar_items-EC53801A.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-MI33G4N7.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+      <div>
+        <a href="Nadina.html" class="sidebar-projectName" translate="no">
+Nadina
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v0.1.0
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="Pages"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-module" id="main" data-type="modules">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Nadina</span>
+            <div class="search-input-wrapper">
+              <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+              <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+                <i class="ri-close-line ri-lg" title="Cancel search"></i>
+              </button>
+            </div>
+          </label>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <div class="engine-selector" data-multiple="false">
+          <button type="button" class="engine-button" aria-label="Select search engine" aria-haspopup="true" aria-expanded="false">
+            <i class="ri-search-2-line" aria-hidden="true"></i>
+            <span class="engine-name">Default</span>
+            <i class="ri-arrow-down-s-line" aria-hidden="true"></i>
+          </button>
+          <div class="engine-dropdown" hidden role="menu">
+
+              <button type="button"
+                      class="engine-option"
+                      data-engine-url="search.html?q="
+                      role="menuitemradio"
+                      aria-checked="true">
+                <span class="name">Default</span>
+                <span class="help">In-browser search</span>
+              </button>
+
+          </div>
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>
+      <span translate="no">Nadina.<wbr />Manifest</span> 
+      <small class="app-vsn" translate="no">(Nadina v0.1.0)</small>
+
+    </h1>
+
+<a href="Nadina.Manifest.md" title="Copy Markdown (hold Ctrl/Cmd and click it to open as Markdown)" class="copy-markdown icon-action" rel="help">
+  <i class="ri-markdown-line" aria-hidden="true"></i>
+  <span class="sr-only">Copy Markdown</span>
+</a>
+
+
+
+      <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/manifest.ex#L1" title="View Source" class="icon-action" rel="help nofollow">
+        <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        <span class="sr-only">View Source</span>
+      </a>
+
+  </div>
+
+
+    <section id="moduledoc">
+<p>Release manifest (spek Tabel 2.3): pembentukan, serialisasi canonical, dan parse strict.</p><p>Byte hasil <a href="#serialize/1"><code class="inline">serialize/1</code></a> adalah pesan M yang ditandatangani. Saat verifikasi, <a href="#parse/1"><code class="inline">parse/1</code></a>
+menerima byte M apa adanya dari bundle, memeriksa ukuran, struktur, nilai field, lalu
+membandingkan M byte-for-byte dengan hasil serialisasi ulang. Semua kesalahan <a href="#parse/1"><code class="inline">parse/1</code></a>
+berarti <code class="inline">FORMAT_ERROR</code>.</p><p>Nilai <code class="inline">algorithm</code> yang bukan salah satu profil tetap lolos <a href="#parse/1"><code class="inline">parse/1</code></a> asalkan berupa string
+ASCII yang bisa ditulis tanpa escape, karena spek memisahkannya sebagai
+<code class="inline">UNSUPPORTED_ALGORITHM</code>. Gunakan <a href="#supported_algorithm?/1"><code class="inline">supported_algorithm?/1</code></a> untuk langkah itu.</p>
+    </section>
+
+</div>
+
+  <section id="summary" class="details-list">
+    <h2 class="section-heading">
+      <a class="hover-link" href="#summary">
+        <i class="ri-link-m" aria-hidden="true"></i>
+      </a>
+      <span class="text">Summary</span>
+    </h2>
+<div class="summary-types summary">
+  <h3>
+    <a href="#types">Types</a>
+  </h3>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:field_path/0" data-no-tooltip="" translate="no">field_path()</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:parse_error/0" data-no-tooltip="" translate="no">parse_error()</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:t/0" data-no-tooltip="" translate="no">t()</a>
+
+      </div>
+
+    </div>
+
+</div>
+<div class="summary-functions summary">
+  <h3>
+    <a href="#functions">Functions</a>
+  </h3>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#algorithms/0" data-no-tooltip="" translate="no">algorithms()</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Daftar profil algoritma yang didukung (spek Tabel 2.1).</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#max_size/0" data-no-tooltip="" translate="no">max_size()</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Ukuran maksimum manifest dalam byte (16 KiB).</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#new/7" data-no-tooltip="" translate="no">new(package, version, algorithm, keyid, name, size, sha256)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Membentuk manifest dengan urutan argumen sesuai spek: paket, versi, profil, fingerprint,
+nama artefak, ukuran, dan hash. Dipakai saat sign, sehingga profil wajib didukung.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#parse/1" data-no-tooltip="" translate="no">parse(bytes)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Parse strict byte manifest dari bundle. Urutan pemeriksaan: ukuran (sebelum parsing),
+JSON strict dan struktur, nilai field, lalu kesesuaian serialisasi canonical.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#serialize/1" data-no-tooltip="" translate="no">serialize(m)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Serialisasi canonical: urutan field tetap, tanpa white space, tanpa escape, tanpa baris
+baru di akhir. Hanya untuk manifest yang sudah lolos <a href="#new/7"><code class="inline">new/7</code></a> atau <a href="#parse/1"><code class="inline">parse/1</code></a>.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#supported_algorithm?/1" data-no-tooltip="" translate="no">supported_algorithm?(algorithm)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Apakah <code class="inline">algorithm</code> termasuk profil yang didukung.</p></div>
+
+    </div>
+
+</div>
+
+  </section>
+
+
+  <section id="types" class="details-list">
+    <h2 class="section-heading">
+      <a class="hover-link" href="#types">
+        <i class="ri-link-m" aria-hidden="true"></i>
+      </a>
+      <span class="text">Types</span>
+    </h2>
+
+    <div class="types-list">
+<section class="detail" id="t:field_path/0">
+
+  <div class="detail-header">
+    <a href="#t:field_path/0" class="detail-link" data-no-tooltip="" aria-label="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">field_path()</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/manifest.ex#L57" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@type</span> field_path() :: [<a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>()]</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:parse_error/0">
+
+  <div class="detail-header">
+    <a href="#t:parse_error/0" class="detail-link" data-no-tooltip="" aria-label="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">parse_error()</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/manifest.ex#L59" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@type</span> parse_error() ::
+  {:too_large, <a href="https://elixir.hexdocs.pm/typespecs.html#basic-types">pos_integer</a>()}
+  | <a href="Nadina.StrictJSON.html#t:decode_error/0">Nadina.StrictJSON.decode_error</a>()
+  | <a href="Nadina.StrictJSON.html#t:validate_error/0">Nadina.StrictJSON.validate_error</a>()
+  | {:invalid_field, <a href="#t:field_path/0">field_path</a>()}
+  | :not_canonical</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:t/0">
+
+  <div class="detail-header">
+    <a href="#t:t/0" class="detail-link" data-no-tooltip="" aria-label="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">t()</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/manifest.ex#L47" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@type</span> t() :: %Nadina.Manifest{
+  algorithm: <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>(),
+  artifact_name: <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>(),
+  artifact_sha256: <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>(),
+  artifact_size: <a href="https://elixir.hexdocs.pm/typespecs.html#basic-types">non_neg_integer</a>(),
+  keyid: <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>(),
+  package: <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>(),
+  version: <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>()
+}</pre>
+
+      </div>
+
+
+  </section>
+</section>
+
+    </div>
+  </section>
+
+  <section id="functions" class="details-list">
+    <h2 class="section-heading">
+      <a class="hover-link" href="#functions">
+        <i class="ri-link-m" aria-hidden="true"></i>
+      </a>
+      <span class="text">Functions</span>
+    </h2>
+
+    <div class="functions-list">
+<section class="detail" id="algorithms/0">
+
+  <div class="detail-header">
+    <a href="#algorithms/0" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">algorithms()</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/manifest.ex#L72" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> algorithms() :: [<a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>()]</pre>
+
+      </div>
+
+<p>Daftar profil algoritma yang didukung (spek Tabel 2.1).</p>
+  </section>
+</section>
+<section class="detail" id="max_size/0">
+
+  <div class="detail-header">
+    <a href="#max_size/0" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">max_size()</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/manifest.ex#L68" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> max_size() :: <a href="https://elixir.hexdocs.pm/typespecs.html#basic-types">pos_integer</a>()</pre>
+
+      </div>
+
+<p>Ukuran maksimum manifest dalam byte (16 KiB).</p>
+  </section>
+</section>
+<section class="detail" id="new/7">
+
+  <div class="detail-header">
+    <a href="#new/7" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">new(package, version, algorithm, keyid, name, size, sha256)</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/manifest.ex#L99" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> new(
+  <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>(),
+  <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>(),
+  <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>(),
+  <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>(),
+  <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>(),
+  <a href="https://elixir.hexdocs.pm/typespecs.html#basic-types">non_neg_integer</a>(),
+  <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>()
+) ::
+  {:ok, <a href="#t:t/0">t</a>()}
+  | {:error, {:invalid_field, <a href="#t:field_path/0">field_path</a>()} | {:unsupported_algorithm, <a href="https://elixir.hexdocs.pm/typespecs.html#built-in-types">term</a>()}}</pre>
+
+      </div>
+
+<p>Membentuk manifest dengan urutan argumen sesuai spek: paket, versi, profil, fingerprint,
+nama artefak, ukuran, dan hash. Dipakai saat sign, sehingga profil wajib didukung.</p>
+  </section>
+</section>
+<section class="detail" id="parse/1">
+
+  <div class="detail-header">
+    <a href="#parse/1" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">parse(bytes)</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/manifest.ex#L149" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> parse(<a href="https://elixir.hexdocs.pm/typespecs.html#built-in-types">binary</a>()) :: {:ok, <a href="#t:t/0">t</a>()} | {:error, <a href="#t:parse_error/0">parse_error</a>()}</pre>
+
+      </div>
+
+<p>Parse strict byte manifest dari bundle. Urutan pemeriksaan: ukuran (sebelum parsing),
+JSON strict dan struktur, nilai field, lalu kesesuaian serialisasi canonical.</p>
+  </section>
+</section>
+<section class="detail" id="serialize/1">
+
+  <div class="detail-header">
+    <a href="#serialize/1" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">serialize(m)</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/manifest.ex#L122" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> serialize(<a href="#t:t/0">t</a>()) :: <a href="https://elixir.hexdocs.pm/typespecs.html#built-in-types">binary</a>()</pre>
+
+      </div>
+
+<p>Serialisasi canonical: urutan field tetap, tanpa white space, tanpa escape, tanpa baris
+baru di akhir. Hanya untuk manifest yang sudah lolos <a href="#new/7"><code class="inline">new/7</code></a> atau <a href="#parse/1"><code class="inline">parse/1</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="supported_algorithm?/1">
+
+  <div class="detail-header">
+    <a href="#supported_algorithm?/1" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">supported_algorithm?(algorithm)</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/manifest.ex#L83" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> supported_algorithm?(<a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>()) :: <a href="https://elixir.hexdocs.pm/typespecs.html#built-in-types">boolean</a>()</pre>
+
+      </div>
+
+<p>Apakah <code class="inline">algorithm</code> termasuk profil yang didukung.</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">Nadina.Manifest</span><span class="o">.</span><span class="n">supported_algorithm?</span><span class="p" data-group-id="group-1">(</span><span class="s">&quot;ed25519&quot;</span><span class="p" data-group-id="group-1">)</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Nadina.Manifest</span><span class="o">.</span><span class="n">supported_algorithm?</span><span class="p" data-group-id="group-2">(</span><span class="s">&quot;rsa-pkcs1-sha256&quot;</span><span class="p" data-group-id="group-2">)</span><span class="w">
+</span><span class="no">false</span></code></pre>
+  </section>
+</section>
+
+    </div>
+  </section>
+
+    <footer class="footer">
+
+        <p>
+
+          <span class="line">
+            <button class="a-main footer-button display-quick-switch" title="Go to package docs">
+              Go to package docs
+            </button>
+
+              <a href="llms.txt" target="_blank">
+                View llms.txt
+              </a>
+
+
+              <a href="Nadina.epub">
+                Download ePub version
+              </a>
+
+          </span>
+        </p>
+
+        <p class="built-using">
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.40.4) for the
+
+            <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+        </p>
+
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

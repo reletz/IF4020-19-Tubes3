@@ -9,7 +9,6 @@ signing*
 /_build/
 /deps/
 /cover/
-/doc/
 *.ez
 *.beam
 erl_crash.dump

@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.40.4">
+    <meta name="project" content="Nadina v0.1.0">
+
+
+    <title>Nadina.Trust — Nadina v0.1.0</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-RXHHCTJW.css" />
+
+    <script defer src="dist/sidebar_items-EC53801A.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-MI33G4N7.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+      <div>
+        <a href="Nadina.html" class="sidebar-projectName" translate="no">
+Nadina
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v0.1.0
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="Pages"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-module" id="main" data-type="modules">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Nadina</span>
+            <div class="search-input-wrapper">
+              <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+              <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+                <i class="ri-close-line ri-lg" title="Cancel search"></i>
+              </button>
+            </div>
+          </label>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <div class="engine-selector" data-multiple="false">
+          <button type="button" class="engine-button" aria-label="Select search engine" aria-haspopup="true" aria-expanded="false">
+            <i class="ri-search-2-line" aria-hidden="true"></i>
+            <span class="engine-name">Default</span>
+            <i class="ri-arrow-down-s-line" aria-hidden="true"></i>
+          </button>
+          <div class="engine-dropdown" hidden role="menu">
+
+              <button type="button"
+                      class="engine-option"
+                      data-engine-url="search.html?q="
+                      role="menuitemradio"
+                      aria-checked="true">
+                <span class="name">Default</span>
+                <span class="help">In-browser search</span>
+              </button>
+
+          </div>
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>
+      <span translate="no">Nadina.<wbr />Trust</span> 
+      <small class="app-vsn" translate="no">(Nadina v0.1.0)</small>
+
+    </h1>
+
+<a href="Nadina.Trust.md" title="Copy Markdown (hold Ctrl/Cmd and click it to open as Markdown)" class="copy-markdown icon-action" rel="help">
+  <i class="ri-markdown-line" aria-hidden="true"></i>
+  <span class="sr-only">Copy Markdown</span>
+</a>
+
+
+
+      <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/trust.ex#L1" title="View Source" class="icon-action" rel="help nofollow">
+        <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        <span class="sr-only">View Source</span>
+      </a>
+
+  </div>
+
+
+    <section id="moduledoc">
+<p>Pengelolaan trust store (spek Tabel 2.6) dengan penulisan atomik.</p><p>Format berkas</p><pre><code class="makeup elixir" translate="no"><span class="p" data-group-id="group-1">{</span><span class="s">&quot;schema&quot;</span><span class="ss">:&quot;minisign-trust/v1&quot;</span><span class="p">,</span><span class="s">&quot;keys&quot;</span><span class="p">:</span><span class="p" data-group-id="group-2">[</span><span class="w">
+  </span><span class="p" data-group-id="group-3">{</span><span class="s">&quot;keyid&quot;</span><span class="ss">:&quot;...&quot;</span><span class="p">,</span><span class="s">&quot;algorithm&quot;</span><span class="ss">:&quot;...&quot;</span><span class="p">,</span><span class="s">&quot;public_key_pem&quot;</span><span class="ss">:&quot;...&quot;</span><span class="p">,</span><span class="s">&quot;packages&quot;</span><span class="p">:</span><span class="p" data-group-id="group-4">[</span><span class="s">&quot;...&quot;</span><span class="p" data-group-id="group-4">]</span><span class="p" data-group-id="group-3">}</span><span class="p" data-group-id="group-2">]</span><span class="p" data-group-id="group-1">}</span></code></pre><p>parse/1 memeriksa struktur, tipe, keunikan keyid, daftar paket (tidak kosong, tanpa
+duplikat, tanpa wildcard), serta kesesuaian profil dan fingerprint dengan kunci publik.
+Semua kegagalan format menghasilkan error, yang bagi verifier berarti FORMAT_ERROR.</p><p>Trust store hanya berubah lewat add/3 dan remove/2. Tidak ada pembaruan otomatis
+dari bundle. Perubahan ditulis ke berkas sementara di direktori yang sama lalu rename,
+sehingga berkas lama tidak rusak bila penulisan gagal.</p>
+    </section>
+
+</div>
+
+  <section id="summary" class="details-list">
+    <h2 class="section-heading">
+      <a class="hover-link" href="#summary">
+        <i class="ri-link-m" aria-hidden="true"></i>
+      </a>
+      <span class="text">Summary</span>
+    </h2>
+<div class="summary-types summary">
+  <h3>
+    <a href="#types">Types</a>
+  </h3>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:error/0" data-no-tooltip="" translate="no">error()</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:t/0" data-no-tooltip="" translate="no">t()</a>
+
+      </div>
+
+    </div>
+
+</div>
+<div class="summary-functions summary">
+  <h3>
+    <a href="#functions">Functions</a>
+  </h3>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#add/4" data-no-tooltip="" translate="no">add(entries, pub, mod, package)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Menambahkan izin paket untuk kunci publik. Kunci baru dibuat sebagai entri baru, kunci
+yang sudah ada diperbarui daftar paketnya. Pasangan keyid dan paket yang sama tidak
+menambah apa pun (idempoten).</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#empty/0" data-no-tooltip="" translate="no">empty()</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Trust store kosong. Tidak memberi kepercayaan kepada kunci mana pun.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#encode/1" data-no-tooltip="" translate="no">encode(entries)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Serialisasi trust store ke JSON.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#find/2" data-no-tooltip="" translate="no">find(entries, keyid)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Mencari entri berdasarkan keyid.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#load/1" data-no-tooltip="" translate="no">load(path)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Membaca dan memparse trust store dari berkas. Berkas yang tidak ada atau tidak dapat
+dibaca menghasilkan error io.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#load_or_empty/1" data-no-tooltip="" translate="no">load_or_empty(path)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Seperti load/1, tetapi berkas yang belum ada dianggap trust store kosong. Dipakai
+oleh trust add, yang membuat trust store bila belum tersedia.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#parse/1" data-no-tooltip="" translate="no">parse(bytes)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Parse strict isi berkas trust store.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#remove/2" data-no-tooltip="" translate="no">remove(entries, keyids)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Menghapus entri berdasarkan satu atau beberapa keyid.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#save/2" data-no-tooltip="" translate="no">save(path, entries)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Menulis trust store secara atomik: berkas sementara pada direktori yang sama, lalu rename.
+Berkas lama tetap utuh bila penulisan gagal.</p></div>
+
+    </div>
+
+</div>
+
+  </section>
+
+
+  <section id="types" class="details-list">
+    <h2 class="section-heading">
+      <a class="hover-link" href="#types">
+        <i class="ri-link-m" aria-hidden="true"></i>
+      </a>
+      <span class="text">Types</span>
+    </h2>
+
+    <div class="types-list">
+<section class="detail" id="t:error/0">
+
+  <div class="detail-header">
+    <a href="#t:error/0" class="detail-link" data-no-tooltip="" aria-label="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">error()</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/trust.ex#L56" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@type</span> error() ::
+  :too_large
+  | :invalid_json
+  | :invalid_schema
+  | :invalid_entry
+  | :duplicate_keyid
+  | :keyid_not_found
+  | {:io, <a href="https://elixir.hexdocs.pm/File.html#t:posix/0">File.posix</a>()}</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:t/0">
+
+  <div class="detail-header">
+    <a href="#t:t/0" class="detail-link" data-no-tooltip="" aria-label="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">t()</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/trust.ex#L54" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@type</span> t() :: [<a href="Nadina.Trust.Entry.html#t:t/0">Nadina.Trust.Entry.t</a>()]</pre>
+
+      </div>
+
+
+  </section>
+</section>
+
+    </div>
+  </section>
+
+  <section id="functions" class="details-list">
+    <h2 class="section-heading">
+      <a class="hover-link" href="#functions">
+        <i class="ri-link-m" aria-hidden="true"></i>
+      </a>
+      <span class="text">Functions</span>
+    </h2>
+
+    <div class="functions-list">
+<section class="detail" id="add/4">
+
+  <div class="detail-header">
+    <a href="#add/4" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">add(entries, pub, mod, package)</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/trust.ex#L203" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> add(<a href="#t:t/0">t</a>(), <a href="Nadina.Profile.html#t:public_key/0">Nadina.Profile.public_key</a>(), <a href="https://elixir.hexdocs.pm/typespecs.html#built-in-types">module</a>(), <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>()) ::
+  {:ok, <a href="#t:t/0">t</a>(), <a href="Nadina.Trust.Entry.html#t:t/0">Nadina.Trust.Entry.t</a>()} | {:error, :invalid_package}</pre>
+
+      </div>
+
+<p>Menambahkan izin paket untuk kunci publik. Kunci baru dibuat sebagai entri baru, kunci
+yang sudah ada diperbarui daftar paketnya. Pasangan keyid dan paket yang sama tidak
+menambah apa pun (idempoten).</p>
+  </section>
+</section>
+<section class="detail" id="empty/0">
+
+  <div class="detail-header">
+    <a href="#empty/0" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">empty()</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/trust.ex#L67" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> empty() :: <a href="#t:t/0">t</a>()</pre>
+
+      </div>
+
+<p>Trust store kosong. Tidak memberi kepercayaan kepada kunci mana pun.</p>
+  </section>
+</section>
+<section class="detail" id="encode/1">
+
+  <div class="detail-header">
+    <a href="#encode/1" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">encode(entries)</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/trust.ex#L245" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> encode(<a href="#t:t/0">t</a>()) :: <a href="https://elixir.hexdocs.pm/typespecs.html#built-in-types">binary</a>()</pre>
+
+      </div>
+
+<p>Serialisasi trust store ke JSON.</p>
+  </section>
+</section>
+<section class="detail" id="find/2">
+
+  <div class="detail-header">
+    <a href="#find/2" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">find(entries, keyid)</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/trust.ex#L194" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> find(<a href="#t:t/0">t</a>(), <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>()) :: <a href="Nadina.Trust.Entry.html#t:t/0">Nadina.Trust.Entry.t</a>() | nil</pre>
+
+      </div>
+
+<p>Mencari entri berdasarkan keyid.</p>
+  </section>
+</section>
+<section class="detail" id="load/1">
+
+  <div class="detail-header">
+    <a href="#load/1" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">load(path)</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/trust.ex#L173" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> load(<a href="https://elixir.hexdocs.pm/Path.html#t:t/0">Path.t</a>()) :: {:ok, <a href="#t:t/0">t</a>()} | {:error, <a href="#t:error/0">error</a>()}</pre>
+
+      </div>
+
+<p>Membaca dan memparse trust store dari berkas. Berkas yang tidak ada atau tidak dapat
+dibaca menghasilkan error io.</p>
+  </section>
+</section>
+<section class="detail" id="load_or_empty/1">
+
+  <div class="detail-header">
+    <a href="#load_or_empty/1" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">load_or_empty(path)</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/trust.ex#L185" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> load_or_empty(<a href="https://elixir.hexdocs.pm/Path.html#t:t/0">Path.t</a>()) :: {:ok, <a href="#t:t/0">t</a>()} | {:error, <a href="#t:error/0">error</a>()}</pre>
+
+      </div>
+
+<p>Seperti load/1, tetapi berkas yang belum ada dianggap trust store kosong. Dipakai
+oleh trust add, yang membuat trust store bila belum tersedia.</p>
+  </section>
+</section>
+<section class="detail" id="parse/1">
+
+  <div class="detail-header">
+    <a href="#parse/1" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">parse(bytes)</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/trust.ex#L81" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> parse(<a href="https://elixir.hexdocs.pm/typespecs.html#built-in-types">binary</a>()) :: {:ok, <a href="#t:t/0">t</a>()} | {:error, <a href="#t:error/0">error</a>()}</pre>
+
+      </div>
+
+<p>Parse strict isi berkas trust store.</p><h2 id="parse/1-contoh" class="section-heading"><a href="#parse/1-contoh" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">Contoh</span></h2><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">Nadina.Trust</span><span class="o">.</span><span class="n">parse</span><span class="p" data-group-id="group-1">(</span><span class="s">~s({&quot;schema&quot;:&quot;minisign-trust/v1&quot;,&quot;keys&quot;:[]})</span><span class="p" data-group-id="group-1">)</span><span class="w">
+</span><span class="p" data-group-id="group-2">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="group-3">[</span><span class="p" data-group-id="group-3">]</span><span class="p" data-group-id="group-2">}</span><span class="w">
+
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Nadina.Trust</span><span class="o">.</span><span class="n">parse</span><span class="p" data-group-id="group-4">(</span><span class="s">~s({&quot;schema&quot;:&quot;minisign-trust/v1&quot;,&quot;keys&quot;:[],&quot;x&quot;:1})</span><span class="p" data-group-id="group-4">)</span><span class="w">
+</span><span class="p" data-group-id="group-5">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:invalid_json</span><span class="p" data-group-id="group-5">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="remove/2">
+
+  <div class="detail-header">
+    <a href="#remove/2" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">remove(entries, keyids)</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/trust.ex#L232" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> remove(<a href="#t:t/0">t</a>(), <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>() | [<a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>()]) ::
+  {:ok, <a href="#t:t/0">t</a>()} | {:error, :keyid_not_found}</pre>
+
+      </div>
+
+<p>Menghapus entri berdasarkan satu atau beberapa keyid.</p>
+  </section>
+</section>
+<section class="detail" id="save/2">
+
+  <div class="detail-header">
+    <a href="#save/2" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">save(path, entries)</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/trust.ex#L265" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> save(<a href="https://elixir.hexdocs.pm/Path.html#t:t/0">Path.t</a>(), <a href="#t:t/0">t</a>()) :: :ok | {:error, <a href="#t:error/0">error</a>()}</pre>
+
+      </div>
+
+<p>Menulis trust store secara atomik: berkas sementara pada direktori yang sama, lalu rename.
+Berkas lama tetap utuh bila penulisan gagal.</p>
+  </section>
+</section>
+
+    </div>
+  </section>
+
+    <footer class="footer">
+
+        <p>
+
+          <span class="line">
+            <button class="a-main footer-button display-quick-switch" title="Go to package docs">
+              Go to package docs
+            </button>
+
+              <a href="llms.txt" target="_blank">
+                View llms.txt
+              </a>
+
+
+              <a href="Nadina.epub">
+                Download ePub version
+              </a>
+
+          </span>
+        </p>
+
+        <p class="built-using">
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.40.4) for the
+
+            <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+        </p>
+
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.40.4">
+    <meta name="project" content="Nadina v0.1.0">
+
+
+    <title>Nadina.Verify — Nadina v0.1.0</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-RXHHCTJW.css" />
+
+    <script defer src="dist/sidebar_items-EC53801A.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-MI33G4N7.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+      <div>
+        <a href="Nadina.html" class="sidebar-projectName" translate="no">
+Nadina
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v0.1.0
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="Pages"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-module" id="main" data-type="modules">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Nadina</span>
+            <div class="search-input-wrapper">
+              <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+              <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+                <i class="ri-close-line ri-lg" title="Cancel search"></i>
+              </button>
+            </div>
+          </label>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <div class="engine-selector" data-multiple="false">
+          <button type="button" class="engine-button" aria-label="Select search engine" aria-haspopup="true" aria-expanded="false">
+            <i class="ri-search-2-line" aria-hidden="true"></i>
+            <span class="engine-name">Default</span>
+            <i class="ri-arrow-down-s-line" aria-hidden="true"></i>
+          </button>
+          <div class="engine-dropdown" hidden role="menu">
+
+              <button type="button"
+                      class="engine-option"
+                      data-engine-url="search.html?q="
+                      role="menuitemradio"
+                      aria-checked="true">
+                <span class="name">Default</span>
+                <span class="help">In-browser search</span>
+              </button>
+
+          </div>
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>
+      <span translate="no">Nadina.<wbr />Verify</span> 
+      <small class="app-vsn" translate="no">(Nadina v0.1.0)</small>
+
+    </h1>
+
+<a href="Nadina.Verify.md" title="Copy Markdown (hold Ctrl/Cmd and click it to open as Markdown)" class="copy-markdown icon-action" rel="help">
+  <i class="ri-markdown-line" aria-hidden="true"></i>
+  <span class="sr-only">Copy Markdown</span>
+</a>
+
+
+
+      <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/verify.ex#L1" title="View Source" class="icon-action" rel="help nofollow">
+        <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        <span class="sr-only">View Source</span>
+      </a>
+
+  </div>
+
+
+    <section id="moduledoc">
+<p>Tujuh langkah pemeriksaan verifikasi dan hasil JSON (spek Tabel 2.8 sampai 2.10).</p><p>Urutan dan status, berhenti pada kegagalan pertama</p><ol><li>INPUT_ERROR: opsi wajib ada dan semua berkas masukan dapat dibaca</li><li>FORMAT_ERROR: struktur, tipe, ukuran, dan serialisasi bundle, manifest, trust store</li><li>UNSUPPORTED_ALGORITHM: nilai algorithm bukan salah satu profil</li><li>KEY_NOT_TRUSTED: keyid ada di trust store, profil cocok, paket diizinkan</li><li>INVALID_SIGNATURE: tanda tangan atas byte manifest sah</li><li>METADATA_MISMATCH: paket, versi, dan nama artefak sesuai masukan</li><li>ARTIFACT_MISMATCH: ukuran dan SHA-256 artefak sesuai manifest</li></ol><p>Hanya kunci dari trust store yang dipakai. Kunci pada bundle tidak ada, dan trust store
+tidak pernah diubah oleh verifikasi. Metadata pada hasil (algorithm, keyid, package,
+version) hanya untuk menjelaskan hasil dan tidak boleh dianggap sah bila verifikasi gagal.</p>
+    </section>
+
+</div>
+
+  <section id="summary" class="details-list">
+    <h2 class="section-heading">
+      <a class="hover-link" href="#summary">
+        <i class="ri-link-m" aria-hidden="true"></i>
+      </a>
+      <span class="text">Summary</span>
+    </h2>
+<div class="summary-types summary">
+  <h3>
+    <a href="#types">Types</a>
+  </h3>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:result/0" data-no-tooltip="" translate="no">result()</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:status/0" data-no-tooltip="" translate="no">status()</a>
+
+      </div>
+
+    </div>
+
+</div>
+<div class="summary-functions summary">
+  <h3>
+    <a href="#functions">Functions</a>
+  </h3>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#exit_code/1" data-no-tooltip="" translate="no">exit_code(arg1)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Exit code untuk hasil verifikasi: 0 bila OK, 2 untuk INPUT_ERROR, selain itu 1.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#run/1" data-no-tooltip="" translate="no">run(opts)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Menjalankan verifikasi. Opsi: file, bundle, trust_store, package, version.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#status_name/1" data-no-tooltip="" translate="no">status_name(status)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Nama status sebagaimana tertulis pada keluaran JSON.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#to_json/1" data-no-tooltip="" translate="no">to_json(r)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Hasil verifikasi sebagai objek JSON (satu baris, diakhiri baris baru).</p></div>
+
+    </div>
+
+</div>
+
+  </section>
+
+
+  <section id="types" class="details-list">
+    <h2 class="section-heading">
+      <a class="hover-link" href="#types">
+        <i class="ri-link-m" aria-hidden="true"></i>
+      </a>
+      <span class="text">Types</span>
+    </h2>
+
+    <div class="types-list">
+<section class="detail" id="t:result/0">
+
+  <div class="detail-header">
+    <a href="#t:result/0" class="detail-link" data-no-tooltip="" aria-label="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">result()</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/verify.ex#L32" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@type</span> result() :: %{
+  valid: <a href="https://elixir.hexdocs.pm/typespecs.html#built-in-types">boolean</a>(),
+  status: <a href="#t:status/0">status</a>(),
+  message: <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>(),
+  algorithm: <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>() | nil,
+  keyid: <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>() | nil,
+  package: <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>() | nil,
+  version: <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>() | nil
+}</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:status/0">
+
+  <div class="detail-header">
+    <a href="#t:status/0" class="detail-link" data-no-tooltip="" aria-label="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">status()</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/verify.ex#L22" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@type</span> status() ::
+  :ok
+  | :input_error
+  | :format_error
+  | :unsupported_algorithm
+  | :key_not_trusted
+  | :invalid_signature
+  | :metadata_mismatch
+  | :artifact_mismatch</pre>
+
+      </div>
+
+
+  </section>
+</section>
+
+    </div>
+  </section>
+
+  <section id="functions" class="details-list">
+    <h2 class="section-heading">
+      <a class="hover-link" href="#functions">
+        <i class="ri-link-m" aria-hidden="true"></i>
+      </a>
+      <span class="text">Functions</span>
+    </h2>
+
+    <div class="functions-list">
+<section class="detail" id="exit_code/1">
+
+  <div class="detail-header">
+    <a href="#exit_code/1" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">exit_code(arg1)</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/verify.ex#L66" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> exit_code(<a href="#t:result/0">result</a>()) :: 0 | 1 | 2</pre>
+
+      </div>
+
+<p>Exit code untuk hasil verifikasi: 0 bila OK, 2 untuk INPUT_ERROR, selain itu 1.</p>
+  </section>
+</section>
+<section class="detail" id="run/1">
+
+  <div class="detail-header">
+    <a href="#run/1" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">run(opts)</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/verify.ex#L48" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> run(<a href="https://elixir.hexdocs.pm/typespecs.html#built-in-types">keyword</a>()) :: <a href="#t:result/0">result</a>()</pre>
+
+      </div>
+
+<p>Menjalankan verifikasi. Opsi: file, bundle, trust_store, package, version.</p>
+  </section>
+</section>
+<section class="detail" id="status_name/1">
+
+  <div class="detail-header">
+    <a href="#status_name/1" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">status_name(status)</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/verify.ex#L72" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> status_name(<a href="#t:status/0">status</a>()) :: <a href="https://elixir.hexdocs.pm/String.html#t:t/0">String.t</a>()</pre>
+
+      </div>
+
+<p>Nama status sebagaimana tertulis pada keluaran JSON.</p>
+  </section>
+</section>
+<section class="detail" id="to_json/1">
+
+  <div class="detail-header">
+    <a href="#to_json/1" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">to_json(r)</h1>
+
+
+        <a href="https://github.com/reletz/IF4020-19-Tubes3/blob/main/lib/nadina/verify.ex#L76" class="icon-action" rel="help nofollow" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> to_json(<a href="#t:result/0">result</a>()) :: <a href="https://elixir.hexdocs.pm/typespecs.html#built-in-types">binary</a>()</pre>
+
+      </div>
+
+<p>Hasil verifikasi sebagai objek JSON (satu baris, diakhiri baris baru).</p>
+  </section>
+</section>
+
+    </div>
+  </section>
+
+    <footer class="footer">
+
+        <p>
+
+          <span class="line">
+            <button class="a-main footer-button display-quick-switch" title="Go to package docs">
+              Go to package docs
+            </button>
+
+              <a href="llms.txt" target="_blank">
+                View llms.txt
+              </a>
+
+
+              <a href="Nadina.epub">
+                Download ePub version
+              </a>
+
+          </span>
+        </p>
+
+        <p class="built-using">
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.40.4) for the
+
+            <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+        </p>
+
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>
